@@ -213,3 +213,7 @@ The technical report for this line is [`docs/aibuildai-llm-post-train-agent.pdf`
 ## Community
 
 Questions and discussion: join the [AIBuildAI Community Slack](https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww) or the [AIBuildAI Community Discord](https://discord.gg/JWrbhmkV6k). Use the issue tracker for bugs and feature requests.
+
+## Contact us
+
+For enterprises interested in adopting or deploying the AIBuildAI LLM-Post-Train Agent at scale, including technical consulting, custom post-training engagements, or partnership inquiries, contact us at pengtao.xie@aibuildai.io.
