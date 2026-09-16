@@ -1,0 +1,316 @@
+# AIBuildAI example: post-train Qwen3-1.7B-Base for grade-school math (GSM8K).
+#
+# `examples/gsm8k-qwen3-1.7b-base/setup.sh <workdir>` builds the task folder and
+# writes this config with its two paths filled in. To fill them in by hand,
+# replace the two /path/to/... values and start the run with:
+#   aibuildai run task.yaml
+run:
+  task_name: gsm8k-qwen3-1.7b-base
+  conda_env: null
+  data_root: /path/to/gsm8k/task
+  setup_from_scratch: false
+  task_prompt: null
+  playground_root: /path/to/gsm8k/playground
+  budget:
+    wall_clock_minutes: 90
+    cost_usd: null
+    per_agent_cost_cap_usd: null
+llm:
+  default:
+    model: claude-opus-5
+    effort: null
+    max_thinking_tokens: null
+  by_role: {}
+  auto: null
+  retry_ceiling_s: null
+  system_instructions:
+    setup: |
+      You are preparing a post-training run: post-train one frozen base language
+      model to score as high as possible under one frozen grader.
+
+      The task folder is READ-ONLY and already complete. It ships the base weights,
+      the benchmark's train split, the grader, and the test split the grader reads.
+      Read its README first: the grader's prompt, decoding and answer contract are
+      the measurement, and everything the run does is aimed at them.
+
+      A knowledge base of curated machine-learning skills is mounted as the `kb` MCP
+      server. Before planning the environment, call `mcp__kb__search_skills` with a
+      description of the task and read the skills that match.
+
+      Install the Program environment the work needs: torch, transformers, trl, peft,
+      accelerate and datasets cover training and grading. Do it early; a run that
+      discovers a missing package inside paid work has already lost the time.
+
+      Write the run's score program as a THIN WRAPPER around grade/evaluate.py:
+
+          python <task>/grade/evaluate.py --model-path <candidate>/final_model \
+                 --limit -1 --json-output-file <out>/metrics.json
+
+      Read `accuracy` out of metrics.json; never recompute the metric, never modify
+      the grader, never substitute your own. Higher is better.
+
+      Your own gate during setup MUST be a small subset (`--limit 20`), never the
+      full split: setup runs on a fixed budget outside the exploration window, and a
+      setup that exhausts it ends the whole run before any training starts.
+
+      The baseline `final_model` is a byte copy of a multi-GB model. START that copy
+      IN THE BACKGROUND as your first action and do the reading and authoring while
+      it runs. Every file under a candidate's `final_model/` must be a regular
+      single-link file: the harness rejects symlinks and hard links alike, so copy
+      the weights and leave trainer state out.
+    meta: |
+      You author the SEARCH PROGRAM for a post-training run: post-train one frozen
+      base language model to score as high as possible under one frozen grader. Read
+      the task README first. It is the contract, and its rules are hard constraints.
+
+      A knowledge base of curated machine-learning skills is mounted as the `kb` MCP
+      server (`mcp__kb__search_skills`, `mcp__kb__load_skill`, `mcp__kb__read_reference`).
+      Search it for this task's domain and design from what it returns. Give every
+      Agent you write the same instruction: consult the knowledge base before
+      committing to a modeling approach.
+
+      Everything you know must survive into the program you write. You create the
+      roles that will actually train the model, and anything you leave out of their
+      prompts does not exist for them. Restate the constraints below in the artifacts
+      your roles will read.
+
+      What moves the score here, roughly in order:
+
+        - The base model is a BASE model. It has no chat behaviour and no answer
+          format. Teaching it the grader's exact prompt and answer format is usually
+          worth more than teaching it the skill.
+        - DATA CHOICE. The benchmark's train split is a starting point, not the data
+          story. Large public math and reasoning corpora are allowed whatever model
+          helped produce them; rule 2 bans calling a hosted LLM API during this run
+          and bans you authoring examples, not published datasets. Searching for data
+          is required: record what you evaluated, chose and rejected, and why.
+        - METHOD. Supervised fine-tuning on good data is the FLOOR, not the ceiling.
+          When the grader is a programmatic checker, a reinforcement round that uses
+          that checker as its reward is where the remaining points usually are.
+          Prefer two stages when the budget affords them, and make sure the choice
+          stays reachable later: a round loop whose only moves are "train again" and
+          "finalize" ends the run on the first plateau.
+
+      GRADING. Grade on the full split (`--limit -1`) whenever you would rank or
+      adopt a checkpoint; a subset score is biased rather than merely noisy, and
+      subset rankings of close checkpoints invert on the full split. Because you
+      select among many checkpoints on one split, require a new candidate to beat the
+      incumbent by more than the grader's reported `stderr` before adopting it.
+
+      SPEND THE WHOLE BUDGET. The run is scored only on the model it ships, and
+      unused time converts to nothing. Design the round loop so a plateau escalates,
+      changing the method, the data or the decoding, rather than terminating, and
+      make finalizing the branch taken when time is nearly gone.
+
+      RECIPE NOTES. Each of these is a known way to lose a run of this kind:
+
+        1. LARGE-VOCAB MODELS RUN OUT OF MEMORY IN THE LOSS, NOT IN THE WEIGHTS.
+           Cross-entropy materializes a [batch x seqlen x vocab] logits tensor plus a
+           gradient the same size. Size the batch from tokens times vocabulary, not
+           from parameter count, and prefer a small per-device batch with gradient
+           accumulation.
+        2. TRAIN AGAINST THE GRADER'S PROMPT. The grader applies one fixed prompt and
+           reads one fixed answer form. A model trained on a different template is
+           scored on prompts it has never seen.
+        3. THE DELIVERABLE MUST LOAD PLAINLY. `final_model/` holds a merged model of
+           real files that `AutoModelForCausalLM.from_pretrained` opens: no unmerged
+           adapter, no symlinks, no hard links.
+work_units:
+- kind: llm_agent
+  name: aggregator
+  budget:
+    kind: fixed
+    minutes: 15
+  retry: 0
+- kind: llm_agent
+  name: coder
+  budget:
+    kind: fixed
+    minutes: 25
+  retry: 0
+- kind: llm_agent
+  name: coder_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: committee
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: designer
+  budget:
+    kind: fixed
+    minutes: 15
+  retry: 0
+- kind: llm_agent
+  name: designer_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: finalizer
+  budget:
+    kind: fixed
+    minutes: 20
+  retry: 0
+- kind: llm_agent
+  name: judge
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: manager
+  budget:
+    kind: pipeline
+  retry: 0
+- kind: llm_agent
+  name: meta
+  budget:
+    kind: fixed
+    minutes: 25
+  retry: 0
+- kind: llm_agent
+  name: meta_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: planner
+  budget:
+    kind: fixed
+    minutes: 15
+  retry: 0
+- kind: llm_agent
+  name: reviewer
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: reviser
+  budget:
+    kind: fixed
+    minutes: 15
+  retry: 0
+- kind: llm_agent
+  name: reviser_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: router
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: selector
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: setup
+  budget:
+    kind: fixed
+    minutes: 45
+  retry: 0
+- kind: llm_agent
+  name: setup_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: submitter
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: worker
+  budget:
+    kind: fixed
+    minutes: 35
+  retry: 0
+- kind: llm_agent
+  name: worker_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: writer
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: writer_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: program
+  name: score_program
+  budget:
+    kind: fixed
+    minutes: 20
+  retry: 0
+- kind: program
+  name: training
+  budget:
+    kind: expected
+    min_minutes: 15
+    max_minutes: 45
+    slack_fraction: 0.3
+  retry: 0
+search:
+  kind: meta
+  input:
+    report: false
+disallowed_tools: []
+scheduler:
+  recheck_seconds: 300
+verifier:
+  enable: {}
+progress:
+  enable: true
+submission:
+  max_versions: 1
+writer:
+  enable: false
+resources:
+  run:
+    cpu_max_cores: null
+    memory_max_gb: null
+  work_unit:
+    cpu_max_cores: 8
+    memory_max_gb: 64
+    by_kind: {}
+  gpu:
+    min_free_mib: 20480
+    busy_util_threshold: 90
+    util_samples: 1
+  sandbox:
+    enable: false
+    system_read_paths: []
+    system_write_paths: []
+  cuda_visible_devices: null
+memory:
+  enable: false
+  max_chars: 30000
+  user_dir: ~/.aibuildai/memory
+mcps:
+  kb: { type: reference }   # the knowledge base: skill retrieval for every role
+plugins: {}
+agents: {}
+skills: {}

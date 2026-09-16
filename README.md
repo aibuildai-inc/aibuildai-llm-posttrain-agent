@@ -80,6 +80,27 @@ aibuildai run task.yaml
 
 The run prints a workspace URL such as `http://127.0.0.1:<port>/run/<run-id>`; open it to follow the run live. Without a browser the run proceeds the same way.
 
+### Example: post-train a base model for grade-school math
+
+The example post-trains `Qwen/Qwen3-1.7B-Base` into a model that solves grade-school math word problems ([GSM8K](https://huggingface.co/datasets/openai/gsm8k)), the shape of task this line is built for, at a size that produces a result in about two hours on one GPU. One script builds the whole task from public sources and writes the config:
+
+```bash
+bash examples/gsm8k-qwen3-1.7b-base/setup.sh ~/gsm8k-example   # about 4 GB, a couple of minutes
+aibuildai run ~/gsm8k-example/task.yaml
+```
+
+The script downloads the base weights and both GSM8K splits from the Hugging Face Hub, writes the task statement and the frozen grader into `~/gsm8k-example/task/`, and warms the pip cache with the packages the run installs into its own Program environment. The task folder is what the run gets: the base weights it may tune, the 7473-problem train split, the grader, and the 1319-problem test split the grader reads.
+
+The grader is the whole measurement, and the run's job is to train against it: it prompts the model with exactly `Question: {question}\nAnswer:`, decodes greedily, and reads the number after the last `####`. The base model scores 0.105 on the first 200 problems of that split, because a base model has no answer format at all. The config keeps the meta search described above, a 90-minute exploration wall clock, and per-agent budgets sized for it; raise them for a serious run.
+
+The deliverable is a merged model directory. Grade it with the task's own grader, in the run's Program environment:
+
+```bash
+H=~/gsm8k-example/playground/gsm8k-qwen3-1.7b-base/<run-home>
+$H/program-environment/env/bin/python ~/gsm8k-example/task/grade/evaluate.py \
+    --model-path $H/deliverable/final_model --limit -1
+```
+
 ### Example: protein EC number prediction
 
 The example task predicts the enzyme class (EC number, 1-7) of a protein from its amino acid sequence ([Yu et al., *Science* 2023](https://www.science.org/doi/10.1126/science.adf2465)). The dataset and a scoring script ship with the product repository, [aibuildai-inc/AI-Build-AI](https://github.com/aibuildai-inc/AI-Build-AI), and this repository ships a ready config under `examples/`:
