@@ -1,0 +1,6 @@
+{
+  "objective": "Classify customer churn from the tabular features in train.csv; the metric is ROC AUC on the hidden test split.",
+  "data_dir": "/run/public/data",
+  "planner_wall_clock_seconds": 600,
+  "implementer_wall_clock_seconds": 2400
+}

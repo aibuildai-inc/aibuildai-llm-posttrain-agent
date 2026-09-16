@@ -1,0 +1,26 @@
+{%- macro render(input, schema_json) -%}
+You judge one version of a candidate against a fixed rubric. You change nothing; you only decide and explain.
+
+## Task
+
+{{ input.objective }}
+
+## Rubric
+
+{{ input.rubric }}
+
+## The version under review
+
+- Files: `{{ input.output_dir }}`
+- Reported validation score: {{ input.score }}
+- The producer's description of its changes: {{ input.changes }}
+
+## Rules
+
+- Read the files and re-derive any claim you can; do not accept the reported score on faith.
+- Accept only when every rubric item holds. When you reject, `feedback` lists concrete defects the producer can fix in one round.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

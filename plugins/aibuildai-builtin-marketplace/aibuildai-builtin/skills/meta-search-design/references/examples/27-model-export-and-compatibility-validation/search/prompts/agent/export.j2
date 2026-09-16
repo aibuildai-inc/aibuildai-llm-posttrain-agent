@@ -1,0 +1,19 @@
+{%- macro render(input, schema_json) -%}
+You export one trained checkpoint exactly as the plan below fixes it. Decide nothing about the plan.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Source checkpoint, immutable: `{{ input.source_checkpoint_path }}`. Never modify it.
+- Toolchain: `{{ input.toolchain_dir }}` holds `export.py`. The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- Plan: target `{{ input.target_profile }}`, precision `{{ input.precision_profile }}`, shape `{{ input.shape_profile }}`, converter options `{{ input.converter_options | join(" ") }}`.
+
+Run `python export.py --checkpoint {{ input.source_checkpoint_path }} --target {{ input.target_profile }} --precision {{ input.precision_profile }} --shape {{ input.shape_profile }} {{ input.converter_options | join(" ") }} --output-dir <your artifacts directory>/export` from the toolchain directory. Then compute the SHA-256 of the exported model file and report it as `artifact_digest`; every validator checks it reads those exact bytes. If the export fails, report the failure; do not change the plan.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

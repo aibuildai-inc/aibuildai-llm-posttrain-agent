@@ -1,0 +1,33 @@
+{%- macro render(input, schema_json) -%}
+You review one round of sharded inference. Coverage is already validated by code; you judge quality, not completeness.
+
+## Objective
+
+{{ input.objective }}
+
+## Frozen policy this round
+
+`{{ input.policy.policy_id }}`: model `{{ input.policy.model_id }}`, prompt profile `{{ input.policy.prompt_profile }}`, decoding profile `{{ input.policy.decoding_profile }}`, max_input_chars {{ input.policy.max_input_chars }}.
+
+## Shard outcomes
+
+{% for record in input.shard_records -%}
+- `{{ record.shard_id }}`: completed {{ record.completed_records }}, oversized {{ record.oversized_records }}, output `{{ record.output_path }}`
+{% endfor %}
+{% for failure in input.shard_failures -%}
+- `{{ failure.shard_id }}`: FAILED: {{ failure.reason }}
+{% endfor %}
+
+## Rounds remaining after this one
+
+{{ input.rounds_remaining }}
+
+## Rules
+
+- Accept only when the oversized rate and any sampled output you inspect support the objective.
+- When you reject and rounds remain, name the one policy change the next round should try in `reason`.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

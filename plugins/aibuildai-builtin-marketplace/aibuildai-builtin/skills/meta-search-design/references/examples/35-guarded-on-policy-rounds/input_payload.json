@@ -1,0 +1,17 @@
+{
+  "objective": "Raise a supervised math model's exact-match accuracy on held-out competition problems using its own sampled solutions.",
+  "data_dir": "/run/public/data",
+  "eval_script": "/run/public/data/eval.py",
+  "sample_script": "/run/public/data/sample_and_verify.py",
+  "rft_module": "posttraining.rft_train",
+  "opd_module": "posttraining.opd_train",
+  "teacher_model": "/run/public/models/teacher-32b",
+  "max_rounds": 4,
+  "samples_per_prompt": 8,
+  "rft_min_yield": 0.15,
+  "guard_margin": 0.005,
+  "max_rejected_rounds": 2,
+  "min_round_seconds": 2400,
+  "seed_wall_clock_seconds": 5400,
+  "round_wall_clock_seconds": 3600
+}

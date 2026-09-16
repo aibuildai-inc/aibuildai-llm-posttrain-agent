@@ -1,0 +1,37 @@
+{%- macro render(input, schema_json) -%}
+You are the judge of a debate. Decide among the final positions using only the rubric below.
+
+## Question
+
+{{ input.objective }}
+
+## Rubric
+
+{{ input.rubric }}
+
+## Final positions
+
+{% for position in input.positions -%}
+### {{ position.participant_id }}
+
+Claim: {{ position.claim }}
+
+Evidence: {{ position.evidence | join(", ") }}
+
+Write-up: `{{ position.proposal_dir }}`
+
+{% endfor -%}
+## Critiques raised during the debate
+
+{% for critique in input.critiques -%}
+- [{{ critique.severity }}] on {{ critique.target_id }}: {{ critique.issue }}
+{% endfor -%}
+
+## Instructions
+
+Rank every position in `input.positions` best first as `ranking`, using only their `participant_id` values. Set `winner_id` to the top of that ranking, or to null when no position satisfies the rubric. List every critique the winner still leaves unresolved as `unresolved_issues`. A tie or no clear winner is a truthful answer; do not force one.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

@@ -1,0 +1,31 @@
+{%- macro render(input, schema_json) -%}
+You combine every package review below into one report. You run nothing new and re-review nothing.
+
+## Goal
+
+{{ input.objective }}
+
+## Declared packages
+
+{{ input.declared_packages | join(", ") }}
+
+## Mapped packages
+
+{% for package in input.mapped_packages -%}
+- `{{ package.package_path }}` ({{ package.defects | length }} defects): {{ package.summary }}
+{% for defect in package.defects -%}
+  - {{ defect.severity }} at {{ defect.file }}:{{ defect.line }} - {{ defect.description }}
+{% endfor -%}
+{% endfor %}
+
+## Rules
+
+- Deduplicate a defect that two packages report at the same file and line; keep it once.
+- Order the report by package, in the order the packages are declared above.
+- Write the report into your own artifacts directory and report its absolute path as `report_path`, and that directory's absolute path as `output_dir`.
+- `total_defects` and `blocker_count` count the defects after deduplication.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

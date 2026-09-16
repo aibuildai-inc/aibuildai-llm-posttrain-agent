@@ -1,0 +1,8 @@
+{
+  "objective": "Diagnose why validation accuracy for the digit classifier trained from /run/public/data stays near random chance (10%) after training, and name the root cause.",
+  "data_dir": "/run/public/data",
+  "available_work_kinds": ["inspect_config", "inspect_logs", "inspect_checkpoint", "run_probe_script"],
+  "max_iterations": 5,
+  "worker_wall_clock_seconds": 600,
+  "iterator_wall_clock_seconds": 300
+}

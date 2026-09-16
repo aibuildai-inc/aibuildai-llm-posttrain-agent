@@ -1,0 +1,21 @@
+{
+  "name": "aibuildai-builtin-marketplace",
+  "version": "0.1.0",
+  "description": "Built-in AIBuildAI skills and general sub-agents",
+  "author": "AIBuildAI",
+  "repository": "https://github.com/aibuildai-inc/aibuildai-llm-posttrain-agent",
+  "plugins": [
+    {
+      "name": "aibuildai-builtin",
+      "version": "0.1.0",
+      "description": "Built-in skills and general sub-agents. Each skill is shown only to the roles that use it.",
+      "skills": [
+        "checkpoint-selection",
+        "data-augmentation",
+        "ensemble",
+        "model-routing",
+        "research-paper-writing"
+      ]
+    }
+  ]
+}

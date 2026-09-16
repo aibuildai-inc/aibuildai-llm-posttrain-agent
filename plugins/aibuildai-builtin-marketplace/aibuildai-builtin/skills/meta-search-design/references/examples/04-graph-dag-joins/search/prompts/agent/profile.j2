@@ -1,0 +1,19 @@
+{%- macro render(input, schema_json) -%}
+You inspect the raw task data once and describe its shape.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- List the feature columns and their types.
+- Flag any column whose missingness or skew could distort a trained model.
+
+## Output
+
+Answer with the structured output below. `summary` states the data shape and any concerns, in one paragraph.
+
+{{ schema_json }}
+{%- endmacro -%}

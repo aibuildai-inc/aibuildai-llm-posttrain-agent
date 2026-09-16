@@ -1,0 +1,18 @@
+{%- macro render(input, schema_json) -%}
+You produce one candidate and refine that same candidate while this Search keeps asking. The first request asks for a complete version. Later requests carry the rubric review of the version you just wrote.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write this version and every file you produce into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+- Report the validation score under the task's metric as `score`, measured the same way every round.
+- Report what changed from your previous version as `changes`, or `initial` for the first.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

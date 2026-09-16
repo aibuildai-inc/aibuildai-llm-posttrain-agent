@@ -1,0 +1,299 @@
+/* The Agent transcript: a time rail outside one card per turn; tool
+   blocks, folds, and prose inside. One frame per thing: inside a fold,
+   a tool input, or a tool result the code surface has no frame of its
+   own, because the container already is the frame. */
+
+.transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── rail ── */
+
+.transcript-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.transcript-rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-top: 11px;
+}
+
+.transcript-rail::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -14px;
+  bottom: -14px;
+  width: 1px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-border) 90%, transparent);
+  transform: translateX(-50%);
+}
+
+.transcript-row:first-of-type .transcript-rail::before {
+  top: 11px;
+}
+
+.transcript-row:last-of-type .transcript-rail::before {
+  bottom: auto;
+  height: 11px;
+}
+
+.transcript-rail-ts {
+  position: relative;
+  z-index: 1;
+  font-size: 9px;
+  color: var(--aibuildai-atlas-ink-secondary);
+  white-space: nowrap;
+  background: var(--aibuildai-atlas-canvas);
+  padding: 0 2px;
+}
+
+.transcript-rail-dot {
+  position: relative;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--aibuildai-atlas-ink);
+  box-shadow: 0 0 0 3px var(--aibuildai-atlas-canvas);
+}
+
+/* ── turn card ── */
+
+.transcript-card {
+  min-width: 0;
+  background: var(--aibuildai-atlas-surface);
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 60%, transparent);
+  border-radius: 12px;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--aibuildai-atlas-ink) 6%, transparent),
+    0 8px 24px -12px color-mix(in srgb, var(--aibuildai-atlas-ink) 22%, transparent);
+}
+
+.transcript-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 60%, transparent);
+  font-size: 12px;
+}
+
+.transcript-card-title {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-weight: 650;
+  font-size: 13px;
+  color: var(--aibuildai-atlas-ink);
+}
+
+.transcript-card-span {
+  font-size: 11px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.transcript-card-spacer {
+  flex: 1;
+}
+
+.transcript-chip {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 80%, transparent);
+  background: var(--aibuildai-atlas-card);
+  color: var(--aibuildai-atlas-ink-secondary);
+  white-space: nowrap;
+}
+
+.transcript-card-body {
+  padding: 6px 14px 10px;
+  overflow-x: hidden;
+}
+
+/* ── prose ── */
+
+.transcript-text {
+  margin: 0.5em 0;
+}
+
+.transcript-text-sub {
+  border-left: 2px solid var(--aibuildai-atlas-status-running);
+  padding-left: 10px;
+}
+
+.transcript-role {
+  display: inline-block;
+  margin-bottom: 2px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-status-running) 14%, transparent);
+  color: var(--aibuildai-atlas-status-running);
+}
+
+/* ── folds: thinking, warnings, the session header ── */
+
+.transcript-fold {
+  margin: 0.6em 0;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+  border-radius: 8px;
+  background: var(--aibuildai-atlas-surface);
+}
+
+.transcript-fold-muted {
+  background: transparent;
+  border-style: dashed;
+}
+
+.transcript-header {
+  margin: 0 0 0 82px;
+}
+
+.transcript-fold > summary,
+.transcript-tool-input > summary,
+.transcript-tool-result > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  list-style: none;
+  font-size: 12px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.transcript-fold > summary::-webkit-details-marker,
+.transcript-tool-input > summary::-webkit-details-marker,
+.transcript-tool-result > summary::-webkit-details-marker {
+  display: none;
+}
+
+.transcript-fold > summary::before,
+.transcript-tool-input > summary::before,
+.transcript-tool-result > summary::before {
+  content: "";
+  flex: none;
+  width: 0.4em;
+  height: 0.4em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 120ms ease;
+}
+
+.transcript-fold[open] > summary::before,
+.transcript-tool-input[open] > summary::before,
+.transcript-tool-result[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.transcript-fold-title {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+.transcript-fold-meta {
+  margin-left: auto;
+  opacity: 0.85;
+}
+
+.transcript-empty {
+  margin: 0.4em 0.9em;
+  font-size: 12px;
+}
+
+/* ── tool block ── */
+
+.transcript-tool {
+  margin: 0.7em 0;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 75%, transparent);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--aibuildai-atlas-canvas);
+}
+
+.transcript-tool-warn {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-warning) 60%, transparent);
+}
+
+.transcript-tool-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--aibuildai-atlas-card);
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 60%, transparent);
+  font-size: 12px;
+}
+
+.transcript-tool-icon {
+  display: inline-flex;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.transcript-tool-name {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-weight: 600;
+}
+
+.transcript-tool-note {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.transcript-tool-result {
+  border-top: 1px dashed color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+}
+
+/* Flat sections inside a container: no second frame. */
+
+.transcript-fold .markdown-surface,
+.transcript-tool-input .markdown-surface,
+.transcript-tool-result .markdown-surface {
+  padding: 0 10px 6px;
+}
+
+.transcript-tool-input .markdown-surface > :first-child {
+  margin-top: 0.2em;
+}
+
+.transcript-fold .code-surface,
+.transcript-tool-input .code-surface,
+.transcript-tool-result .code-surface,
+.transcript-tool-input .markdown-surface details {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.transcript-tool-input .markdown-surface details > summary {
+  padding: 4px 0;
+  font-size: 12px;
+}
+
+.transcript-tool-input .markdown-surface details > :not(summary) {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.transcript-fold .markdown-surface pre,
+.transcript-tool-input .markdown-surface pre,
+.transcript-tool-result .markdown-surface pre {
+  max-height: 360px;
+  overflow: auto;
+}

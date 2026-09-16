@@ -1,0 +1,8 @@
+{%- import "system_rules.j2" as general -%}
+{%- import search_template as search -%}
+{%- import agent_template as role with context -%}
+{%- import "agent_prompt.j2" as agent -%}
+{%- set general_text -%}{{ general.render(general_violations) }}{%- endset -%}
+{%- set search_text -%}{{ search.render() }}{%- endset -%}
+{%- set agent_text -%}{{ agent.render(role, launch, input, input_json, schema_json) }}{%- endset -%}
+{{ [general_text | trim, search_text | trim, agent_text | trim] | join("\n\n") }}

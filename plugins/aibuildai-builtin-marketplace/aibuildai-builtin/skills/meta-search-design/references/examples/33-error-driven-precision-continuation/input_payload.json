@@ -1,0 +1,11 @@
+{
+  "objective": "The model already scores near its ceiling on the function-calling evaluation in eval.jsonl; diagnose and fix the remaining individual errors without regressing what already passes.",
+  "data_dir": "/run/public/data",
+  "target_score": 0.99,
+  "max_fix_rounds": 6,
+  "replay_fraction": 0.2,
+  "continuation_learning_rate": 2e-06,
+  "fixer_wall_clock_seconds": 600,
+  "fix_round_seconds": 2400,
+  "worker_wall_clock_seconds": 14400
+}

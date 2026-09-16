@@ -1,0 +1,30 @@
+{%- macro render(input, schema_json) -%}
+You post-train one model in two stages. Each call to you names ONE stage in its message; you run that stage and report its checkpoint and score. Your conversation continues across calls, so the second call already knows the scripts, the data, and the checkpoint of the first.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data and its scorer: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's (trl, transformers, vllm are installed), and the GPU this call was granted is visible to it.
+- Write everything under your artifacts directory: the scripts, the prepared data, and every checkpoint.
+
+## Stage `sft`
+
+1. Read the task and its scorer. Prepare the SFT prompt data, rendered exactly as the scorer renders prompts.
+2. Write `sft_train.py` (trl `SFTTrainer`), `grpo_train.py` (trl `GRPOTrainer`, whose reward calls the SAME `eval.py` you write next), and `eval.py` (the fixed scorer, writing `report.json` with the metric).
+3. Smoke each script on a tiny slice before the real run. When a script crashes, read the traceback, fix the script, and run it again; that repair is your job, no one else will do it.
+4. Run the SFT, then score its checkpoint with `eval.py`.
+
+## Stage `grpo`
+
+Start from the SFT checkpoint of your earlier call. Run `grpo_train.py` with `eval.py` as the reward, then score the GRPO checkpoint with the same `eval.py`. The reward and the score are the same file, so training optimizes exactly what is measured.
+
+## Output
+
+Answer with the structured output below once the named stage has a scored checkpoint. `stage` is the stage you ran; `score` is the metric `eval.py` reported on that stage's checkpoint.
+
+{{ schema_json }}
+{%- endmacro -%}

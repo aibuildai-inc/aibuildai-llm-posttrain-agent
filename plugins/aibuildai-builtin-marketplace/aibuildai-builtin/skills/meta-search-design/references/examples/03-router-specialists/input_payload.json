@@ -1,0 +1,8 @@
+{
+  "objective": "The nightly training job in the task repository crashes with a shape mismatch, and the on-call engineer wants both a fix and a short note on what published techniques address this kind of shape bug.",
+  "data_dir": "/run/public/data",
+  "router_wall_clock_seconds": 300,
+  "specialist_wall_clock_seconds": 1800,
+  "synthesis_wall_clock_seconds": 600,
+  "min_successful_routes": 1
+}

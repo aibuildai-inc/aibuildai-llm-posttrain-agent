@@ -1,0 +1,13 @@
+{
+  "objective": "Search hyperparameters for a small image classifier on the labeled photos under train/; the metric is top-1 accuracy on the hidden test split.",
+  "data_dir": "/run/public/data",
+  "metric_name": "top1_accuracy",
+  "population_size": 4,
+  "max_generations": 3,
+  "elite_count": 1,
+  "parent_count": 2,
+  "min_feasible": 1,
+  "initializer_wall_clock_seconds": 1200,
+  "mutation_wall_clock_seconds": 900,
+  "evaluation_wall_clock_seconds": 1800
+}

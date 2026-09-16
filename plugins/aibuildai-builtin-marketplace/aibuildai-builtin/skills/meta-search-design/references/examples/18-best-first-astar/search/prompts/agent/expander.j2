@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You propose the next modifications of one training pipeline configuration.
+
+## Task
+
+{{ input.objective }}
+
+## Parent configuration
+
+{{ input.parent_config_json }}
+
+## Facts
+
+- Fixed training source: `{{ input.source_dir }}`. Read it to see what `train.py` accepts; never edit it.
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Propose at most {{ input.branching_factor }} children. Each child is one complete configuration JSON document, changed from the parent by exactly one named modification.
+- {{ input.remaining_expansions }} expansions remain in this study; keep each child cheap enough to actually try.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

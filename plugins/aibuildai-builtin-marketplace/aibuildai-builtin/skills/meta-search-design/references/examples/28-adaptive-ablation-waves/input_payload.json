@@ -1,0 +1,9 @@
+{
+  "objective": "Which components of the proposed tabular model (feature scaling, dropout, the auxiliary loss, and the learning-rate schedule) actually contribute to its validation accuracy on train.csv?",
+  "data_dir": "/run/public/data",
+  "max_waves": 3,
+  "max_cells_per_wave": 4,
+  "orchestrator_wall_clock_seconds": 1200,
+  "cell_wall_clock_seconds": 2400,
+  "analyst_wall_clock_seconds": 900
+}

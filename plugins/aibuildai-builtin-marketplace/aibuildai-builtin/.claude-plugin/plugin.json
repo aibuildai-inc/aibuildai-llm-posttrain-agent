@@ -1,0 +1,21 @@
+{
+  "name": "aibuildai-builtin",
+  "version": "0.1.0",
+  "description": "The built-in AIBuildAI skills and the general MCP sub-agent. Each skill is shown only to the roles that use it.",
+  "author": {
+    "name": "AIBuildAI"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/aibuildai-inc/aibuildai-llm-posttrain-agent",
+  "keywords": [
+    "methodology",
+    "data-augmentation",
+    "ensemble",
+    "checkpoint-selection",
+    "model-routing",
+    "writing",
+    "paper",
+    "review",
+    "mcp-subagent"
+  ]
+}

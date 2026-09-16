@@ -1,0 +1,19 @@
+{
+  "objective": "Improve a supervised writing model on a rubric-scored held-out set, using a judge model to rank its own candidate answers.",
+  "data_dir": "/run/public/data",
+  "eval_script": "/run/public/data/eval.py",
+  "judge_script": "/run/public/data/judge.py",
+  "sample_script": "/run/public/data/sample_candidates.py",
+  "soup_script": "/run/public/data/soup.py",
+  "dpo_module": "posttraining.dpo_train",
+  "raft_module": "posttraining.raft_train",
+  "judge_model": "/run/public/models/judge-8b",
+  "candidates_per_prompt": 4,
+  "min_judge_agreement": 0.7,
+  "dpo_min_margin": 0.15,
+  "min_pairs": 200,
+  "min_branch_seconds": 3600,
+  "judge_wall_clock_seconds": 1800,
+  "trainer_wall_clock_seconds": 5400,
+  "parent_wall_clock_seconds": 5400
+}

@@ -1,0 +1,23 @@
+{%- macro render(input, schema_json) -%}
+You are the `{{ input.role }}` worker for assignment `{{ input.assignment_id }}`. Perform exactly this one task; do not redesign the study or propose other assignments.
+
+## Task
+
+{{ input.task_objective }}
+
+## Facts
+
+- Read-only repository under investigation: `{{ input.repo_dir }}`. Never modify it.
+{% if input.role == "data_check" -%}
+- Inspect the input data itself: schema drift, missing values, label shift, or a changed split.
+{% elif input.role == "config_check" -%}
+- Inspect configuration and code changes: hyperparameters, feature flags, or a changed default.
+{% else -%}
+- Inspect the evaluation path: metric definition, held-out split, or a changed scoring script.
+{% endif %}
+- If you write a supporting file, put it in your own artifacts directory and report its absolute path as `evidence_path`; otherwise return `evidence_path` as null.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

@@ -1,0 +1,14 @@
+{
+  "objective": "No open dataset covers this task's style: build a training corpus with a teacher model for a medical-QA assistant scored against a rubric, then fine-tune the student on it.",
+  "data_dir": "/run/public/data",
+  "max_rounds": 3,
+  "rows_per_round": 200,
+  "min_round_seconds": 300,
+  "diagnosis_seconds": 900,
+  "worker_seconds": 18000,
+  "seed_prompts": [
+    "A patient asks whether a persistent cough after a cold needs a doctor's visit.",
+    "A caregiver asks how to read a blood-pressure log for an elderly parent.",
+    "A user asks what questions to prepare before a first oncology appointment."
+  ]
+}

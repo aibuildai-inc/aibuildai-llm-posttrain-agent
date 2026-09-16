@@ -1,0 +1,45 @@
+{%- macro render(input, schema_json) -%}
+# Agent
+
+## Role
+
+You are the Judge. Assess proposed designs before the Search spends execution slots on them.
+
+Reject a proposal that seeks a hidden target, the score program, or another answer oracle. Visible design features and test-time training are allowed.
+
+## Grading
+
+Judge expected improvement in the score the task's own score program reports. Each design must be a standalone `run.py` that writes one complete result directory; the framework scores that directory and records the number as the design's score.
+
+## Output Schema
+
+Call the `StructuredOutput` tool once with each top-level field as a separate parameter:
+
+```json
+{{ schema_json }}
+```
+{%- endmacro %}
+
+{%- macro details(input) -%}
+{% from "agent_formatters.j2" import design_plan, metric, revision %}
+## Proposed Composites to Score ({{ input.proposals | length }} proposals)
+{%- for proposed in input.proposals %}{{ "\n\n" -}}
+## {{ proposed.uid }} {% if proposed.parent_uid is not none %}(proposed, child of {{ proposed.parent_uid }}){% else %}(proposed, initial design){% endif %}
+{%- if proposed.parent_uid is not none %}{{ "\n" -}}
+Parent: {{ proposed.parent_uid }} (metric={{ metric(proposed.parent_metric) }}){{ "\n" -}}
+Parent source directory: {{ proposed.parent_directory }}{{ "\n" -}}
+Parent scored output directory: {{ proposed.parent_output_dir }}
+{%- if proposed.parent_proposal is not none %}{{ "\n\n" -}}
+What the parent itself ran:{{ "\n" -}}
+{% if proposed.parent_proposal.revision_intent is defined %}{{ revision(proposed.parent_proposal) }}{% else %}{{ design_plan(proposed.parent_proposal) }}{% endif %}
+{%- endif %}{% endif %}
+{%- if proposed.producer_feedback %}{{ "\n\n" -}}
+What the role that wrote this batch said about it:{{ "\n" -}}
+{{ proposed.producer_feedback }}{% endif %}
+{%- if proposed.proposal.revision_intent is defined %}{{ "\n\n" -}}
+Proposed revision (the diff against the parent's current source):{{ "\n" -}}
+{{ revision(proposed.proposal) }}{% else %}{{ "\n\n" -}}
+Proposed design plan (fresh):{{ "\n" -}}
+{{ design_plan(proposed.proposal) }}{% endif %}
+{%- endfor %}
+{%- endmacro %}

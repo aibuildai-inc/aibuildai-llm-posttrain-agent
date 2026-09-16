@@ -1,0 +1,171 @@
+/* ── Lifecycle actions (header) and the replay strip ─────────────────
+   Same Warm Editorial vocabulary as the rest of the chrome: quiet pill
+   buttons, the atlas surface, no boxed KPI or video-player look. */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.run-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 11px;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 85%, transparent);
+  border-radius: 999px;
+  background: var(--aibuildai-atlas-surface);
+  color: var(--aibuildai-atlas-ink);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.action-button[data-hovered] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 9%, transparent);
+}
+
+.action-button[data-disabled] {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.action-button-primary {
+  border-color: color-mix(in srgb, var(--aibuildai-highlight) 45%, transparent);
+  background: color-mix(in srgb, var(--aibuildai-highlight) 12%, var(--aibuildai-atlas-surface));
+  color: var(--aibuildai-highlight-ink);
+}
+
+.action-error {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 22px;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: min(420px, calc(100vw - 44px));
+  background: var(--aibuildai-atlas-surface);
+  color: var(--aibuildai-atlas-status-error);
+  font-size: 11.5px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.replay-header-clock {
+  font-size: 11.5px;
+}
+
+/* ── Replay strip ──────────────────────────────────────────────────── */
+
+.replay-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 0 18px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-surface) 92%, var(--aibuildai-atlas-canvas));
+  border-top: 1px solid var(--aibuildai-atlas-border);
+}
+
+.replay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--aibuildai-atlas-ink);
+  cursor: pointer;
+}
+
+.replay-button[data-hovered] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 10%, transparent);
+}
+
+.replay-clock {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--aibuildai-atlas-ink-secondary);
+  white-space: nowrap;
+}
+
+.replay-scrubber {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 120px;
+}
+
+.replay-track {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.replay-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-border) 90%, transparent);
+}
+
+.replay-track-fill {
+  position: absolute;
+  left: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--aibuildai-highlight);
+}
+
+.replay-thumb {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--aibuildai-highlight);
+  border: 2px solid var(--aibuildai-atlas-surface);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--aibuildai-atlas-ink) 25%, transparent);
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.replay-thumb[data-dragging] {
+  transform: translate(-50%, -50%) scale(1.15) !important;
+}
+
+.replay-speed-trigger {
+  min-width: 52px;
+  justify-content: center;
+}
+
+.replay-speed-popover {
+  width: 90px;
+}
+
+.replay-note {
+  font-size: 11px;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

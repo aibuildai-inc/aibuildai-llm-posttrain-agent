@@ -1,0 +1,75 @@
+{% macro metric(value) -%}{{ "%.6f" | format(value) if value is not none else "N/A" }}{%- endmacro %}
+
+{% macro resource_state(input) -%}
+## Resource State
+  Remaining pipeline time: {{ "%.0f" | format(input.remaining_minutes) }} minutes
+  Evaluations completed: {{ input.done_count }}
+{%- endmacro %}
+
+{% macro design_plan(plan) -%}
+{%- if plan is none -%}
+  (no plan)
+{%- else -%}
+{% if plan.name %}  Name: {{ plan.name }}
+{% endif -%}
+{% if plan.architecture %}  Architecture: {{ plan.architecture }}
+{% endif -%}
+{% if plan.data_pipeline %}  Data Pipeline: {{ plan.data_pipeline }}
+{% endif -%}
+{% if plan.loss_function %}  Loss Function: {{ plan.loss_function }}
+{% endif -%}
+{% if plan.regularization %}  Regularization: {{ plan.regularization }}
+{% endif -%}
+{% if plan.training_config %}  Training Config: {{ plan.training_config }}
+{% endif -%}
+{% if plan.validation_strategy %}  Validation Strategy: {{ plan.validation_strategy }}
+{% endif -%}
+{% if plan.method_steps %}  Implementation Steps:
+{% for step in plan.method_steps %}    {{ loop.index }}. {{ step }}
+{% endfor -%}
+{% endif -%}
+{% if plan.design_notes %}  Design Notes: {{ plan.design_notes }}
+{% endif -%}
+{% if plan.references %}  References ({{ plan.references | length }}):
+{% for reference in plan.references %}    {{ loop.index }}. {{ reference.title }}{% set metadata = [reference.authors, reference.year, reference.identifier] | select | join(", ") %}{% if metadata %} ({{ metadata }}){% endif %}{% if reference.supports %}{{ "\n" }}       supports: {{ reference.supports }}{% endif %}{{ "\n" if not loop.last else "" -}}
+{% endfor -%}
+{% else %}  References: (none captured at design time)
+{%- endif -%}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro revision(proposal) -%}
+{%- if proposal is none -%}
+  (no proposal)
+{%- else %}
+  Name: {{ proposal.name }}
+  Diagnosis: {{ proposal.diagnosis }}
+  Revision Intent: {{ proposal.revision_intent }}
+  Expected Outcome: {{ proposal.expected_outcome }}
+{% if proposal.code_patches %}  Code Patches ({{ proposal.code_patches | length }}):
+{% for patch in proposal.code_patches %}    {{ loop.index }}. file={{ patch.file }}  — {{ patch.rationale }}
+       find:    {{ (patch.find if patch.find | length <= 200 else patch.find[:200] ~ "...") | repr }}
+       replace: {{ (patch.replace if patch.replace | length <= 200 else patch.replace[:200] ~ "...") | repr }}
+{% endfor -%}
+{% else %}  Code Patches: (none)
+{% endif -%}
+{% if proposal.recipe_changes %}  Recipe Changes ({{ proposal.recipe_changes | length }}):
+{% for change in proposal.recipe_changes %}    {{ loop.index }}. [{{ change.target }}] {{ change.from_state }} -> {{ change.to_state }}
+       rationale: {{ change.rationale }}
+{% endfor -%}
+{% else %}  Recipe Changes: (none)
+{% endif -%}
+{% if proposal.references %}  References ({{ proposal.references | length }}):
+{% for reference in proposal.references %}    {{ loop.index }}. {{ reference.title }}{% set metadata = [reference.authors, reference.year, reference.identifier] | select | join(", ") %}{% if metadata %} ({{ metadata }}){% endif %}{% if reference.supports %}{{ "\n" }}       supports: {{ reference.supports }}{% endif %}{{ "\n" if not loop.last else "" -}}
+{% endfor -%}
+{% else %}  References: (none captured at design time)
+{%- endif -%}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro metric_contract(contract) -%}
+{%- if contract is not none -%}
+## Metric contract
+- metric: {{ contract.metric_name }}, direction: {{ contract.metric_direction }} ({{ "higher" if contract.metric_direction == "max" else "lower" }} is better)
+{%- endif -%}
+{%- endmacro %}

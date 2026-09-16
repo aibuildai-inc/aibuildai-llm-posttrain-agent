@@ -1,0 +1,31 @@
+{
+  "objective": "Select the strongest checkpoint for classifying product reviews into five sentiment classes, judged on held-out accuracy and calibration.",
+  "rubric": "Prefer the checkpoint with the higher held-out accuracy; if accuracy is within one point, prefer the better-calibrated one. Report a tie only when neither condition breaks the pair.",
+  "contestants": [
+    {
+      "candidate_id": "roberta-base-ft",
+      "output_dir": "/run/artifacts/roberta-base-ft",
+      "summary": "RoBERTa-base fine-tuned for three epochs on the labeled review split.",
+      "seed_score": 0.812
+    },
+    {
+      "candidate_id": "distilbert-ft",
+      "output_dir": "/run/artifacts/distilbert-ft",
+      "summary": "DistilBERT fine-tuned for five epochs with class-weighted loss.",
+      "seed_score": 0.788
+    },
+    {
+      "candidate_id": "deberta-v3-ft",
+      "output_dir": "/run/artifacts/deberta-v3-ft",
+      "summary": "DeBERTa-v3-small fine-tuned for three epochs with label smoothing.",
+      "seed_score": 0.827
+    },
+    {
+      "candidate_id": "bilstm-attn",
+      "output_dir": "/run/artifacts/bilstm-attn",
+      "summary": "A BiLSTM with attention trained from scratch on the review split.",
+      "seed_score": 0.741
+    }
+  ],
+  "match_wall_clock_seconds": 600
+}

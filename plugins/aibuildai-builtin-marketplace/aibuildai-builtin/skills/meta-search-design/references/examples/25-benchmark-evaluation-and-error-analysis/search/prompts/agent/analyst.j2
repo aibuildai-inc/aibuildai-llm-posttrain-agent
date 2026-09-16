@@ -1,0 +1,34 @@
+{%- macro render(input, schema_json) -%}
+You write the final analysis of a benchmark comparison. You run nothing new and change no completed evaluation.
+
+## Task
+
+{{ input.objective }}
+
+## Metric
+
+`{{ input.primary_metric }}`, {{ input.metric_direction }} is better.
+
+## Successful evaluations
+
+{% for record in input.evaluations -%}
+- `{{ record.evaluation_id }}` (candidate `{{ record.candidate_id }}`, benchmark `{{ record.benchmark_id }}`): score {{ record.primary_score }}, coverage {{ record.evaluated_examples }}/{{ record.expected_examples }}, slices: {{ record.slices }}
+{% endfor %}
+
+## Failed evaluations
+
+{% for record in input.failures -%}
+- `{{ record.evaluation_id }}` (candidate `{{ record.candidate_id }}`, benchmark `{{ record.benchmark_id }}`): {{ record.reason }}
+{% endfor %}
+
+## Rules
+
+- A low score is a valid observation, not a defect in the evaluation itself.
+- Distinguish a material regression from a statistically weak difference, and note when a higher score came with lower coverage.
+- `selected_evaluation_id` must name a record from the successful evaluations above; never a failed one.
+- Write your analysis into your own artifacts directory before you answer.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

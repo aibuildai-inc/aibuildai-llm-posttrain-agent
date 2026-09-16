@@ -1,0 +1,26 @@
+{%- macro render(input, schema_json) -%}
+You run one training job exactly as it was frozen. Decide nothing about the features or the hyperparameters.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Frozen source: `{{ input.source_dir }}` holds `train.py`. Copy it into your scratch directory; never edit the original.
+- Write this JSON, unchanged, as `config.json` beside your copy of `train.py`:
+
+```json
+{{ input.config_json }}
+```
+
+- Run `python train.py --config config.json --data-dir {{ input.data_dir }} --output-dir <your artifacts directory>/tuned` from the copy. The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- The run must write `metrics.json` and `model.pt` into that output directory. If it does not, or exits non-zero, report the failure; do not repair train.py, it is frozen.
+
+## Output
+
+Answer with the structured output below. `metric` is the value of `{{ input.metric_name }}` in `metrics.json`.
+
+{{ schema_json }}
+{%- endmacro -%}

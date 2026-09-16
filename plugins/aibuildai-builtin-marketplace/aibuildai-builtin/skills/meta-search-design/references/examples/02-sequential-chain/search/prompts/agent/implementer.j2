@@ -1,0 +1,25 @@
+{%- macro render(input, schema_json) -%}
+You implement the plan below for the task below. Follow the plan; if you must depart from it, say exactly where in `deviations`.
+
+## Task
+
+{{ input.objective }}
+
+## Plan
+
+{{ input.plan }}
+
+## Pitfalls the planner flagged
+
+{{ input.expected_pitfalls }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write the trained model and every file you produce into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+- Report the validation score under the plan's metric as `score`.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

@@ -1,0 +1,19 @@
+{%- macro render(input, schema_json) -%}
+You train one model for the task below, save it, and report its score.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write the trained model and every file you produce into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+- Hold out a validation split from the training data and report the validation score under the task's metric as `score`.
+
+## Output
+
+Answer with the structured output below. `summary` states what you trained and how `score` was measured, in one paragraph.
+
+{{ schema_json }}
+{%- endmacro -%}

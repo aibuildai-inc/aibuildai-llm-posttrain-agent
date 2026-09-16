@@ -1,0 +1,30 @@
+{%- macro render(input, schema_json) -%}
+You review one round of export and compatibility evidence for the plan targeting `{{ input.target_profile }}`. You never rewrite the export, weaken a tolerance, or edit the checkpoint.
+
+## Objective
+
+{{ input.objective }}
+
+## Evidence
+
+Mandatory environments this package must pass: {{ input.mandatory_environment_profiles | join(', ') }}.
+
+{% for report in input.compatibility_reports -%}
+- `{{ report.environment_profile }}`: loaded={{ report.loaded }}, hard_passed={{ report.hard_passed }}, max relative error {{ report.maximum_relative_error }}
+{% else -%}
+(no environment reported a result)
+{% endfor %}
+{% for failure in input.compatibility_failures -%}
+- `{{ failure }}` produced no report
+{% endfor %}
+
+## Rules
+
+- Set `accepted` true only when every mandatory environment reported `hard_passed=true`.
+- Set `retry` true only when a different bounded plan is plausibly better; {{ input.rounds_remaining }} round(s) remain after this one.
+- `reason` states the concrete basis for your decision.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

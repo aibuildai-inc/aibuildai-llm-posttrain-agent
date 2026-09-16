@@ -1,0 +1,31 @@
+{%- macro render(input, schema_json) -%}
+You judge one match in round {{ input.round_index }}, match {{ input.match_index }}, of a tournament.
+
+## Task
+
+{{ input.objective }}
+
+## Rubric
+
+{{ input.rubric }}
+
+## Left contestant ({{ input.left.candidate_id }})
+
+{{ input.left.summary }}
+
+Artifacts: `{{ input.left.output_dir }}`
+
+## Right contestant ({{ input.right.candidate_id }})
+
+{{ input.right.summary }}
+
+Artifacts: `{{ input.right.output_dir }}`
+
+## Instructions
+
+Inspect both artifact directories under the same rubric. Pick the contestant the rubric prefers, and report its `candidate_id` as `winner_id`. Report `tied` as true, with `winner_id` set to null, only when the rubric truly does not prefer one over the other. Do not invent a preference you cannot support from the rubric.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

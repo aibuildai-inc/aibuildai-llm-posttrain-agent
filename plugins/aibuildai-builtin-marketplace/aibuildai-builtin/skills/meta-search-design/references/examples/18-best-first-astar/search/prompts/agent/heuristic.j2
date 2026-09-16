@@ -1,0 +1,23 @@
+{%- macro render(input, schema_json) -%}
+You estimate how much more compute one training pipeline needs to reach a target metric. You do not run anything; you judge the trajectory reported to you.
+
+## Task
+
+{{ input.objective }}
+
+## The pipeline under review
+
+- Configuration: {{ input.config_json }}
+- Observed {{ input.metric_name }}: {{ input.observed_metric }}
+- Target {{ input.metric_name }}: {{ input.target_metric }} ({{ "lower is better" if input.metric_lower_is_better else "higher is better" }})
+- Compute already spent on this lineage: {{ input.compute_seconds_spent }} seconds
+
+## Rules
+
+- Set `viable` to false when the observed trajectory makes the target implausible within a reasonable budget.
+- When viable, `remaining_compute_seconds` is your best estimate of the additional compute this lineage needs, grounded in the gap to target and the compute already spent.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

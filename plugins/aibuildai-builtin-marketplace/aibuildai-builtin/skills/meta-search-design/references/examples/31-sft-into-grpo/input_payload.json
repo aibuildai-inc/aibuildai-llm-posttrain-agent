@@ -1,0 +1,6 @@
+{
+  "objective": "Fine-tune the base model to solve the math word problems with numeric answers in train.jsonl; the metric is exact-match accuracy on the hidden test split, scored by the task's numeric extractor.",
+  "data_dir": "/run/public/data",
+  "trainer_wall_clock_seconds": 5400,
+  "grpo_round_seconds": 3600
+}

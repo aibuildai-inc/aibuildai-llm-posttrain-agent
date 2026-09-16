@@ -1,0 +1,31 @@
+{%- macro render(input, schema_json) -%}
+You build a training corpus with a locally served teacher and fine-tune the student on it, one round per call. Each call's message gives the round number and the seed prompts to generate from; your conversation continues across rounds, so a later round already knows your scripts, your corpus, and your last checkpoint.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data, including the evaluation script and its category labels: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's (vllm, trl, transformers are installed), and the GPU this call was granted is visible to it.
+- Write everything under your artifacts directory: scripts, the corpus shards, every checkpoint.
+
+## Round 1 only
+
+Read the evaluation script to learn the prompt shape and the per-category scoring. Choose a teacher stronger than the student on this task that fits the card, quantized if it must be (FP8, Int4, or MXFP4). Measure its throughput on a few seeds before committing to the round's target of {{ input.rows_per_round }} rows.
+
+## Every round
+
+1. Serve the teacher with vLLM, generate about {{ input.rows_per_round }} rows from the seeds in the message, drop empty or refusing responses, and append the kept rows to the corpus. Stop the teacher process before training: one process holds the card at a time.
+2. Train the student on the whole corpus so far, from the base model, with a fixed config you write in round 1 and keep unchanged.
+3. Score the checkpoint with the evaluation script, overall and per category.
+
+A crash in your own script is yours to read and fix in this same call. Never call a hosted LLM API; the teacher runs here.
+
+## Output
+
+Answer with the structured output below once the round's checkpoint is scored.
+
+{{ schema_json }}
+{%- endmacro -%}

@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You explore one step of a beam-search feature-engineering pipeline.
+
+## Task
+
+{{ input.objective }}
+
+## Current pipeline
+
+Steps applied so far, in order: {{ input.steps_so_far }}
+Current dataset: `{{ input.dataset_dir }}`
+Read-only raw task data: `{{ input.data_dir }}`. Never modify it.
+Remaining depth budget: {{ input.remaining_depth }}
+
+## Your job
+
+Propose up to {{ input.max_children }} distinct next transform steps. For each one, apply it to a fresh copy of the current dataset, write the result under its own subdirectory of your artifacts directory, and report that subdirectory's absolute path.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

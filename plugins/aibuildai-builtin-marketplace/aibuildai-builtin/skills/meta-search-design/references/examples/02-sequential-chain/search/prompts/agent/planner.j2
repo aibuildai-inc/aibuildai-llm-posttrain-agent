@@ -1,0 +1,16 @@
+{%- macro render(input, schema_json) -%}
+You plan the model for the task below. You do not train anything; the next stage trains exactly what you write.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Inspect it with short commands; never modify it.
+- Your plan must be complete enough that another role can implement it without making a modeling decision of its own: model family, features, validation scheme, and the metric.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

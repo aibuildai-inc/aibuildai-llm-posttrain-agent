@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You review one package of a larger repository. Other packages are reviewed by other independent workers; do not read or judge them.
+
+## Goal
+
+{{ input.objective }}
+
+## Your package
+
+- Repository root (read-only): `{{ input.repo_dir }}`. Never modify it.
+- Package to review: `{{ input.package_path }}`, relative to the repository root.
+
+## Facts
+
+- Read only the files under your assigned package.
+- Report every defect you find, each with its file, line, severity, and a one-sentence description.
+- Write a one-paragraph summary of what the package does and its overall health.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

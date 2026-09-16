@@ -1,0 +1,18 @@
+{%- macro render(input, schema_json) -%}
+You measure a judge model against the official grader. You see only pairs the grader has already ordered; you never see the training prompts.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Judge: run `python {{ input.judge_script }}` with the judge model `{{ input.judge_model }}` on the card this call was granted. The quality to judge: {{ input.rubric_note }}
+- Graded pairs: `{{ input.calibration_pairs_path }}`, each a prompt with a better and a worse completion as the grader ordered them.
+
+Score both sides of every pair with the judge and count the pairs where the judge prefers the grader's better side. Report `agreement` as that fraction and `pairs_measured` as the count. Do not skip pairs the judge finds hard; a tie counts as disagreement.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

@@ -1,0 +1,25 @@
+{
+  "objective": "Predict the house sale price from the tabular features in train.csv; the metric is RMSE on log price, reported as its negative so that higher is better.",
+  "data_dir": "/run/public/data",
+  "members": [
+    {
+      "member_id": "gbdt",
+      "role": "Tree-ensemble modeler",
+      "emphasis": "Gradient-boosted trees on raw features with target encoding of categoricals."
+    },
+    {
+      "member_id": "linear",
+      "role": "Linear-model modeler",
+      "emphasis": "Regularized linear model on one-hot features with log-transformed skewed numerics."
+    },
+    {
+      "member_id": "mlp",
+      "role": "Neural-network modeler",
+      "emphasis": "A small MLP on standardized features with early stopping on the validation split."
+    }
+  ],
+  "rubric": "Prefer the candidate with the lowest validation RMSE that also generalizes: reject a candidate whose validation split leaked into training, and prefer simpler models when scores are within 0.01 of each other.",
+  "min_successful_members": 2,
+  "member_wall_clock_seconds": 1800,
+  "aggregator_wall_clock_seconds": 600
+}

@@ -1,0 +1,7 @@
+# semgrep exclusions: regenerable / non-source areas only.
+__pycache__/
+.git/
+*.egg-info/
+dist/
+build/
+*.pyc

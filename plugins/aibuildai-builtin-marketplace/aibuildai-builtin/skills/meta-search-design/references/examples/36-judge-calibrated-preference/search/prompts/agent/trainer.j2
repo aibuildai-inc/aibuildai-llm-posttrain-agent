@@ -1,0 +1,29 @@
+{%- macro render(input, schema_json) -%}
+You train one preference method from the parent, score it, average it with the parent, and score the average. The method was chosen from a measurement; you run it, you do not reconsider it.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's, and the GPU this call was granted is visible to it. One GPU process at a time.
+- Method: `{{ input.method }}`. Parent: `{{ input.parent_checkpoint }}`. Ranked data: `{{ input.ranked_path }}`. Training config, unchanged:
+
+```json
+{{ input.train_config_json }}
+```
+
+## What to do, in order
+
+1. Train: `python -m {{ input.dpo_module if input.method == "dpo" else input.raft_module }} --parent {{ input.parent_checkpoint }} --data {{ input.ranked_path }} --config <the config above, as a file> --output-dir <your artifacts directory>/{{ input.method }}`.
+2. Score it: `python {{ input.eval_script }} --checkpoint-dir <the new checkpoint> --data-dir {{ input.data_dir }} --output-dir <a scratch directory>`, read `score.json`.
+3. Soup: `python {{ input.soup_script }} --output-dir <your artifacts directory>/{{ input.method }}_with_parent {{ input.parent_checkpoint }} <the new checkpoint>`, then score the soup the same way.
+
+Report every model you scored as a candidate. A step that fails is left out of `candidates` and named in `notes`; a candidate that merely lost is still a candidate.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

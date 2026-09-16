@@ -1,0 +1,5 @@
+{
+  "objective": "Predict the house sale price from the tabular features in train.csv; the metric is RMSE on log price.",
+  "data_dir": "/run/public/data",
+  "wall_clock_seconds": 1800
+}

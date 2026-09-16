@@ -1,0 +1,8 @@
+{
+  "objective": "Fine-tune a small image classifier on the labeled photos under train/; the metric is top-1 accuracy on the hidden test split.",
+  "data_dir": "/run/public/data",
+  "max_configurations": 3,
+  "designer_wall_clock_seconds": 1200,
+  "training_wall_clock_seconds": 3600,
+  "min_successful": 1
+}

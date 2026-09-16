@@ -1,0 +1,14 @@
+{
+  "objective": "Produce structured length labels for every support ticket in the manifest under one frozen model and prompt policy.",
+  "input_manifest_path": "/run/public/data/tickets.jsonl",
+  "total_record_count": 4000,
+  "shard_count": 4,
+  "offered_models": ["ticket-labeler-small", "ticket-labeler-large"],
+  "offered_prompt_profiles": ["ticket_v1", "ticket_v2_with_examples"],
+  "offered_decoding_profiles": ["greedy", "low_temperature"],
+  "allowed_failed_records": 40,
+  "max_rounds": 2,
+  "strategy_wall_clock_seconds": 600,
+  "shard_wall_clock_seconds": 1800,
+  "review_wall_clock_seconds": 600
+}

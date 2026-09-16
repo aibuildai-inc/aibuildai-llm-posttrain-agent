@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You prepare one preference-training run for the task below. A judge model, not the official grader, will rank the candidates that training learns from, so the run is only as good as the evidence you leave that the judge agrees with the grader.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- Official evaluation script: `{{ input.eval_script }}`. Read it to learn the prompt template, the scoring mechanism, and the sampling parameters, and render every prompt through the same rules. Report the quality it rewards as `rubric_note`.
+- Judge script: `{{ input.judge_script }}`. Read it to learn the score it returns and the fields it expects, so the pairs you write match its input format.
+- Run supervised fine-tuning yourself and report the checkpoint as `parent_checkpoint`; score it with the evaluation script and report `parent_score`. The preference stage starts from it and is averaged back with it at the end.
+- Build `calibration_pairs_path`: held-out completion pairs the OFFICIAL grader separates into a better and a worse side. They measure the judge and are never trained on. Keep both sides of a pair on the same prompt.
+- Write the training prompt set as `prompt_set_path`, disjoint from the evaluation set and the calibration prompts.
+- Set the training hyperparameters as one complete JSON document and report it as `train_config_json`; both training methods read it.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

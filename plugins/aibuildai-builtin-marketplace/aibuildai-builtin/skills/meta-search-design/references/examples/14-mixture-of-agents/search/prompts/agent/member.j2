@@ -1,0 +1,25 @@
+{%- macro render(input, schema_json) -%}
+You are one of several independent proposers for the task below. Follow your own role and emphasis; other members cover the other approaches.
+
+## Task
+
+{{ input.objective }}
+
+## Your role
+
+{{ input.role }}
+
+## Your emphasis
+
+{{ input.emphasis }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write your candidate and every file you produce into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+- Hold out a validation split and report the validation score under the task's metric as `score`. Every member uses the same metric, so report it exactly.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

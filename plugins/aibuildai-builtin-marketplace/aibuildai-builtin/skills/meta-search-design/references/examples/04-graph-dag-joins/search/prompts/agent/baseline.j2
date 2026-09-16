@@ -1,0 +1,20 @@
+{%- macro render(input, schema_json) -%}
+You train one quick default model for the task below, without reading any profile of the data.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Use every raw feature with no selection; the goal is a fast reference score.
+- Write the model into your own artifacts directory and report that directory as `output_dir`.
+- Hold out a validation split and report the validation score under the task metric as `score`.
+
+## Output
+
+Answer with the structured output below. `feature_importance_summary` names which raw features the model weighted most, in prose.
+
+{{ schema_json }}
+{%- endmacro -%}

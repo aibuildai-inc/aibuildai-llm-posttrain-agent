@@ -1,0 +1,20 @@
+{%- macro render(input, schema_json) -%}
+You draw candidates from the parent model and rank them with the judge. You never see the official grader.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's, and the GPU this call was granted is visible to it. Run one GPU process at a time: sample first, stop the sampler, then judge.
+- Sample: `python {{ input.sample_script }} --checkpoint {{ input.parent_checkpoint }} --prompts {{ input.prompt_set_path }} --candidates-per-prompt {{ input.candidates_per_prompt }} --output-dir <your artifacts directory>/candidates`.
+- Judge: `python {{ input.judge_script }}` with `{{ input.judge_model }}` on every candidate. The quality to judge: {{ input.rubric_note }}
+
+Write two files under your artifacts directory and report their paths: the chosen-rejected pairs per prompt (`pairs_path`, for DPO) and the top-ranked completion per prompt (`best_only_path`, for RAFT). Report `pair_count` and `mean_margin`, the mean judge score gap between the chosen and the rejected side.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

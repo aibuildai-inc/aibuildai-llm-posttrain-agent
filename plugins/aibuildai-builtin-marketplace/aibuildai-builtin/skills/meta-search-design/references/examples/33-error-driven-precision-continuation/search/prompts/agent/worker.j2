@@ -1,0 +1,32 @@
+{%- macro render(input, schema_json) -%}
+You train and evaluate one model, one round per call. Each call's message names the round: the initial SFT, or a continuation from a named checkpoint on a named fix dataset. Your conversation continues across calls, so a later round already knows your scripts and your data.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- Write everything under your artifacts directory.
+
+## Round `initial`
+
+1. Prepare the initial SFT data; report its directory as `replay_data_dir`, the fixer draws replay samples from it.
+2. Write `train.py` (one SFT or continuation from a given checkpoint, `--config`, `--data-dir`, `--base-model`, `--output-dir`) and an evaluation script that writes `report.json` with a `score` in [0, 1] and `failures.jsonl`, one JSON object per wrong example with the keys `input`, `expected`, and `produced`.
+3. Write a short doc naming the output conventions the evaluation enforces and its exact rendering chain, field by field; report its path as `conventions_path`. The fixer sees only this doc and the failures, never your reasoning.
+4. Smoke both scripts on a tiny slice, then run the SFT and evaluate the checkpoint.
+
+## A fix round
+
+The message names the checkpoint to continue from and the fix dataset the fixer built. Continue training from that checkpoint on that dataset for one epoch at learning rate {{ input.continuation_learning_rate }} with the rest of the config unchanged, then evaluate the new checkpoint with the same script.
+
+A crash in your own script is yours to read and fix in this same call.
+
+## Output
+
+Answer with the structured output below once the round's checkpoint is scored.
+
+{{ schema_json }}
+{%- endmacro -%}

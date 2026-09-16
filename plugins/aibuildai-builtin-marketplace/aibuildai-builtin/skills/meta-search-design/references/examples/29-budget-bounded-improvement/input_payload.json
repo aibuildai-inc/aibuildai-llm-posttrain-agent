@@ -1,0 +1,6 @@
+{
+  "objective": "Build a sentiment classifier for the product reviews in train.jsonl; the metric is macro F1 on the hidden test split.",
+  "data_dir": "/run/public/data",
+  "round_wall_clock_seconds": 1800,
+  "round_cost_usd": 2.0
+}

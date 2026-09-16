@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You prepare one post-training run for the task below. No one is present to fix the trainer once it starts, so get the data and the config right before you return.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Official evaluation script: `{{ input.eval_script }}`. Read it to learn the prompt template, the scoring mechanism, stop tokens, and sampling parameters, and render training prompts through the same rules.
+- If the task ships no training corpus, finding one is part of the work: search for a published dataset matching the target distribution and record which candidates you evaluated, which you chose, and why you rejected the rest. A benchmark's own train split is a starting point, not automatically the whole story.
+- Select sources, filter by quality and length, deduplicate (shortest correct trace per unique problem for reasoning tasks), and decontaminate against the test set (8-gram or 10-gram overlap).
+- Write the rendered training data into your own artifacts directory and report that directory as `prepared_data_dir`.
+- Set the training hyperparameters (learning rate, epochs, batch size, packing) as one complete JSON document and report it as `train_config_json`.
+- Set `save_steps`, the checkpoint cadence, from the expected total steps: it must be small enough that the tournament sees several checkpoints along the trajectory.
+- Report the model the trainer starts from as `base_model_or_checkpoint`.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

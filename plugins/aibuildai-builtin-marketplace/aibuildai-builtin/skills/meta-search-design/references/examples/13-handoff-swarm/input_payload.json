@@ -1,0 +1,8 @@
+{
+  "objective": "The image-preprocessing pipeline in preprocess.py is writing corrupted embeddings for roughly 3% of training examples. Find the corrupted stage, fix it, and confirm the fix removes the corruption.",
+  "data_dir": "/run/public/data",
+  "max_turns": 8,
+  "max_visits_per_role": 3,
+  "specialist_wall_clock_seconds": 900,
+  "finalizer_wall_clock_seconds": 600
+}

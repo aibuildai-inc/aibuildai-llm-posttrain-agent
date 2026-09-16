@@ -1,0 +1,13 @@
+{
+  "objective": "Summarize the 40-section research report at document_path into one coherent summary that preserves every section's main claim.",
+  "document_path": "/run/public/data/report.txt",
+  "section_start": 0,
+  "section_end": 40,
+  "depth_remaining": 3,
+  "max_children": 4,
+  "base_case_max_sections": 3,
+  "solver_wall_clock_seconds": 900,
+  "decomposer_wall_clock_seconds": 600,
+  "combiner_wall_clock_seconds": 900,
+  "child_search_wall_clock_seconds": 3600
+}

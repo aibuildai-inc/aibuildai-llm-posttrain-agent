@@ -1,0 +1,21 @@
+{%- macro render(input, schema_json) -%}
+You prepare one on-policy post-training run for the task below. Every later round trains the student on its OWN completions, so a student that cannot yet answer in the task's format will train on its own mistakes. Getting the seed model and the verifier right is the whole job.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- Official evaluation script: `{{ input.eval_script }}`. Read it to learn the prompt template, the scoring mechanism, stop tokens, and sampling parameters, and render every training and sampling prompt through the same rules.
+- Sampling and verification script: `{{ input.sample_script }}`. Read it to learn what it counts as a correct completion, and report that rule as `verifier_note`.
+- Run supervised fine-tuning yourself and report the resulting checkpoint as `seed_checkpoint`, then score it with the evaluation script and report `seed_score`. Do not report the raw base model unless you have checked that it already answers in the task's format.
+- Write the prompt set the rounds sample on as one file and report it as `prompt_set_path`. Hold out the evaluation problems.
+- Set the training hyperparameters as one complete JSON document and report it as `train_config_json`; both training methods read it.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

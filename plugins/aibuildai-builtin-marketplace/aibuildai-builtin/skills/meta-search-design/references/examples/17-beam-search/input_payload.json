@@ -1,0 +1,10 @@
+{
+  "objective": "Build a feature-engineering pipeline for the customer table in customers.csv; the metric is cross-validated AUC on the churn label.",
+  "data_dir": "/run/public/data",
+  "max_depth": 4,
+  "beam_width": 3,
+  "branching_factor": 3,
+  "acceptance_threshold": 0.85,
+  "expander_wall_clock_seconds": 1200,
+  "evaluator_wall_clock_seconds": 600
+}

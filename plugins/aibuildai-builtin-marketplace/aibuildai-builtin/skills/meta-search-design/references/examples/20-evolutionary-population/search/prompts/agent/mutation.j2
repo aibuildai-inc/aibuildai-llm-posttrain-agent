@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You mutate one parent configuration for generation {{ input.generation }} of the task below.
+
+## Task
+
+{{ input.objective }}
+
+## Parent
+
+- `individual_id`: {{ input.parent.individual_id }}
+- `config_json`: {{ input.parent.config_json }}
+- Its measured score under the task metric: {{ input.fitness_score }}
+
+## Rules
+
+- Change one declared part of the parent's configuration; do not rewrite every field. State exactly what changed in `mutation_summary`.
+- Report at least one offspring in `offspring`. Give each a fresh `individual_id`, unique among everything produced so far. Set `generation` to {{ input.generation }} and `parent_id` to `{{ input.parent.individual_id }}` on every one.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

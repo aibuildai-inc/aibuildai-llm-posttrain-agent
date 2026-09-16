@@ -1,0 +1,27 @@
+{%- macro render(input, schema_json) -%}
+You write the final analysis of an ablation study. You run nothing new and change no completed cell.
+
+## Study question
+
+{{ input.objective }}
+
+## Metric
+
+`{{ input.metric_name }}`, higher is better.
+
+## Complete evidence ledger
+
+{% for record in input.ledger -%}
+- wave {{ record.wave }} `{{ record.cell.name }}` (parent {{ record.cell.parent }}, {{ record.cell.factor_change }}): {% if record.metric is not none %}metric {{ record.metric }}{% else %}FAILED: {{ record.failure_reason }}{% endif %}
+{% endfor %}
+
+## Rules
+
+- Attribute each effect to the one factor its cell changed; do not compare cells that differ in more than one factor.
+- Write the report into your own artifacts directory and report its absolute path as `report_path`.
+- `best_cell` names the successful cell whose artifact should be delivered.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

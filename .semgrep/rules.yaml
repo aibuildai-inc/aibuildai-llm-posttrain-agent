@@ -1,0 +1,766 @@
+# Semgrep rules for mechanically forbidden patterns in shipped source.
+rules:
+  - id: web-no-concrete-search-import
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Web must import the public Search base, not a concrete Search module.
+    paths:
+      include:
+        - output/web/
+    pattern-regex: '(?m)^\s*(?:from\s+engine\.search\.(?!base(?:\s+import|\.|$))[A-Za-z_][A-Za-z0-9_.]*\s+import|import\s+engine\.search\.(?!base(?:\s|\.|$))[A-Za-z_][A-Za-z0-9_.]*)'
+
+  - id: web-no-concrete-agent-import
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Web must import the public Agent base, not a concrete Agent role module.
+    paths:
+      include:
+        - output/web/
+    pattern-regex: '(?m)^\s*(?:from\s+engine\.work_unit\.agent\.(?!base(?:\s+import|\.|$))[A-Za-z_][A-Za-z0-9_.]*\s+import|import\s+engine\.work_unit\.agent\.(?!base(?:\s|\.|$))[A-Za-z_][A-Za-z0-9_.]*)'
+
+  - id: web-no-concrete-program-import
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Web must import the public Program base, not a concrete Program module.
+    paths:
+      include:
+        - output/web/
+    pattern-regex: '(?m)^\s*(?:from\s+engine\.work_unit\.program\.(?!base(?:\s+import|\.|$))[A-Za-z_][A-Za-z0-9_.]*\s+import|import\s+engine\.work_unit\.program\.(?!base(?:\s|\.|$))[A-Za-z_][A-Za-z0-9_.]*)'
+
+  - id: web-no-concrete-family-facade-import
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Web must import public family names, not a concrete implementation module through a family facade.
+    paths:
+      include:
+        - output/web/
+    patterns:
+      - pattern-either:
+          - pattern: from engine.search import $MODULE
+          - pattern: from engine.work_unit.agent import $MODULE
+          - pattern: from engine.work_unit.program import $MODULE
+      - metavariable-regex:
+          metavariable: $MODULE
+          regex: ^[a-z_][A-Za-z0-9_]*$
+
+  - id: web-no-exact-type-presentation
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Web presentation must use public base families and recorded facts, not an exact type.
+    paths:
+      include:
+        - output/web/
+    pattern-either:
+      - pattern: type($VALUE) is $TYPE
+      - pattern: $TYPE is type($VALUE)
+      - pattern: type($VALUE) is not $TYPE
+      - pattern: $TYPE is not type($VALUE)
+      - pattern: type($VALUE) == $TYPE
+      - pattern: $TYPE == type($VALUE)
+      - pattern: type($VALUE) != $TYPE
+      - pattern: $TYPE != type($VALUE)
+
+  - id: web-no-opaque-execution-text-decision
+    languages: [typescript]
+    severity: ERROR
+    message: >-
+      Atlas and Inspector presentation must not infer execution meaning from opaque text.
+    mode: taint
+    paths:
+      include:
+        - output/web/frontend/src/atlas/
+        - output/web/frontend/src/inspector/
+        - output/web/frontend/src/components/ExecutionIcon.tsx
+    pattern-sources:
+      - patterns:
+          - pattern: $OBJECT.$FIELD
+          - metavariable-regex:
+              metavariable: $FIELD
+              regex: ^(kind|role|label|class_name|type_name)$
+    pattern-sinks:
+      - pattern-either:
+          - pattern: $TEXT === $VALUE
+          - pattern: $VALUE === $TEXT
+          - pattern: $TEXT == $VALUE
+          - pattern: $VALUE == $TEXT
+          - pattern: $TEXT !== $VALUE
+          - pattern: $VALUE !== $TEXT
+          - pattern: $TEXT != $VALUE
+          - pattern: $VALUE != $TEXT
+          - pattern: $REGEX.test($TEXT)
+          - pattern: $TEXT.includes(...)
+          - pattern: $TEXT.startsWith(...)
+          - pattern: $TEXT.endsWith(...)
+          - pattern: $TEXT.toLowerCase()
+          - pattern: $TABLE[$TEXT]
+          - pattern: |
+              switch ($TEXT) {
+                ...
+              }
+
+  - id: web-no-family-text-inference
+    languages: [typescript]
+    severity: ERROR
+    message: >-
+      The typed family allows exact enum checks only, not text inference.
+    mode: taint
+    paths:
+      include:
+        - output/web/frontend/src/atlas/
+        - output/web/frontend/src/inspector/
+        - output/web/frontend/src/components/ExecutionIcon.tsx
+    pattern-sources:
+      - pattern: $OBJECT.family
+    pattern-sinks:
+      - pattern-either:
+          - pattern: $REGEX.test($TEXT)
+          - pattern: $TEXT.includes(...)
+          - pattern: $TEXT.startsWith(...)
+          - pattern: $TEXT.endsWith(...)
+          - pattern: $TEXT.toLowerCase()
+
+  # ── CS07 ──────────────────────────────────────────────────────────────────
+  # no_other_display_sentinels: display-sentinel strings used as a missing-data
+  # fallback. Token set is the closed FORBIDDEN_SENTINELS frozenset. Forms:
+  #   dict.get/.setdefault/.pop(k, SENTINEL) | getattr(o, k, SENTINEL) | X or SENTINEL
+  # Scope: the three prod dirs.
+  - id: cs07-no-display-sentinel-fallback
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS07: do not use a display sentinel ('unknown' / 'n/a' / ...) as a
+      missing-data fallback (dict.get/setdefault/pop default, getattr default,
+      or `X or SENTINEL`).
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+    patterns:
+      - pattern-either:
+          - pattern: $D.get($K, $SENTINEL)
+          - pattern: $D.setdefault($K, $SENTINEL)
+          - pattern: $D.pop($K, $SENTINEL)
+          - pattern: getattr($O, $A, $SENTINEL)
+          - pattern: $X or $SENTINEL
+      - metavariable-regex:
+          metavariable: $SENTINEL
+          # Full-string match of the closed FORBIDDEN_SENTINELS token set.
+          # semgrep binds the metavariable to the literal's SOURCE text, so the
+          # surrounding quote char is part of the match; accept either ' or "
+          # so a single-quoted sentinel is not missed.
+          regex: ^['"](unknown|<unknown>|n/a|N/A|Unknown|UNKNOWN)['"]$
+
+  # ── CS12 ──────────────────────────────────────────────────────────────────
+  # no_suppress_baseException: contextlib.suppress(BaseException) (qualified or
+  # bare `suppress`), with BaseException as ANY positional arg.
+  # Scope: the three prod dirs.
+  - id: cs12-no-suppress-baseexception
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS12: contextlib.suppress(BaseException) silently discards
+      KeyboardInterrupt / SystemExit. Suppress a specific exception instead.
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+    patterns:
+      - pattern-either:
+          - pattern: contextlib.suppress(..., BaseException, ...)
+          - pattern: suppress(..., BaseException, ...)
+
+  # ── CS14 ──────────────────────────────────────────────────────────────────
+  # no_question_mark_fallback: literal "?" used as default / fallback / return.
+  # Matches "?" as: any Call positional arg, any Call keyword value,
+  # any non-? `or` operand, either IfExp branch, `return "?"`, a "?" element of
+  # a returned tuple, and `name = "?"`. Scope: the three prod dirs.
+  - id: cs14-no-question-mark-fallback
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS14: do not use "?" as a default / fallback / fall-through value
+      (call default, `X or "?"`, IfExp branch, return, or assignment).
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+    patterns:
+      - pattern-either:
+          - pattern: $F(..., "?", ...)
+          - pattern: $F(..., $KW="?", ...)
+          - pattern: $X or "?"
+          - pattern: '"?" if $C else $E'
+          - pattern: '$T if $C else "?"'
+          - pattern: return "?"
+          - pattern: return (..., "?", ...)
+          - pattern: $V = "?"
+
+  # ── CS37 ──────────────────────────────────────────────────────────────────
+  # no_weakref_proxy: substring "weakref.proxy" anywhere in engine/ or output/.
+  - id: cs37-no-weakref-proxy
+    languages: [python]
+    severity: ERROR
+    message: "CS37: weakref.proxy must not appear in engine/ or output/."
+    paths:
+      include:
+        - engine/
+        - output/
+    pattern: weakref.proxy(...)
+
+  # ── CS41 ──────────────────────────────────────────────────────────────────
+  # pool_shutdown_no_wait_for: pool shutdown_all / close_all wrapped in
+  # asyncio.wait_for, matched as `wait_for.*(shutdown_all|close_all)` on
+  # sanitized source. Scope: engine infra output.
+  - id: cs41-pool-shutdown-no-wait-for
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS41: pool.shutdown_all / close_all must NOT be wrapped in
+      asyncio.wait_for (the cancellation would orphan in-flight shutdown).
+    paths:
+      include:
+        - engine/
+        - infra/
+        - output/
+      exclude:
+        # backends/ was never in this rule's include; now under infra/, exclude
+        # the infra/backends/ subtree to preserve the original scanned set.
+        - infra/backends/
+    patterns:
+      - pattern-either:
+          - pattern: $W.wait_for($P.shutdown_all(...), ...)
+          - pattern: $W.wait_for($P.close_all(...), ...)
+          - pattern: wait_for($P.shutdown_all(...), ...)
+          - pattern: wait_for($P.close_all(...), ...)
+
+  # ── CS01 ──────────────────────────────────────────────────────────────────
+  # no_legacy_strings (PARTIAL): retired identifiers must not reappear in
+  # production code. The original guarded ~36 retired tokens; ~28 of them are
+  # migration-specific internal symbols now extinct everywhere (grep-proven; an
+  # LLM would not re-coin them) and were dropped. Retained here are the 8 GENERIC
+  # CS/state names an LLM might plausibly re-introduce. The original used a
+  # `\b<token>\b` word-boundary regex over code_only(...)-sanitized source, so
+  # docstring / comment mentions never fired. semgrep matches the identifier as
+  # an AST node, which is inherently code-only (docstrings/comments are skipped),
+  # and the `$X.<name>` form covers the qualified-attribute case the word-
+  # boundary regex also matched. Scope: the original PROD_DIRS (the 6 dirs +
+  # the shipped product packages).
+  - id: cs01-no-legacy-identifier
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS01: retired identifier reappeared in production code. These names were
+      removed in a migration; do not re-introduce them.
+    paths:
+      include:
+        - engine/
+        - infra/
+        - output/
+      exclude:
+        # backends/ was never in this rule's include; now under infra/, exclude
+        # the infra/backends/ subtree to preserve the original scanned set.
+        - infra/backends/
+    patterns:
+      - pattern-either:
+          - pattern: WorkflowState
+          - pattern: $X.WorkflowState
+          - pattern: SearchTree
+          - pattern: $X.SearchTree
+          - pattern: GroupRegistry
+          - pattern: $X.GroupRegistry
+          - pattern: HistoryEntry
+          - pattern: $X.HistoryEntry
+          - pattern: StateChangeEvent
+          - pattern: $X.StateChangeEvent
+          - pattern: LifecycleHooks
+          - pattern: $X.LifecycleHooks
+          - pattern: CompositeOutput
+          - pattern: $X.CompositeOutput
+          - pattern: TranscriptDispatcher
+          - pattern: $X.TranscriptDispatcher
+
+  # ── CS03 ──────────────────────────────────────────────────────────────────
+  # no_bare_abspath: os.path.abspath(...) is allowed only inside
+  # infra/util/paths.py. The original used code_only() so an instructional
+  # STRING containing "os.path.abspath" never fired; semgrep's AST Call pattern
+  # is likewise blind to string literals. Scope: the product packages.
+  # Allowlist: paths.exclude
+  # the one sanctioned wrapper file.
+  - id: cs03-no-bare-abspath
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS03: os.path.abspath is banned outside infra/util/paths.py. Use the
+      sanctioned path resolver in infra/util/paths.py.
+    paths:
+      include:
+        - engine/
+        - infra/
+        - output/
+      exclude:
+        - infra/util/paths.py
+        # backends/ was never in this rule's include; now under infra/, exclude
+        # the infra/backends/ subtree to preserve the original scanned set.
+        - infra/backends/
+        # Installed resources ship INTO an agent's workspace as standalone
+        # stdlib-only files and execute outside the product, where the
+        # sanctioned wrapper cannot be imported - the rule's remedy is
+        # structurally impossible there, same as third-party code. Nothing in
+        # the product may import this directory; code that a product module
+        # needs must move OUT of it, never widen this exclusion.
+        - engine/work_unit/resources/
+    pattern: os.path.abspath(...)
+
+  # ── CS13 ──────────────────────────────────────────────────────────────────
+  # no_string_name_dispatch: `type(x).__name__ == "..."` string-name dispatch
+  # (breaks silently under rename — use isinstance). The original matched a
+  # Compare with a single Eq op where one side is `type(...).__name__` and the
+  # other a string Constant (either operand order). Its allowlist site
+  # (agents/base.py:620) is STALE, and the current tree has ZERO such comparisons anywhere in
+  # scope, so no nosemgrep exemption is needed; the rule reports 0, matching the
+  # original. Scope: the original product dirs.
+  - id: cs13-no-string-name-dispatch
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS13: `type(x).__name__ == "..."` string-name dispatch breaks silently
+      under rename. Use isinstance(x, ConcreteClass).
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+    patterns:
+      - pattern-either:
+          - pattern: type($X).__name__ == "..."
+          - pattern: '"..." == type($X).__name__'
+
+  # ── CS53 ──────────────────────────────────────────────────────────────────
+  # Launch-policy observations keep their existing concrete authorities.
+  # `.resources.<sub-field>` targets only a sub-field, not the allocator's
+  # sanctioned whole-record assignment.
+  - id: cs53-no-raw-resource-writes
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS53: raw write to a resource field bypasses its authority.
+      Use Resources methods or ResourceAllocator.
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+        - startup/
+        - cli.py
+        - config.py
+        - bootstrap.py
+      exclude:
+        # infra/backends owns its own Process/Tool status fields.
+        - spikes/
+        - plugins/
+        - infra/backends/
+    patterns:
+      - pattern-either:
+          - pattern: $X.resources.cap_s = $V
+          - pattern: $X.resources.consumed_s = $V
+          - pattern: $X.resources.device_index = $V
+          - pattern: $X.resources.memory_max_bytes = $V
+          - pattern: $X.resources.swap_max_bytes = $V
+          - pattern: $X.resources.cpu_quota_pct = $V
+          - pattern: $X.resources.cost_cap_usd = $V
+
+  # ── CS-FI02 ─────────────────────────────────────────────────────────────────
+  # Fault-injection variables are inputs to shipped source, never mutable
+  # process state. A production write would make one run contaminate another.
+  - id: cs-fi02-env-write-only-in-fault-injector
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS-FI02: shipped source must not write AIBUILDAI_FORCE_* or
+      AIBUILDAI_TEST_* environment variables.
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+        - startup/
+        - cli.py
+        - config.py
+        - bootstrap.py
+    patterns:
+      - pattern-either:
+          - pattern: os.environ[$K] = $V
+          - pattern: os.putenv($K, ...)
+      - metavariable-regex:
+          metavariable: $K
+          regex: ^['"]AIBUILDAI_(FORCE|TEST)_.*['"]$
+
+  # ── CS57 (semgrep half) ─────────────────────────────────────────────────────
+  # Hand-rolled path containment is banned in shipped source. This rule catches
+  # direct `.is_relative_to(...)` calls; more complex path dataflow remains a
+  # review judgment.
+  - id: cs57-no-is-relative-to
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS57: hand-rolled `.is_relative_to(...)` path containment is banned (it
+      does NOT resolve symlinks — a known bug class). Use
+      infra.util.paths.is_within(child, parent).
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+        - startup/
+        - cli.py
+        - config.py
+        - bootstrap.py
+    pattern: $P.is_relative_to(...)
+
+  # ── CS61 ──────────────────────────────────────────────────────────────────
+  # no_glue_suffix_class: a class name must not end in a no-information glue
+  # suffix that names no real role. This is the naming-governance MACHINE
+  # leg — deliberately narrow (the human review leg owns the real "does this
+  # name fit?" judgment). It blocks only the
+  # few clearly-empty glue words. It does NOT block: Hook (a legitimate
+  # subscriber mechanism role, protected by CS20/CS44), Controller (the
+  # acquire/release-lifecycle sense, accepted for HostResourceController),
+  # or Data (21 grandfathered *Data records exist; left to review).
+  # Zero production hits at introduction time (the glue suffixes below are
+  # extinct on main); this rule is a regression ratchet, not a cleanup.
+  - id: cs61-no-glue-suffix-class
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS61: class name ends in a no-information glue suffix (Manager / Driver /
+      Orchestrator / Coordinator / Supervisor / Handler / Helper) that names no
+      real role. Name the responsibility instead. Hook / Bus / Dispatcher /
+      Controller are legitimate mechanism
+      roles and are NOT blocked.
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+        - startup/
+        - cli.py
+        - config.py
+        - bootstrap.py
+    patterns:
+      - pattern-either:
+          - pattern: |
+              class $NAME(...): ...
+          - pattern: |
+              class $NAME: ...
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: ^.*(Manager|Driver|Orchestrator|Coordinator|Supervisor|Handler|Helper)$
+
+  # ── SBX01 (single-exit) ─────────────────────────────────────────────────
+  # bwrap_argv_call_only_on_sanctioned_surfaces: a CALL to build_bwrap_argv(...)
+  # is the moment a path list becomes a real namespace bind. After the
+  # confinement-unify refactor it is allowed on EXACTLY ONE surface — the single
+  # renderer both execution surfaces route through:
+  #   - infra/host_resource/confinement.py   (Confinement._build_binds, called
+  #     by Confinement.wrap / .as_script)
+  # Any NEW direct caller is a second exit that could hand the sandbox a path
+  # the validated Confinement never accounted for (the drift this rule
+  # prevents). The function is DEFINED in infra/sandbox/bwrap.py; a `def` is NOT a
+  # call, so semgrep's Call pattern never fires on the definition (verified), and
+  # infra/ stays in scope so a future infra caller is still caught. The backend
+  # (build_agent_launcher) and the subprocess call sites reach build_bwrap_argv only
+  # transitively through Confinement, so they are NOT direct callers and need no
+  # allowlist entry. The one sanctioned file is paths.exclude'd; the clean tree
+  # therefore reports zero.
+  - id: sbx01-bwrap-argv-call-only-on-sanctioned-surfaces
+    languages: [python]
+    severity: ERROR
+    message: >-
+      SBX01: build_bwrap_argv() may be called only by the ONE
+      sanctioned renderer — infra/host_resource/confinement.py
+      (Confinement._build_binds, which wrap / as_script both use).
+      A new direct caller is a second exit that can hand the
+      sandbox an unbound path. Route the launch through Confinement instead.
+    paths:
+      include:
+        - engine/
+        - infra/
+      exclude:
+        - infra/host_resource/confinement.py
+    pattern: build_bwrap_argv(...)
+
+  # ── SBX02 (single-exit) ─────────────────────────────────────────────────
+  # config_dir_write_only_on_credential_paths: a WRITE of CLAUDE_CONFIG_DIR (the
+  # per-credential subprocess auth dir) is the moment a credential dir is handed
+  # to a launched claude. On this tree the launcher owns the ONLY live write
+  # site, for both launch paths (the bwrap sandbox and the direct no-bwrap
+  # launcher):
+  #   - infra/backends/claude/agent_launcher.py: setenv["CLAUDE_CONFIG_DIR"] = ...
+  #       (Confinement renders the entry as the generated launcher's own
+  #        --setenv/export, co-produced with the credential rw-bind from the
+  #        same env_delta)
+  # spec_to_options.py no longer writes the name — its docstring states the
+  # launcher co-produces it and it is NOT placed in ClaudeAgentOptions.env —
+  # and keeps its paths.exclude entry from the era when the bare path wrote
+  # env["CLAUDE_CONFIG_DIR"] directly.
+  # A write anywhere else is a third credential exit that could point a launched
+  # claude at an auth dir the plan never bound. The rule matches ONLY the two
+  # WRITE shapes (a dict-subscript assignment and the --setenv list element), so
+  # the READ / membership sites are untouched by construction: env.get(
+  # "CLAUDE_CONFIG_DIR") in config_paths.py and the env-scrub keep list
+  # _KEEP_EXACT in env_scrub.py are neither an assignment nor a `--setenv`
+  # element, so they never fire. The two sanctioned files are paths.exclude'd;
+  # the clean tree reports zero.
+  - id: sbx02-config-dir-write-only-on-credential-paths
+    languages: [python]
+    severity: ERROR
+    message: >-
+      SBX02: CLAUDE_CONFIG_DIR may be WRITTEN only in the sanctioned
+      launcher path — agent_launcher.py's setenv entry, rendered as the
+      generated launcher's --setenv. A write elsewhere is a third credential
+      exit that can point a launched claude at an unbound auth dir. Reads
+      (env.get) and the env-scrub keep list are unaffected.
+    paths:
+      include:
+        - engine/
+        - infra/
+      exclude:
+        - infra/backends/claude/spec_to_options.py
+        - infra/backends/claude/agent_launcher.py
+    patterns:
+      - pattern-either:
+          - pattern: $D["CLAUDE_CONFIG_DIR"] = $V
+          - pattern: '["--setenv", "CLAUDE_CONFIG_DIR", ...]'
+          - pattern: '[..., "--setenv", "CLAUDE_CONFIG_DIR", ...]'
+
+  # ── CS63 ("airtight replay" Leg 1) ────────────────────────────────────────
+  # no_off_stream_treesearch_write: a raw assignment to a run-state
+  # EVENT-DERIVED field bypasses the event stream (the fold) that a pure
+  # event-replay rebuilds state from. An off-stream write makes the LIVE state
+  # diverge from a replay of the same run's events — the class of
+  # bug. These event-derived fields are reconstructed ONLY by applying events
+  # through the event fold to their owning RunState or Search:
+  #   roots, run_config, next_step_num, consumed_seconds.
+  # The render-scratch fields (folded_now_absolute / folded_now_relative /
+  # monotonic_clock_origin) are recomputed on EVERY fold and are deliberately NOT
+  # locked (absent from _SLIM_TOPLEVEL_KEYS — they are not resume state).
+  #
+  # Sanctioned writers (paths.exclude), each the sole legitimate writer of the
+  # fields it touches:
+  #   - engine/run_state.py            : event-applied run state plus
+  #                                          construction/resume (from_snapshot,
+  #                                          the model_validator(mode="after")),
+  #                                          and the clock tick (next_step_num)
+  #   - engine/search/base.py             : the Search's event-applied execution state
+  #   - engine/hooks.py                   : the live render-scratch consumed_seconds fill (a product decision)
+  #
+  # Matches PLAIN assignment only (the CS53 idiom) — an augmented `+=` (the
+  # state_machine clock-tick form) is a different AST node and the only such write
+  # sits in an allowlisted file anyway. Scope: shipped state-owning packages plus
+  # cli_impl.py. The clean tree reports zero.
+  - id: cs63-no-off-stream-treesearch-write
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS63: raw assignment to a RunState event-derived field bypasses
+      the event stream that rebuilds replay state, so live state
+      diverges from a pure event-replay. Route the write through an event (fire it
+      on the bus so the fold applies it) or a sanctioned RunState method,
+      never a raw write.
+    paths:
+      include:
+        - output/
+        - engine/
+        - infra/
+        - startup/
+        - cli.py
+        - cli_impl.py
+        - config.py
+        - bootstrap.py
+      exclude:
+        - engine/run_state.py
+        - engine/search/base.py
+        # The run's own lifecycle writes (step count, consumed time, clock
+        # origin) live on the universal Search family, so this file is a
+        # sanctioned owner alongside the built-in layer above.
+        - engine/search/runtime.py
+        - engine/hooks.py
+    patterns:
+      - pattern-either:
+          - pattern: $X.roots = $V
+          - pattern: $X.run_config = $V
+          - pattern: $X.next_step_num = $V
+          - pattern: $X.consumed_seconds = $V
+
+  # ── CS64 ──
+  # Persisted records and their own rules perform no filesystem I/O. The files
+  # are named directly because engine also owns the I/O that drives them.
+  # The pathlib-method set contains only names with no str/dict namesake -
+  # `replace` / `rename` / bare `open` are intentionally absent from it (str
+  # owns `replace`); the builtin open() and the os.<fn> patterns cover those
+  # without colliding with str methods. os.path / os.environ stay allowed
+  # (pure path arithmetic and env reads are not filesystem access).
+  - id: cs64-run-state-no-fs-io
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS64: persisted run state performs no filesystem I/O. Keep the
+      record's rule pure and move the read/write to the engine code that owns
+      the saved file, or pass the data in.
+    paths:
+      include:
+        - engine/base.py
+        - engine/cost.py
+        - engine/durable_execution.py
+        - engine/event/base.py
+        - engine/event/events.py
+        - engine/execution_output.py
+        - engine/failure.py
+        - engine/metric_contract.py
+        - engine/paths.py
+        - engine/run_state.py
+        - engine/status.py
+        - engine/work_unit/events.py
+        # Every persisted-record module, named by the one convention that
+        # identifies one: a Definition's records live in its own io.py,
+        # wherever that Definition's package is. A per-file list here went
+        # stale the moment a package moved.
+        - engine/**/io.py
+        - engine/work_unit/agent/policy.py
+        - engine/work_unit/resources.py
+    patterns:
+      - pattern-either:
+          - pattern: open(...)
+          - pattern: os.replace(...)
+          - pattern: os.rename(...)
+          - pattern: os.mkdir(...)
+          - pattern: os.makedirs(...)
+          - pattern: os.remove(...)
+          - pattern: os.unlink(...)
+          - pattern: os.rmdir(...)
+          - pattern: os.removedirs(...)
+          - pattern: os.listdir(...)
+          - pattern: os.scandir(...)
+          - pattern: os.walk(...)
+          - pattern: os.open(...)
+          - pattern: os.link(...)
+          - pattern: os.symlink(...)
+          - pattern: os.readlink(...)
+          - pattern: os.stat(...)
+          - pattern: os.lstat(...)
+          - pattern: os.chmod(...)
+          - pattern: os.truncate(...)
+          - pattern: $X.read_text(...)
+          - pattern: $X.write_text(...)
+          - pattern: $X.read_bytes(...)
+          - pattern: $X.write_bytes(...)
+          - pattern: $X.exists(...)
+          - pattern: $X.is_file(...)
+          - pattern: $X.is_dir(...)
+          - pattern: $X.is_symlink(...)
+          - pattern: $X.iterdir(...)
+          - pattern: $X.glob(...)
+          - pattern: $X.rglob(...)
+          - pattern: $X.walk(...)
+          - pattern: $X.mkdir(...)
+          - pattern: $X.rmdir(...)
+          - pattern: $X.unlink(...)
+          - pattern: $X.touch(...)
+          - pattern: $X.symlink_to(...)
+          - pattern: $X.hardlink_to(...)
+          - pattern: $X.stat(...)
+          - pattern: $X.lstat(...)
+          - pattern: $X.chmod(...)
+          - pattern: $X.lchmod(...)
+          - pattern: $X.samefile(...)
+          - pattern: import tempfile
+          - pattern: import shutil
+
+  # ── CS66 — infra/util stays independent ──
+  - id: cs66-util-imports-nothing
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS66: infra/util/ is the bottom of the dependency stack - stdlib and
+      third-party imports only, nothing else in this project, and no project
+      business logic. A helper that needs engine or infra machinery is not a
+      util; move it up (see infra/cost_pricing.py, which was moved out for this reason).
+    paths:
+      include:
+        - infra/util/
+    patterns:
+      # A TYPE_CHECKING-only import adds no runtime edge; timeouts.py
+      # annotates the Backend it guards and stays a leaf at runtime.
+      - pattern-not-inside: |
+          if TYPE_CHECKING:
+              ...
+      - pattern-either:
+          - pattern: import engine
+          - pattern: import output
+          - pattern: import config
+          - pattern: import memory
+          - pattern: import prompts
+          - pattern: import startup
+          - pattern: import plugins
+          - pattern: import bootstrap
+          - pattern: import cli
+          - pattern: import cli_impl
+          - pattern: import aibuildai_version
+          - pattern: from infra import $X
+          - pattern: import infra.backends
+          - pattern: import infra.process
+          - pattern: import infra.exec
+          - pattern: import infra.host_resource
+          - pattern: import infra.fs
+          - pattern: import infra.sandbox
+          - pattern: import infra.model_catalog
+          - pattern: import infra.kb_service
+          - pattern: import infra.cost_observation
+          - pattern: import infra.cost_pricing
+
+  # ── CS67 — Memory reads evidence, never the product's schemas ──
+  # memory/ generates a task's memory from the files a finished run left behind.
+  # It reached that record by importing the product's execution Outputs and
+  # rebuilding RunState, which made it a second interpreter of the product
+  # schema: every renamed Output field or moved path had to be followed here.
+  # An Agent reads the run's own directories now, under a strict multi-root
+  # read boundary, so these imports have no caller left, and this rule is what
+  # stops the coupling from growing back one import at a time. engine.base (the
+  # shared model base) is the narrow edge that remains.
+  - id: cs67-memory-no-execution-schema
+    languages: [python]
+    severity: ERROR
+    message: >-
+      CS67: Memory does not interpret the product's execution schema.
+      It receives a read-only evidence tree and an Agent reads it. Take the
+      fact from the evidence instead of importing the Output type that
+      produced it.
+    paths:
+      include:
+        - memory/
+    patterns:
+      - pattern-either:
+          - pattern: import engine.run_state
+          - pattern: from engine.run_state import $X
+          - pattern: import engine.event
+          - pattern: from engine.event import $X
+          - pattern: from engine.event.store import $X
+          - pattern: import engine.paths
+          - pattern: from engine.paths import $X
+          - pattern: import engine.work_unit
+          - pattern: from engine.work_unit import $X
+          - pattern: import engine.builtin
+          - pattern: from engine.builtin import $X
+          - pattern: from engine.builtin.$PKG import $X
+          - pattern: from engine.builtin.$PKG.$MOD import $X
+          - pattern: from engine.search import $X
+          - pattern: import engine.generated_definitions
+          - pattern: from engine.generated_definitions import $X

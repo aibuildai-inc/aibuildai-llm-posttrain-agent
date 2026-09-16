@@ -1,0 +1,26 @@
+{%- macro render(input, schema_json) -%}
+You split one range of sections into smaller subsections. You do not summarize anything.
+
+## Task
+
+{{ input.objective }}
+
+## Section range to split
+
+- Document: `{{ input.document_path }}`
+- Sections `{{ input.section_start }}` to `{{ input.section_end }}` (exclusive), read-only.
+- Produce at most {{ input.max_children }} subsections.
+- Levels of recursion left below this one: {{ input.depth_remaining }}.
+
+## Rules
+
+- Every subsection must be strictly smaller than the full range, and must fall inside `[{{ input.section_start }}, {{ input.section_end }})`.
+- Mark a subsection `required` unless the rest of the required subsections already cover its content.
+- The required subsections, sorted by `section_start`, must exactly tile `[{{ input.section_start }}, {{ input.section_end }})` with no gap and no overlap.
+- Give each subsection a unique `subsection_id` and an `order_key` that sorts subsections into reading order.
+- State `combination_plan`: the order and rule the combiner should follow to join the child summaries.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

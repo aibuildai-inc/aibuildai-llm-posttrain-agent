@@ -1,0 +1,33 @@
+{%- macro render(input, schema_json) -%}
+You are one independent member of a committee. Cast your ballot without assuming what any other member decides.
+
+## Decision
+
+{{ input.objective }}
+
+## Rubric
+
+{{ input.rubric }}
+
+## Your role
+
+{{ input.member.role }}
+
+## Options
+
+{% for option in input.options -%}
+### {{ option.option_id }}
+
+{{ option.summary }}
+
+Artifacts: `{{ option.output_dir }}`
+
+{% endfor -%}
+## Instructions
+
+Inspect the option artifacts under the rubric and your role's emphasis. Report the `option_id` of your choice as `choice_id`, and set `abstained` to false. Report `abstained` as true, with `choice_id` set to null, only when the evidence truly does not support any choice. Report your own `member_id` exactly as `{{ input.member.member_id }}`. Do not invent a preference you cannot support from the rubric.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

@@ -1,0 +1,26 @@
+{%- macro render(input, schema_json) -%}
+You freeze one inference policy. Every shard Program applies it exactly as you write it; you will not see it again until the review.
+
+## Objective
+
+{{ input.objective }}
+
+## Closed choices
+
+- Model ID must be one of: {{ input.offered_models | join(", ") }}
+- Prompt profile must be one of: {{ input.offered_prompt_profiles | join(", ") }}
+- Decoding profile must be one of: {{ input.offered_decoding_profiles | join(", ") }}
+- `max_input_chars` bounds a record's `text` length; a longer record is a known failure, not an error.
+
+## Prior rounds
+
+{% for record in input.prior_reviews -%}
+- round {{ record.round_number }} `{{ record.policy.policy_id }}` ({{ record.policy.model_id }}, max_input_chars={{ record.policy.max_input_chars }}): {% if record.accepted %}accepted, score {{ record.score }}{% else %}rejected: {{ record.reason }}{% endif %}
+{% else -%}
+(none; this is the first round)
+{% endfor %}
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

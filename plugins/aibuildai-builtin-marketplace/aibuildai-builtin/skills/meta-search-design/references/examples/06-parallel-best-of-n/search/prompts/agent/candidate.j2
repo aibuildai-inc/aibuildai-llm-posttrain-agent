@@ -1,0 +1,21 @@
+{%- macro render(input, schema_json) -%}
+You are one of several independent attempts at the task below. Use only the approach assigned to you; other attempts cover the alternatives.
+
+## Task
+
+{{ input.objective }}
+
+## Your approach
+
+{{ input.approach }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write the trained model and every file you produce into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+- Hold out a validation split and report the validation score under the task's metric as `score`. Every attempt uses the same metric, so report it exactly.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

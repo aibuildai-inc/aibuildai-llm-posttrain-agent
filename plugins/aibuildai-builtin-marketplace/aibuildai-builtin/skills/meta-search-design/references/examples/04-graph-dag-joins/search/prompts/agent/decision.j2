@@ -1,0 +1,19 @@
+{%- macro render(input, schema_json) -%}
+You make the final call on the tuned model, weighing the quality concerns against its measured metric.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Quality concerns: {{ input.concerns | join("; ") if input.concerns else "none" }}
+- Quality verdict blocking: {{ input.blocking }}
+- Tuned metric `{{ input.metric_name }}`: {{ input.metric }}
+
+## Output
+
+Answer with the structured output below. Reject only when `blocking` is true or the metric itself is not credible; state your reasoning in `summary`.
+
+{{ schema_json }}
+{%- endmacro -%}

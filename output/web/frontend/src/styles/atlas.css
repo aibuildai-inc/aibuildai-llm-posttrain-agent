@@ -1,0 +1,626 @@
+/* The Execution Atlas is a warm map, not a dashboard panel. Colours come
+   only from the served project variables and color-mix(). Three zoom tiers are
+   driven by the data-tier attribute the canvas sets from the React Flow
+   viewport scale: CSS reveals or hides detail; the graph never changes. */
+
+.atlas {
+  position: absolute;
+  inset: 0;
+}
+
+.atlas .react-flow {
+  background: var(--aibuildai-atlas-canvas);
+}
+
+/* Node position glide on structural relayout: React Flow writes each
+   node's position as a transform, so a transition here animates ELK's
+   new coordinates. New nodes mount at their final spot (no transition
+   fires on first paint) and get one entrance animation instead. */
+.atlas .react-flow__node {
+  transition: transform 0.55s cubic-bezier(0.3, 0.9, 0.3, 1);
+  cursor: grab;
+}
+
+/* While a node is dragged the transform must follow the pointer, so the
+   glide transition turns off, and the card lifts off the map. */
+.atlas .react-flow__node.dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.atlas .react-flow__node.dragging .search-cluster,
+.atlas .react-flow__node.dragging .composite-card,
+.atlas .react-flow__node.dragging .unit-node {
+  box-shadow: 0 16px 38px color-mix(in srgb, var(--aibuildai-atlas-ink) 18%, transparent);
+}
+
+.atlas .react-flow__node > * {
+  animation: atlas-enter 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
+}
+
+@keyframes atlas-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas .react-flow__node {
+    transition: none;
+  }
+  .atlas .react-flow__node > * {
+    animation: none;
+  }
+}
+
+/* Resize handles show only on the hovered or selected card. */
+.atlas .react-flow__resize-control.handle {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  border: 1px solid var(--aibuildai-highlight);
+  background: var(--aibuildai-atlas-surface);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.atlas .react-flow__resize-control.line {
+  border-color: transparent;
+}
+
+.atlas .react-flow__node:hover .react-flow__resize-control.handle,
+.atlas .react-flow__node.selected .react-flow__resize-control.handle {
+  opacity: 1;
+}
+
+.atlas-port {
+  opacity: 0;
+  width: 2px;
+  height: 2px;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  pointer-events: none;
+}
+
+/* ── Search cluster: the spatial scope ─────────────────────────────── */
+
+.search-cluster {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--aibuildai-highlight) 4%, var(--aibuildai-atlas-surface));
+  border: 1.5px solid var(--aibuildai-atlas-border);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--aibuildai-atlas-ink) 8%, transparent);
+}
+
+/* Nested scopes read as paper regions inside the larger map. */
+.search-cluster[data-depth="2"],
+.search-cluster[data-depth="3"],
+.search-cluster[data-depth="4"] {
+  background: color-mix(in srgb, var(--aibuildai-atlas-card) 52%, transparent);
+}
+
+.search-cluster[data-status="running"] {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-running) 45%, var(--aibuildai-atlas-border));
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--aibuildai-atlas-status-running) 75%, transparent);
+}
+
+.search-cluster[data-status="error"] {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-error) 45%, var(--aibuildai-atlas-border));
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 17px;
+  color: var(--aibuildai-atlas-ink);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.search-header > svg {
+  color: var(--aibuildai-atlas-ink-secondary);
+  flex: none;
+}
+
+.search-kind {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-weight: 650;
+  font-size: 15px;
+  letter-spacing: -0.015em;
+}
+
+.search-uid {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.search-status {
+  font-size: 11px;
+  font-weight: 550;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.search-counters {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.search-focus {
+  display: inline-flex;
+  flex: none;
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--aibuildai-guide);
+  background: transparent;
+  cursor: pointer;
+}
+
+.search-focus[data-hovered],
+.search-focus[data-focus-visible] {
+  color: var(--aibuildai-highlight);
+  background: color-mix(in srgb, var(--aibuildai-highlight) 9%, transparent);
+}
+
+.search-counter {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 1px 8px;
+  border-radius: 999px;
+  color: var(--aibuildai-atlas-ink-secondary);
+  background: color-mix(in srgb, var(--aibuildai-atlas-border) 55%, transparent);
+}
+
+.search-counter[data-kind="done"] {
+  color: var(--aibuildai-atlas-status-success);
+  background: color-mix(in srgb, var(--aibuildai-atlas-status-success) 14%, transparent);
+}
+
+.search-counter[data-kind="active"] {
+  color: var(--aibuildai-atlas-status-running);
+  background: color-mix(in srgb, var(--aibuildai-atlas-status-running) 14%, transparent);
+}
+
+.search-counter[data-kind="failed"] {
+  color: var(--aibuildai-atlas-status-error);
+  background: color-mix(in srgb, var(--aibuildai-atlas-status-error) 14%, transparent);
+}
+
+.search-counter[data-kind="best"] {
+  color: var(--aibuildai-highlight-ink);
+  background: color-mix(in srgb, var(--aibuildai-highlight) 13%, transparent);
+}
+
+/* ── Shared execution spans ───────────────────────────────────────── */
+
+.exec-spans {
+  display: inline-flex;
+  gap: 8px;
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.exec-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.exec-progress-track {
+  width: 36px;
+  height: 3px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-border) 55%, transparent);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.exec-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--aibuildai-highlight);
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
+.exec-progress-fill[data-tier="low"] { background: var(--aibuildai-status-success); }
+.exec-progress-fill[data-tier="mid"] { background: var(--aibuildai-status-warning); }
+.exec-progress-fill[data-tier="high"] { background: var(--aibuildai-status-error); }
+.exec-progress-fill[data-tier="over"] { background: var(--aibuildai-status-error); }
+
+.exec-model {
+  color: var(--aibuildai-atlas-ink-secondary);
+  opacity: 0.75;
+}
+
+/* ── Composite execution card ──────────────────────────────────────── */
+
+.composite-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  background: var(--aibuildai-atlas-surface);
+  border: 1px solid var(--aibuildai-atlas-border);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--aibuildai-atlas-ink) 5%, transparent);
+}
+
+.composite-card[data-status="running"] {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-running) 55%, var(--aibuildai-atlas-border));
+}
+
+.composite-card[data-status="error"] {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-error) 55%, var(--aibuildai-atlas-border));
+}
+
+.composite-card[data-result] {
+  border-color: var(--aibuildai-highlight);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--aibuildai-highlight) 12%, transparent),
+    0 8px 24px color-mix(in srgb, var(--aibuildai-atlas-ink) 9%, transparent);
+}
+
+.search-cluster[data-result],
+.unit-node[data-result] {
+  border-color: var(--aibuildai-highlight);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--aibuildai-highlight) 12%, transparent),
+    0 8px 24px color-mix(in srgb, var(--aibuildai-atlas-ink) 9%, transparent);
+}
+
+/* The card's own facts live in a fixed-height block at the top; when the
+   composite owns WorkUnits they lay out as child nodes in the space below
+   (ELK pads the compound by the same height). */
+.composite-content {
+  height: 104px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 13px;
+}
+
+.composite-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.composite-uid {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--aibuildai-atlas-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.composite-crown {
+  color: var(--aibuildai-highlight);
+  flex: none;
+}
+
+.composite-top .status-dot-lone {
+  margin-left: auto;
+}
+
+.composite-hero {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 0;
+}
+
+.composite-metric {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--aibuildai-atlas-ink);
+}
+
+.composite-metric-name {
+  font-size: 10.5px;
+  font-weight: 550;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.composite-metric-pending {
+  align-self: center;
+  font-size: 12px;
+  font-weight: 550;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.composite-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.composite-phases {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.phase-tick {
+  width: 14px;
+  height: 5px;
+  border-radius: 2px;
+  background: color-mix(in srgb, currentColor 85%, transparent);
+}
+
+.phase-tick[data-token="success"] { color: var(--aibuildai-atlas-status-success); }
+.phase-tick[data-token="warning"] { color: var(--aibuildai-atlas-status-warning); }
+.phase-tick[data-token="error"] { color: var(--aibuildai-atlas-status-error); }
+.phase-tick[data-token="running"] { color: var(--aibuildai-atlas-status-running); }
+.phase-tick[data-token="pending"] { color: var(--aibuildai-atlas-status-pending); }
+
+.composite-spans {
+  margin-left: auto;
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 10.5px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+/* ── WorkUnit nodes: family silhouettes ────────────────────────────── */
+
+.unit-status,
+.execution-status {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.unit-node {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-card) 72%, var(--aibuildai-atlas-surface));
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+  border-radius: 9px;
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--aibuildai-atlas-ink) 3%, transparent);
+}
+
+/* A compound WorkUnit keeps its own facts in
+   a fixed-height header block; the children ELK placed below it sit in
+   the remaining space. The header height matches layout.ts UNIT_PADDING. */
+.unit-node[data-compound] {
+  justify-content: flex-start;
+  padding: 0;
+}
+
+.unit-node[data-compound] .unit-content {
+  height: 58px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 12px;
+}
+
+/* The stable Agent family has a speech shape. Status stays a separate
+   colour channel. Other WorkUnit families use the common shape. */
+.unit-node[data-family="agent"] {
+  border-radius: 14px 14px 14px 4px;
+}
+
+.unit-node[data-status="running"] {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-running) 50%, var(--aibuildai-atlas-border));
+}
+
+.unit-node[data-status="error"] {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-error) 50%, var(--aibuildai-atlas-border));
+}
+
+/* A card the pointer rests on rises one pixel: the grab affordance. */
+.composite-card,
+.unit-node {
+  transition: translate 0.15s ease;
+}
+
+.composite-card:hover,
+.unit-node:hover {
+  translate: 0 -1px;
+}
+
+.unit-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+/* The title is the unit's NAME; its kind follows as a quiet annotation
+   behind a middle dot, so "coder_1 · Coder" reads name first. */
+.unit-title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.unit-name {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--aibuildai-atlas-ink);
+  white-space: nowrap;
+}
+
+.unit-kind {
+  font-size: 10.5px;
+  font-weight: 550;
+  color: var(--aibuildai-atlas-ink-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unit-kind::before {
+  content: "\00B7\2002";
+}
+
+.unit-top .status-dot-lone {
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+}
+
+.unit-content .exec-spans {
+  display: flex;
+  gap: 10px;
+  font-size: 10px;
+}
+
+/* ── Selection ─────────────────────────────────────────────────────── */
+
+.atlas .react-flow__node.selected .search-cluster,
+.atlas .react-flow__node.selected .composite-card,
+.atlas .react-flow__node.selected .unit-node {
+  outline: 2px solid var(--aibuildai-highlight);
+  outline-offset: 3px;
+}
+
+/* ── Topology edges ───────────────────────────────────────────────── */
+
+/* One recorded relation, two looks decided by the endpoints: a
+   Composite -> Composite edge is lineage, quiet and dashed; every other
+   direct dependency (one WorkUnit into another, fan-in into an
+   Ensemble) is a solid flow edge. Both end in an arrowhead. */
+.atlas .react-flow__edge.edge-lineage path.react-flow__edge-path {
+  stroke: var(--aibuildai-guide);
+  stroke-width: 1.25;
+  stroke-dasharray: 6 5;
+}
+
+.atlas .react-flow__edge.edge-flow path.react-flow__edge-path {
+  stroke: var(--aibuildai-guide);
+  stroke-width: 1.5;
+}
+
+/* Hovering a node lights the edges it takes part in. */
+.atlas .react-flow__edge.edge-hot path.react-flow__edge-path {
+  stroke-width: 2.4;
+}
+
+/* A living indicator: the dependency feeding a running consumer marches
+   toward it. */
+.atlas .react-flow__edge.edge-live path.react-flow__edge-path {
+  stroke: color-mix(in srgb, var(--aibuildai-atlas-status-running) 62%, var(--aibuildai-guide));
+  stroke-dasharray: 7 5;
+  animation: atlas-edge-march 0.9s linear infinite;
+}
+
+@keyframes atlas-edge-march {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* A selection dims the edges outside its context, like the nodes. */
+.atlas .react-flow__edge.atlas-dim path.react-flow__edge-path {
+  opacity: 0.3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas .react-flow__edge.edge-live path.react-flow__edge-path {
+    animation: none;
+  }
+}
+
+/* ── Semantic zoom tiers ───────────────────────────────────────────── */
+
+/* Run overview: Search scopes carry the story; unit text, card feet, and
+   the edges inside cards recede -- only the projected scope-level
+   topology stays. */
+.atlas[data-tier="overview"] .react-flow__edge.edge-inner {
+  visibility: hidden;
+}
+
+.atlas[data-tier="overview"] .unit-title,
+.atlas[data-tier="overview"] .unit-content > .exec-spans,
+.atlas[data-tier="overview"] .composite-foot,
+.atlas[data-tier="overview"] .composite-metric-name,
+.atlas[data-tier="overview"] .search-uid,
+.atlas[data-tier="overview"] .search-status {
+  visibility: hidden;
+}
+
+/* Scaled header stays inside the cluster: the width compensates the
+   scale factor exactly, so the right-aligned counters still end at the
+   cluster's right padding edge. */
+.atlas[data-tier="overview"] .search-header {
+  transform: scale(1.5);
+  transform-origin: top left;
+  width: 66.667%;
+}
+
+/* Search tier: composites and compact units carry the story; lineage
+   appears, unit second lines stay quiet. */
+.atlas[data-tier="search"] .unit-content > .exec-spans {
+  visibility: hidden;
+}
+
+/* Execution tier reveals everything. */
+
+/* ── React Flow chrome: MiniMap, controls, attribution ─────────────── */
+
+.atlas .react-flow__minimap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 85%, transparent);
+}
+
+.atlas .react-flow__controls {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: none;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 85%, transparent);
+}
+
+.atlas .react-flow__controls-button {
+  background: var(--aibuildai-atlas-surface);
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+  fill: var(--aibuildai-atlas-ink-secondary);
+}
+
+.atlas .react-flow__controls-button:hover {
+  background: var(--aibuildai-atlas-card);
+  fill: var(--aibuildai-atlas-ink);
+}
+
+.atlas .react-flow__attribution {
+  background: transparent;
+}
+
+.atlas .react-flow__attribution a {
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+/* ── Selection context dimming ─────────────────────────────────────── */
+
+.atlas .react-flow__node.atlas-dim {
+  filter: saturate(0.3);
+  transition: filter 0.25s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas .react-flow__node.atlas-dim {
+    transition: none;
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "objective": "Build a sentiment classifier for the product reviews in train.jsonl; the metric is macro F1 on the hidden test split.",
+  "data_dir": "/run/public/data",
+  "rubric": "1. A held-out validation split exists and the reported score is computed on it. 2. No test-split text or labels are read during training. 3. The saved model loads and predicts from a fresh process. 4. Class imbalance is handled explicitly.",
+  "max_rounds": 3,
+  "producer_wall_clock_seconds": 1800,
+  "evaluator_wall_clock_seconds": 600
+}

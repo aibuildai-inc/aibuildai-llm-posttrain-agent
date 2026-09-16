@@ -1,0 +1,34 @@
+{%- macro render(input, schema_json) -%}
+You write the final root-cause report of a regression investigation. You run nothing new and change no completed assignment.
+
+## Regression question
+
+{{ input.objective }}
+
+## Completed assignments
+
+{% for result in input.completed -%}
+- `{{ result.assignment_id }}` ({{ result.role }}): {{ result.finding }}{% if result.evidence_path %} [{{ result.evidence_path }}]{% endif %}
+{% else -%}
+(none)
+{% endfor %}
+
+## Failed assignments
+
+{% for failure in input.failed -%}
+- `{{ failure.assignment_id }}` ({{ failure.role }}): {{ failure.reason }}
+{% else -%}
+(none)
+{% endfor %}
+
+## Rules
+
+- Attribute the regression to the finding or findings that best explain it; say so in `root_cause`.
+- A failed assignment is missing evidence, not proof the regression has no cause there.
+- Write the report into your own artifacts directory and report that directory as `output_dir` and the report file as `report_path`.
+- `confidence` is how well the evidence supports `root_cause`, from 0 to 1.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

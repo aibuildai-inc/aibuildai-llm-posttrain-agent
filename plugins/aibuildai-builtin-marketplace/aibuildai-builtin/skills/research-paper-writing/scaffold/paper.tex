@@ -1,0 +1,58 @@
+% The official NeurIPS 2024 submission template with its sample content
+% removed. Copy this whole scaffold directory into your own artifacts
+% directory and edit it freely: the file is yours from the moment you copy it,
+% and nothing writes any part of it for you.
+%
+% Compile it from your artifacts directory with the tectonic already on your
+% PATH:
+%
+%     tectonic -X compile paper.tex --keep-logs
+%
+% Read what tectonic prints, fix your own source, and compile again.
+
+\documentclass{article}
+
+% If you need to pass options to natbib, do it BEFORE neurips_2024 loads it:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+
+% Ready for submission. For a preprint, e.g. for arXiv, use:
+%     \usepackage[preprint]{neurips_2024}
+% For the camera-ready version, use:
+%     \usepackage[final]{neurips_2024}
+\usepackage{neurips_2024}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+\title{Your title}
+
+\author{%
+  Your author line
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  Your abstract.
+\end{abstract}
+
+\section{Introduction}
+
+Your text. Cite with \citep{key} against your own \texttt{references.bib}, and
+include a figure you generated yourself with
+\verb|\includegraphics{figures/name.png}|.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

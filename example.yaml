@@ -1,0 +1,437 @@
+# aibuildai config -- AUTO-GENERATED, do not hand-edit this file.
+#
+# GENERATED from the Pydantic config models in config.py (the single source of
+# truth for defaults AND per-option docs). To change a default/comment or add/
+# remove an option, edit config.py and regenerate:
+#   `python -m startup.example_yaml`.
+#
+# To configure a run, copy this file and edit your COPY's values, then:
+#   aibuildai run <your copy>
+# Lines marked `REQUIRED -- replace` have no default and must be supplied.
+
+# Inputs and the manager-generated identity for one run.
+run:
+  # short task id (names the output dir)
+  # REQUIRED -- replace
+  task_name: my-task
+  # optional host conda environment cloned into this run's Program environment before Setup; cloning needs conda initialized in the launching shell. A missing base creates a fresh Python 3.11 environment with the product's own tooling, no conda needed; unset means look for an environment named by run.task_name
+  conda_env: null
+  # the user's task folder: the whole run input. It holds what the task asks for in any readable form plus every material the task needs. Setup reads it, freezes it as the run's README, and writes the run's score program; it is read-only for the whole run
+  # REQUIRED -- replace
+  data_root: /path/to/task-folder
+  # when true, SETUP prepares the task itself: the task statement comes from run.task_prompt and the task folder ships no data, so SETUP follows its llm.system_instructions to obtain the data + evaluation spec, carve a held-out answer key, and author the score program + README from scratch. Default false: the task folder holds the statement and the data, and SETUP only wraps them
+  setup_from_scratch: false
+  # the task statement for a setup_from_scratch run: what to solve, in the user's own words (e.g. the competition to enter). SETUP copies it verbatim into the run's README, so every later role reads exactly this text. REQUIRED when run.setup_from_scratch is true and REJECTED when it is false -- with setup_from_scratch false the statement lives in the run.data_root task folder instead
+  task_prompt: null
+  # writable run-output root
+  # REQUIRED -- replace
+  playground_root: /path/to/playground
+  # The run's budget: the whole-pipeline global budget (wall-clock + USD) plus the per-agent governance knobs (cost cap / reminder cadence / finalize threshold). Owned by `run` because a run IS a concern; the budget never forms its own top-level concept.
+  budget:
+    # minutes before the run stops starting new exploration work (1440 = 24h)
+    # work already running and final delivery can continue, so the result can arrive later
+    # > 0
+    wall_clock_minutes: 1440
+    # soft run-level USD admission gate over every exploration agent's own spend; null = no limit
+    # > 0
+    cost_usd: null
+    # USD cap on one agent's own spend; null = no limit
+    # > 0
+    per_agent_cost_cap_usd: null
+# Per-role LLM reasoning profiles: which model each role runs on and how it reasons. ``default`` is the base profile (the router itself runs on it, and every role cascades its unset fields from it); ``by_role`` are per-role overrides; ``auto`` opts into the subagent router. A bare string ``llm: X`` is sugar for ``{default: {model: X}}``.
+
+#     ``profile_for(role)`` resolves a role's complete profile with precedence User(``by_role``) > Router(``auto``) > ``default``, cascading field by field.
+llm:
+  # A role's COMPLETE reasoning profile: which MODEL it runs on plus the model-coupled reasoning knobs (``effort`` / ``max_thinking_tokens``). You never pick a model without owning its reasoning depth, so both live in one profile. ``llm.default`` is such a profile; ``llm.by_role`` entries are partial :class:`RoleModelProfileOverride` profiles that cascade onto it.
+  # the base reasoning profile: model (required) plus reasoning knobs. The router itself runs on this model, and every role cascades its unset fields from here.
+  default:
+    # model id this role runs on (bare deepseek-* targets DeepSeek; bare gpt-* targets OpenAI; provider/model = OpenRouter; else Anthropic)
+    # REQUIRED -- replace
+    model: claude-haiku-4-5-20251001
+    # reasoning-effort knob. null = unset (no --effort flag, the binary default applies); set low/medium/high/xhigh/max to steer reasoning depth.
+    effort: null
+    # null lets the model choose thinking depth, guided by effort; 0 disables extended thinking; a positive value sets the budget
+    # >= 0
+    max_thinking_tokens: null
+
+  # per-role profile overrides, keyed by role ('coder', 'designer', ...). Each entry is a PARTIAL profile (any subset of model/effort/max_thinking_tokens); unset fields cascade from `default` (and the router's model pick). Empty = every role uses `default`. Coexists with `auto` as the highest-precedence layer.
+  # Example (uncomment + edit):
+  #   by_role:
+  #     designer: {model: claude-opus-4-8, effort: high}
+  #     coder: {model: claude-sonnet-5}
+  #     reviser: {effort: medium}
+  by_role: {}
+
+  # opt into the subagent Router with its built-in model-routing skill. Coexists with `by_role`: the router decides each role's MODEL, then a `by_role` override wins field-by-field (User > Router > default).
+  # Example (uncomment + edit):
+  #   auto:
+  #     strategy: llm
+  #     mode: stable
+  #     per_execution: true
+  #     roles: all          # or an exact list such as [designer, coder]
+  #     allowed_models:    # null = unrestricted; a list restricts the menu
+  #       - claude-haiku-4-5
+  #       - claude-sonnet-5
+  #       - claude-opus-4-8
+  auto: null
+  # seconds of provider-outage patience before a paused run stops; unset waits forever
+  # > 0
+  retry_ceiling_s: null
+
+  # extra run instructions keyed by agent role; each role receives only the text under its own name
+  # Example (uncomment + edit):
+  #   setup: |
+  #     Install every package the task needs.
+  #   designer: |
+  #     Use a pretrained model when it fits the task.
+  #   worker: |
+  #     Load the planned pretrained weights.
+  system_instructions: {}
+# one required time calculation for every WorkUnit type used by the run. `retry` beside a budget says how many extra runs a unit of that type gets after a terminal failure; 0 is one run only.
+# REQUIRED -- replace
+work_units:
+  - kind: llm_agent
+    name: aggregator
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: coder
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: coder_review
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: designer
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: designer_review
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: finalizer
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: judge
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: meta
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: meta_review
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: reviser
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: reviser_review
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: router
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: selector
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: setup
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: setup_review
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: submitter
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: worker
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: worker_review
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: writer
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: llm_agent
+    name: writer_review
+    budget:
+      kind: fixed
+      minutes: 60
+    retry: 0
+  - kind: program
+    name: score_program
+    budget:
+      kind: fixed
+      minutes: 2
+    retry: 0
+  - kind: program
+    name: training
+    budget:
+      kind: expected
+      min_minutes: 30
+      max_minutes: 600
+      slack_fraction: 0.3
+    retry: 0
+# Root Search selection and its business Input.
+
+#     ``kind`` selects the registered root Search class. ``input`` is validated directly against that class's own declared Input model -- that model is the sole authority for which parameters are accepted, their types, defaults, and validation; an unknown field fails at startup as ``search.input.<field>``. The canonical validated value becomes the root Search's frozen journaled Input.
+search:
+  # the selected Search's own business parameters, validated directly against that Search class's Input model (the sole authority for names, types, defaults, and validation). Each kind documents its own fields below; an unknown field fails at startup. The starter config derives this block's live value from the default kind's own Input model.
+  # fields for kind 'tree':
+  #   parallel (REQUIRED) -- max concurrent evaluations. This is the concurrency ceiling, NOT the search method. Required; never derived from host hardware.
+  #   num_designs (default None) -- initial designs the designer proposes (the fan-out the judge/selector rank). null = the designer decides the count from task complexity; an int forces exactly that many.
+  #   num_revisions (default None) -- revision proposals a completed evaluation fans out (children proposed per evaluation). null = the Reviser decides the count; an int forces exactly that many. 0 proposals stays legal and deliberately ends that line.
+  #   max_evaluations (default None) -- attempted-evaluation ceiling (failures occupy a slot); 0 runs no evaluations at all. null = no count cap: the selector stops the search when further exploration is no longer worthwhile, backed by the run-level wall-clock + cost budget.
+  #   early_stopping (default 3) -- stop the search once this many completed evaluations in a row have all failed the same way (the same failure.kind). 0 turns this off.
+  # fields for kind 'linear':
+  #   num_designs (default 1)
+  #   num_revisions (default 1)
+  #   parallel (default 1)
+  #   max_evaluations (default None) -- attempted-evaluation ceiling (failures occupy a slot); 0 runs no evaluations at all. null = no count cap beyond the run-level wall-clock + cost budget.
+  #   early_stopping (default 3) -- stop the search once this many completed evaluations in a row have all failed the same way (the same failure.kind). 0 turns this off.
+  # fields for kind 'parallel':
+  #   parallel (REQUIRED) -- max concurrent evaluation chains. This is the concurrency ceiling, NOT the search method. Required; never derived from host hardware.
+  #   num_designs (default None) -- initial designs the designer proposes (one starting chain per design). null = the designer decides the count from task complexity; an int forces exactly that many.
+  #   num_revisions (default 1) -- revision proposals a completed evaluation fans out. Fixed at 1: each chain continues as one line, exactly like ``linear``, just widened to N chains.
+  #   max_evaluations (default None) -- attempted-evaluation ceiling (failures occupy a slot); 0 runs no evaluations at all. null = no count cap beyond the run-level wall-clock + cost budget.
+  #   early_stopping (default 3) -- stop the search once this many completed evaluations in a row have all failed the same way (the same failure.kind). 0 turns this off.
+  # fields for kind 'nb':
+  #   parallel (REQUIRED) -- max concurrent Worker evaluations.
+  #   num_designs (default 1)
+  #   num_revisions (default 1)
+  #   max_evaluations (default None) -- attempted-evaluation ceiling (failures occupy a slot); 0 runs no evaluations at all. null = no count cap beyond the run-level wall-clock + cost budget.
+  #   early_stopping (default 3) -- stop the search once this many completed evaluations in a row have all failed the same way (the same failure.kind). 0 turns this off.
+  # fields for kind 'nb_tree':
+  #   parallel (REQUIRED) -- max concurrent complete-Worker evaluations.
+  #   num_designs (default None) -- the complete-Worker tree's starting evaluations. null = the designer decides the count from task complexity.
+  #   num_revisions (default None) -- the maximum revision children emitted by each Worker. null = the Worker decides the count; an int caps it. 0 proposals stays legal and deliberately ends that line.
+  #   max_evaluations (default None) -- attempted-evaluation ceiling (failures occupy a slot); 0 runs no evaluations at all. null = no count cap: the search stops when the run-level wall-clock + cost budget is exhausted.
+  #   early_stopping (default 3) -- stop the search once this many completed evaluations in a row have all failed the same way (the same failure.kind). 0 turns this off.
+  # fields for kind 'meta':
+  #   report (default True) -- write, compile, and review the Meta design report (report/paper.pdf) beside the generated package; false skips the document entirely and judges the package alone
+  input:
+    parallel: 4
+# Built-in tool names disabled for EVERY role and their spawned sub-agents (e.g. ['WebSearch', 'WebFetch']). Empty (the default) disables nothing. A task derived from a paper may set this to ['WebSearch', 'WebFetch'] so the paper's method cannot be looked up as a shortcut. A resolved skill, sub-agent, or MCP grant requires Skill, Agent and Task, or mcp__* respectively; blocking a required invocation tool is rejected instead of listing an extension that cannot run.
+disallowed_tools: []
+# Scheduler host re-check cadence.
+
+#     Work waiting at the disk free-space floor wakes when another execution ends. ``recheck_seconds`` is the backup wake for a host change that happened outside this run.
+scheduler:
+  # host re-check cadence (seconds)
+  # >= 1
+  recheck_seconds: 1800
+# Per-role semantic verification (off by default).
+
+#     It decides only whether a role's semantic verifier is part of the run at
+#     all. Once a verifier is in a role's chain its VERDICT is authoritative and
+#     a negative one rejects the candidate, but a verifier that FAILED gave no
+#     verdict: that is logged and the chain goes on, so it neither rejects the
+#     candidate nor becomes the failure of the role that ran it. The
+#     deterministic checks a role runs for itself are its own acceptance
+#     contract and are never switchable from here.
+verifier:
+  # per-role semantic review. Set a role to true to include the reviewer that role composes; false or omission leaves it out. Empty = all off. An unknown role name fails at startup against the roles the configured Search actually composes a reviewer for, which the roles themselves declare -- so no list here can go stale against the build.
+  # Example (uncomment + edit):
+  #   enable:
+  #     coder: true
+  #     designer: true
+  enable: {}
+# Prompt built-in solving roles to record metrics — on by default.
+
+#     Every materialized Agent and Program can import the same wandb-shaped ``aibuildai`` recorder. When this setting is on, the built-in coder and worker prompts introduce ``init`` / ``log`` / ``finish`` and each logged metric key becomes one live Web Workspace curve. The recorder appends to that WorkUnit attempt's ``metrics.jsonl``. Each ``init()`` opens one series segment, so one file can hold several segments and Web keeps their metric keys separate. Off only removes the prompt instruction; the shared recorder remains available to authored WorkUnits.
+progress:
+  # introduce the shared aibuildai metric recorder (init / log / finish) in the built-in coder and worker prompts. Each logged metric key becomes one live Web Workspace curve in that WorkUnit attempt's metrics.jsonl. Each init call opens one separate segment. Off removes only the prompt instruction; every materialized Agent and Program can still import and use the recorder.
+  enable: true
+# The run's budget for an EXTERNAL scoring oracle.
+
+#     Some tasks are judged by a service the run does not own — a competition leaderboard, a held-out grader behind an API — and that service is rate limited, so its score is scarce in a way the local score program is not. With no budget the run can only spend it the way the Finalizer does: once, at the very end, on the result selected from the local score.
+
+#     ``max_versions`` is that budget. Above 1 it activates the SUBMITTER, which spends the budget across the candidates the search produced while the Finalizer keeps ownership of the run's deliverable.
+
+#     The number bounds THIS RUN only. It is not a claim about Kaggle's own quota, which resets on its own clock and is shared with anything else using the account.
+submission:
+  # notebook versions this run may push. One push is one version, and a version is what the external service scores. 1 (the default) leaves the run exactly as it is: the FINALIZER delivers, and any submitting it does comes from its own instructions. Above 1 activates the SUBMITTER, which spends up to this many versions on the candidates the search produced while the FINALIZER still delivers the selected result
+  # >= 1
+  max_versions: 1
+# Writer paper settings. ``writer.enable`` controls the final paper after AGGREGATE. The Writer compiles each one itself with the tectonic its ``required_pdf`` declaration puts on its PATH. ``verifier.enable['writer']`` controls the optional faithfulness check.
+writer:
+  # opt in the WRITEUP phase: after aggregation, write a NeurIPS paper describing the run and compile it to a PDF in its own artifacts. Off by default; the standalone `aibuildai write-paper <run-dir>` command runs regardless, and supplies the Writer's work_units time entry itself when the run archived none (a switched-off Writer needs no entry).
+  enable: false
+# Absolute WorkUnit limits and optional independent run totals.
+resources:
+  # Optional hard limits for the whole run.
+
+  #     These limits are independent of WorkUnit limits and are never used to derive them. A run limit may sit below the sum of all WorkUnits that may overlap. In that case, the run limit can kill a process before its WorkUnit reaches its own limit. Include the framework and all WorkUnits that may overlap when every WorkUnit limit must be reachable.
+  run:
+    # optional hard CPU ceiling for the whole run
+    # > 0.0
+    cpu_max_cores: null
+    # optional hard memory ceiling for the whole run, in GiB (one GB here is 1024^3 bytes)
+    # > 0
+    memory_max_gb: null
+  # Base limits plus replacements keyed by WorkUnit kind and name.
+
+  #     The ``llm_agent`` limit covers the model process and all Bash commands it starts together.
+
+  #     A role's limit is also the ceiling every WorkUnit it starts may declare. Most roles start none, so their limit is about one agent, and this row is that limit. A role that runs a whole search by starting durable work -- ``manager`` -- has the search's resource authority instead of one of its own, so it declares no ceiling here and this row does not reach it.
+  work_unit:
+    # hard CPU ceiling for one WorkUnit, in cores, with at most three decimal places
+    # > 0.0
+    # REQUIRED -- replace
+    cpu_max_cores: 4
+    # hard memory ceiling for one WorkUnit, in GiB (one GB here is 1024^3 bytes)
+    # > 0
+    # REQUIRED -- replace
+    memory_max_gb: 16
+
+    # partial limits keyed first by WorkUnit kind, then by name. Each set field replaces the base value for that identity. The llm_agent limit covers its model process and all Bash commands
+    # Example (uncomment + edit):
+    #   by_kind:
+    #     program:
+    #       training: {cpu_max_cores: 8, memory_max_gb: 64}
+    #       score_program: {memory_max_gb: 8}
+    by_kind: {}
+  gpu:
+    # a GPU must have at least this much free VRAM (MiB) to be used
+    # >= 1
+    min_free_mib: 8192
+    # a GPU above this utilization percent is considered busy and skipped
+    # >= 1, <= 100
+    busy_util_threshold: 90
+    # number of fast NVML probes whose MEDIAN utilization is used (1 = single probe, no debounce; >1 smooths the soft-sort util signal against second-scale spikes)
+    # >= 1
+    util_samples: 1
+  # The bwrap FILE-ISOLATION layer (opt-in, default off). Much of the fleet blocks unprivileged user namespaces, so sandbox-off is the standard operating mode.
+
+  #     It governs ONE axis: what the filesystem looks like to a unit. It does NOT govern resources. The kernel bounds every WorkUnit Scope either way -- joining a cgroup needs no namespace and no privilege -- and child WorkUnits and Bash commands stay below their owning WorkUnit's ceiling with this off as with it on. The only thing that changes is the PATH a command sees for its own cgroup (``Confinement.commands_root()``).
+
+  #     Coupling the two axes is a real defect, and it shipped once: because the commands cgroup reached the model only THROUGH the bwrap bind, turning the sandbox off left the commands tier out of existence entirely and quietly cut every Bash command to the agent session's share, a tenth of what it is owed.
+
+  #     What sandbox-off genuinely costs: read/write confinement, and with it any defence against a DELIBERATE model -- one that walks /proc/self/cgroup and rewrites a limit, or reads a file it should not. The cgroup bounds accidents; the sandbox is what bounds an adversary.
+  sandbox:
+    # set true on hosts with working userns to add kernel-level filesystem read/write confinement. It does not change any resource limit: the kernel bounds this run either way
+    enable: false
+    # extra host paths to bind read-only when the sandbox is on, ADDED to the exact view each launch declares (the operating system's /usr, /etc, and /run, the interpreter it runs, and the directories its role names) — a listed path can never drop a declared one. List only what this host additionally needs, e.g. a toolchain the task uses
+    system_read_paths: []
+    # extra host paths to bind read-write when the sandbox is on, ADDED to the exact view each launch declares (only the role that builds environments writes the Conda root; the model CLI writes its own config dir) — a listed path can never drop a declared one. List only what this host additionally needs, e.g. a credential dir a task submits with
+    system_write_paths: []
+  # the GPUs this run may see, as physical NVIDIA card indices. Unset = every host GPU. An empty list = a CPU-only run: no card is claimed and no CUDA-visibility check runs. Set = the whole run's visible set: the allocator claims only inside it, every sandboxed unit dev-binds only its cards, and startup refuses indices NVML does not report. The external CUDA_VISIBLE_DEVICES env var is refused at startup; this field is the single control point.
+  cuda_visible_devices: null
+# Memory injected each run, and the operator's own memory dir.
+
+#     Named for what it carries. The phrase "knowledge base" belongs to the remote Kb MCP service (`mcps.kb`, base via AIBUILDAI_KB_BASE_URL), which is a different subsystem: it serves skill documents on request, while this one injects a corpus into every agent's system prompt.
+
+#     `memorize` reads the runs it summarizes from `run.playground_root`, which already declares where this run's output lives. There is no second field naming that directory here.
+memory:
+  # inject memory into every agent's system prompt; the default false injects nothing and reads no corpus
+  enable: false
+  # budget for the built-in memory body; the caution header, your own notes and the truncation marker sit outside this budget, so the text that reaches the agent can come back longer or shorter than it; null = no budget
+  # > 0
+  max_chars: 30000
+  # user-managed memory dir (read every run)
+  user_dir: ~/.aibuildai/memory
+
+# MCP server registry. Every entry requires `type`: `reference`, `stdio`, `http`,
+# or `sse`. `roles` is optional and defaults to all active Agent roles. A reference
+# uses the registry key as a product-owned built-in name. A stdio entry requires
+# `command`; http and sse require `url`. ${VAR} is expanded at runtime in
+# command, url, env, and headers. Built-in: `kb`.
+# Example (uncomment + edit):
+#   mcps:
+#     kb: { type: reference }
+#     my_tool: { type: stdio, command: python, args: [-m, my_tool.server], roles: [coder] }
+#     my_http: { type: http, url: https://example.test/mcp, headers: { Authorization: "Bearer ${TOKEN}" } }
+mcps: {}
+
+# Plugin registry. Every entry requires `type: reference` for a shipped plugin or
+# `type: path` with `path` for a user plugin. `roles` is optional and defaults to all
+# active Agent roles. A grant gives those roles every skill and bundled Agent in the
+# plugin. Empty keeps only the implicit core plugin.
+# Example (uncomment + edit):
+#   plugins:
+#     aibuildai-builtin: { type: reference }
+#     my-team-playbook: { type: path, path: ./plugins/my-team-playbook, roles: [coder] }
+plugins: {}
+
+# Standalone sub-agent registry. Every entry requires `type: reference` for a shipped
+# agent or `type: path` with `path` for a user agent. `roles` is optional and adds to
+# the built-in defaults.
+# Example (uncomment + edit):
+#   agents:
+#     mcp-subagent: { type: reference, roles: [router] }
+#     my-critic: { type: path, path: ./agents/critic.md, roles: [reviser] }
+agents: {}
+
+# Per-skill role grants. Every entry requires `type: reference` for a qualified skill
+# from an enabled plugin or `type: path` with `path` for a user skill. `roles` is
+# optional and adds to built-in and plugin grants.
+# Example (uncomment + edit):
+#   skills:
+#     aibuildai-builtin:ensemble: { type: reference, roles: [router] }
+#     my-own-skill: { type: path, path: ./skills/my-own-skill, roles: [coder] }
+skills: {}
+
+# Advanced — rarely changed; uncomment a line to override its default.
+# run:
+#   budget:
+#     reminder_interval_divisor: 10  # budget-reminder cadence = budget / this; >= 1
+#     finalize_threshold_pct: 20.0 # remaining-budget percent reserved for finishing: an agent below it switches to FINALIZE tone, and the run below it launches no new work; > 0.0, < 100.0
+# search:
+#   kind: tree  # search method: how the pipeline explores the design space. Startup selects the registered Search type by this name; an unavailable name fails loud during startup.; 'tree' = The branch-and-select tree: designer fans out designs, judge scores, selector picks which ones to run, reviser revises completed ones, aggregator ensembles across leaves.; 'linear' = One explicit Designer -> serial chain of complete Workers -> Aggregator ensemble flow.; 'parallel' = One explicit Designer -> up to `parallel` concurrent chains of complete Workers -> Aggregator ensemble flow.; 'nb' = One complete Worker per evaluation in a single chain, scored after it finishes.; 'nb_tree' = A complete-Worker evaluation lifecycle expanded into a tree: each Worker owns implementation and run.py execution for its evaluation and leaves the finished output in that evaluation's output directory (no Coder / Reviser / Training Program / Judge / Selector / Aggregator); the Designer creates multiple starting plans, each Worker can emit multiple revision children, and every child runs directly. The framework scores each finished evaluation with the task folder's own score program.; 'meta' = An Agent writes the search program, and the run then executes the program it wrote.
+# submission:
+#   share_external_scores: false  # feed external scores BACK into the search as advisory context. This does NOT control whether they are recorded: whenever the SUBMITTER runs it always writes every result it gets to external_scores.jsonl in its own run-home records dir, because that costs nothing and is the run's only durable record of what the external service returned. This flag decides only who READS it. False (the default) keeps information one-way: the SUBMITTER reads local scores to rank what to send and nothing it learns reaches the search. True lets the roles that draft the next candidates (the NB WORKER and the REVISER) also see which candidates the external oracle scored and how. It never affects RANKING -- the winner is still chosen by the local score program alone -- it only tells those two roles where the local proxy and the real oracle disagreed. Requires max_versions above 1, since with no SUBMITTER there are no external scores to share
+# resources:
+#   run:
+#     disk_free_floor_gb: 50  # stop admitting new work when the run's filesystem has less free space than this. It protects the machine -- and, on a shared host, other people's data. It is admission control, not a kill: a training run three hours in is not the right thing to shoot because the disk got tight.; >= 1

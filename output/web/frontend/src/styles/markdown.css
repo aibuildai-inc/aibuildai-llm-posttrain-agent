@@ -1,0 +1,311 @@
+/* The MarkdownSurface is a warm editorial document. Prose is the UI sans at a readable
+   measure; code and data are mono. Shiki token colors are the
+   --aibuildai-code-* variables mapped here onto the project palette —
+   neutral text roles for controlled categories — so no
+   third-party syntax theme ships as the appearance. */
+
+.markdown-surface {
+  max-width: 78ch;
+  font-size: 14px;
+  line-height: 1.68;
+  color: var(--aibuildai-atlas-ink);
+
+  --aibuildai-code-foreground: var(--aibuildai-atlas-ink);
+  --aibuildai-code-background: transparent;
+  --aibuildai-code-token-comment: var(--aibuildai-atlas-ink-secondary);
+  --aibuildai-code-token-keyword: var(--aibuildai-atlas-ink);
+  --aibuildai-code-token-function: color-mix(in srgb, var(--aibuildai-atlas-ink) 82%, var(--aibuildai-atlas-ink-secondary));
+  --aibuildai-code-token-constant: var(--aibuildai-atlas-ink);
+  --aibuildai-code-token-string: var(--aibuildai-atlas-ink-secondary);
+  --aibuildai-code-token-string-expression: var(--aibuildai-atlas-ink-secondary);
+  --aibuildai-code-token-parameter: color-mix(in srgb, var(--aibuildai-atlas-ink) 68%, var(--aibuildai-atlas-ink-secondary));
+  --aibuildai-code-token-punctuation: color-mix(in srgb, var(--aibuildai-atlas-ink) 60%, var(--aibuildai-atlas-ink-secondary));
+  --aibuildai-code-token-link: var(--aibuildai-atlas-ink);
+}
+
+/* ── Folds (transcript tool results) ── */
+
+.markdown-surface details {
+  margin: 0.9em 0;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+  border-radius: 6px;
+}
+
+.markdown-surface summary {
+  cursor: pointer;
+  padding: 0.45em 0.8em;
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 0.86em;
+  color: var(--aibuildai-atlas-ink-secondary);
+  list-style: none;
+}
+
+.markdown-surface summary::-webkit-details-marker {
+  display: none;
+}
+
+.markdown-surface summary::before {
+  content: "";
+  display: inline-block;
+  width: 0.45em;
+  height: 0.45em;
+  margin-right: 0.7em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg) translateY(-0.1em);
+  transition: transform 120ms ease;
+}
+
+.markdown-surface details[open] > summary::before {
+  transform: rotate(45deg) translateY(-0.2em);
+}
+
+.markdown-surface details[open] > summary {
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+}
+
+.markdown-surface details > :not(summary) {
+  margin-left: 0.8em;
+  margin-right: 0.8em;
+}
+
+/* ── Headings ── */
+
+.markdown-surface h1,
+.markdown-surface h2,
+.markdown-surface h3,
+.markdown-surface h4 {
+  color: var(--aibuildai-atlas-ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-weight: 650;
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+}
+
+.markdown-surface h1 {
+  font-size: 1.5em;
+  margin: 0 0 0.7em;
+}
+
+.markdown-surface h2 {
+  font-size: 1.2em;
+  margin: 1.7em 0 0.6em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 55%, transparent);
+}
+
+.markdown-surface h3 {
+  font-size: 1.05em;
+  margin: 1.4em 0 0.45em;
+}
+
+.markdown-surface h4 {
+  font-size: 0.92em;
+  margin: 1.2em 0 0.4em;
+  color: color-mix(in srgb, var(--aibuildai-atlas-ink) 82%, var(--aibuildai-atlas-ink-secondary));
+}
+
+/* ── Prose ── */
+
+.markdown-surface p {
+  margin: 0 0 0.95em;
+}
+
+.markdown-surface ul,
+.markdown-surface ol {
+  margin: 0 0 0.95em;
+  padding-left: 1.5em;
+}
+
+.markdown-surface li {
+  margin: 0.22em 0;
+}
+
+.markdown-surface li::marker {
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.markdown-surface ul ul,
+.markdown-surface ul ol,
+.markdown-surface ol ul,
+.markdown-surface ol ol {
+  margin-bottom: 0;
+}
+
+.markdown-surface input[type="checkbox"] {
+  accent-color: var(--aibuildai-highlight);
+  margin-right: 0.45em;
+  vertical-align: -0.1em;
+}
+
+.markdown-surface a {
+  color: var(--aibuildai-highlight-ink);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-highlight) 35%, transparent);
+}
+
+.markdown-surface a:hover {
+  border-bottom-color: var(--aibuildai-highlight);
+}
+
+.markdown-surface a:visited {
+  color: var(--aibuildai-highlight-ink);
+}
+
+.markdown-surface strong {
+  font-weight: 650;
+}
+
+.markdown-surface em {
+  color: color-mix(in srgb, var(--aibuildai-content) 88%, var(--aibuildai-highlight));
+  font-style: italic;
+}
+
+.markdown-surface del {
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.markdown-surface hr {
+  border: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-border) 60%, transparent);
+  margin: 1.6em 0;
+}
+
+/* ── Inline code ── */
+
+.markdown-surface :not(pre) > code {
+  font-size: 0.86em;
+  background: color-mix(in srgb, var(--aibuildai-atlas-card) 80%, var(--aibuildai-atlas-canvas));
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 45%, transparent);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+}
+
+/* ── Fenced code ── */
+
+.code-surface {
+  margin: 0 0 1.1em;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 50%, transparent);
+  border-radius: 10px;
+  background: var(--aibuildai-atlas-card);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--aibuildai-atlas-ink) 5%, transparent);
+  overflow: hidden;
+}
+
+.code-language {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+  padding: 6px 14px 0;
+}
+
+.code-surface pre {
+  margin: 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.65;
+  background: transparent;
+}
+
+.markdown-surface pre code {
+  font-size: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+/* ── Blockquote ── */
+
+.markdown-surface blockquote {
+  margin: 0 0 1em;
+  padding: 10px 16px;
+  border-left: 3px solid color-mix(in srgb, var(--aibuildai-highlight) 70%, transparent);
+  border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--aibuildai-highlight) 5%, transparent);
+  color: color-mix(in srgb, var(--aibuildai-atlas-ink) 88%, var(--aibuildai-atlas-ink-secondary));
+  font-style: normal;
+}
+
+.markdown-surface blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── Tables ── */
+
+.table-scroll {
+  overflow-x: auto;
+  margin: 0 0 1.1em;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 45%, transparent);
+  border-radius: 8px;
+}
+
+.markdown-surface table {
+  border-collapse: collapse;
+  width: max-content;
+  min-width: 100%;
+  font-size: 13px;
+}
+
+.markdown-surface th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+  padding: 8px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 60%, transparent);
+  background: color-mix(in srgb, var(--aibuildai-atlas-surface) 70%, var(--aibuildai-atlas-canvas));
+}
+
+.markdown-surface td {
+  padding: 7px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 30%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.markdown-surface tr:last-child td {
+  border-bottom: 0;
+}
+
+.markdown-surface tbody tr:hover td {
+  background: color-mix(in srgb, var(--aibuildai-atlas-border) 35%, transparent);
+}
+
+/* ── Mermaid ── */
+
+.mermaid-surface {
+  margin: 0 0 1.1em;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 50%, transparent);
+  border-radius: 10px;
+  background: var(--aibuildai-atlas-card);
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-error {
+  color: var(--aibuildai-status-error);
+  font-size: 12px;
+}
+
+/* ── Math (KaTeX) ── */
+
+.markdown-surface .katex-display {
+  margin: 0.8em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.markdown-surface .katex {
+  font-size: 1.05em;
+}

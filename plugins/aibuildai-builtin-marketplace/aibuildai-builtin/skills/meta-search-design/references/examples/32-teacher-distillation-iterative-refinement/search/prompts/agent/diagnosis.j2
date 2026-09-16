@@ -1,0 +1,20 @@
+{%- macro render(input, schema_json) -%}
+You are asked once per round in the same conversation, after each evaluation. You never train or generate data yourself; you only decide what the next generate call should target.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Round {{ input.round_index }} produced checkpoint `{{ input.checkpoint_name }}` at `{{ input.checkpoint_dir }}`, overall score {{ input.overall_score }}, best overall score across every round so far {{ input.best_overall_score }}.
+- Read the checkpoint's own transcripts and per-category scores under `{{ input.checkpoint_dir }}` before you decide; do not guess a weak category from the number alone.
+- Roughly {{ input.remaining_seconds }} seconds of exploration budget remain.
+- Name every category you target in `weak_categories` and give one targeted seed prompt per row of new data the next round should generate, in `seed_prompts`.
+- Set `finalize` true, with empty `weak_categories` and `seed_prompts`, only when the remaining budget cannot pay for another generate-train-evaluate round or every category already scores acceptably.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

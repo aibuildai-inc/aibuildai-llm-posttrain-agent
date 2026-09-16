@@ -1,0 +1,14 @@
+{
+  "objective": "Search a sequence of hyperparameter decisions for the sentiment classifier in train.py that maximizes macro F1 on the held-out validation split.",
+  "data_dir": "/run/public/data",
+  "source_dir": "/run/public/source",
+  "metric_name": "macro_f1",
+  "max_simulations": 24,
+  "max_depth": 4,
+  "branching_factor": 3,
+  "exploration_constant": 1.4,
+  "discount": 1.0,
+  "expander_wall_clock_seconds": 300,
+  "rollout_wall_clock_seconds": 300,
+  "trial_wall_clock_seconds": 1800
+}

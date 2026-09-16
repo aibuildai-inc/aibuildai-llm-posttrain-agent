@@ -1,0 +1,40 @@
+{
+  "objective": "Package the trained review-classifier checkpoint for CPU and GPU serving; the release must run under both the CPU reference runtime and the current CUDA runtime with prediction drift under the declared tolerance.",
+  "source_checkpoint_path": "/run/artifacts/checkpoints/review-classifier/model.pt",
+  "toolchain_dir": "/run/public/data/export-toolchain",
+  "offered_targets": [
+    "onnx",
+    "torchscript"
+  ],
+  "offered_precision_profiles": [
+    "fp32",
+    "fp16"
+  ],
+  "offered_shape_profiles": [
+    "fixed-batch-32",
+    "dynamic-batch"
+  ],
+  "offered_converter_options": [
+    "--opset=17",
+    "--fold-constants",
+    "--simplify"
+  ],
+  "offered_compatibility_profiles": [
+    "cpu-reference",
+    "cuda-current",
+    "cuda-previous"
+  ],
+  "offered_tolerance_profiles": [
+    "strict",
+    "standard"
+  ],
+  "mandatory_environment_profiles": [
+    "cpu-reference",
+    "cuda-current"
+  ],
+  "max_rounds": 3,
+  "strategy_wall_clock_seconds": 600,
+  "review_wall_clock_seconds": 600,
+  "export_wall_clock_seconds": 1800,
+  "validation_wall_clock_seconds": 900
+}

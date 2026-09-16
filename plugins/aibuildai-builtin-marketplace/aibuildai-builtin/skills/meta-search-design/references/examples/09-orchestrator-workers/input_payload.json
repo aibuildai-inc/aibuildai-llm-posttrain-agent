@@ -1,0 +1,10 @@
+{
+  "objective": "After merging the last change, validation AUC of the churn model on customer_churn.csv dropped from 0.81 to 0.74. Find the root cause.",
+  "repo_dir": "/run/public/data",
+  "max_waves": 3,
+  "max_assignments_per_wave": 3,
+  "max_total_assignments": 6,
+  "orchestrator_wall_clock_seconds": 900,
+  "worker_wall_clock_seconds": 1200,
+  "synthesizer_wall_clock_seconds": 600
+}

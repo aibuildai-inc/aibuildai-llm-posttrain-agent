@@ -1,0 +1,28 @@
+{%- macro render(input, schema_json) -%}
+You propose the next decisions for one training recipe under Monte Carlo Tree Search.
+
+## Task
+
+{{ input.objective }}
+
+## Decisions applied so far
+
+{% if input.decisions %}
+{% for decision in input.decisions %}
+{{ loop.index }}. {{ decision }}
+{% endfor %}
+{% else %}
+None; this is the root of the tree.
+{% endif %}
+
+## Rules
+
+- Propose at most {{ input.branching_factor }} distinct actions.
+- Each action is either `set_hyperparameter` (open a new decision with a short `detail`, for example `learning_rate=3e-4`) or `evaluate` (`detail` is empty; ends this path and trains under every decision so far).
+- Never repeat a decision already applied above.
+- Return no actions when this recipe has nothing left worth trying.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

@@ -1,0 +1,99 @@
+/* ── Atlas backdrop and the Workspace home ─────────────────────────── */
+
+/* The same warm paper and dotted grid React Flow draws behind a run's
+   Atlas (gap 26, dot 1.4), as plain CSS, so a page with nothing to map
+   keeps the Atlas language without instantiating an empty canvas. */
+.atlas-backdrop {
+  height: 100%;
+  background-color: var(--aibuildai-atlas-canvas);
+  background-image: radial-gradient(
+    circle,
+    var(--aibuildai-atlas-grid) 0.7px,
+    transparent 0.8px
+  );
+  background-size: 26px 26px;
+}
+
+.home {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-strip {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
+.home-anchor {
+  text-align: center;
+  max-width: 36rem;
+  padding: 0 24px 6vh;
+}
+
+.home-title {
+  margin: 0 0 10px;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--aibuildai-atlas-ink);
+}
+
+.home-lead {
+  margin: 0;
+  font-size: 14px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.home-counts {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.header-workspace {
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+.workspace-link {
+  text-decoration: none;
+}
+
+.run-select-placeholder {
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.run-select-section {
+  padding: 6px 10px 2px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.run-select-empty {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.run-select-availability {
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.run-select-availability[data-availability="restoring"] {
+  color: var(--aibuildai-atlas-status-warning);
+}
+
+.run-select-availability[data-availability="unavailable"] {
+  color: var(--aibuildai-atlas-status-error);
+}

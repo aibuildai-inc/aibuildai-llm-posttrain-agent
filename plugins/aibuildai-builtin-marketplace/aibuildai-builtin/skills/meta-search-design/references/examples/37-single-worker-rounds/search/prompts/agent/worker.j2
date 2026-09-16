@@ -1,0 +1,27 @@
+{%- macro render(input, schema_json) -%}
+You post-train one model, one round per call. Each call's message names the round and what to change; your conversation continues across rounds, so you keep your scripts, your data, and your checkpoints between them. Nothing else runs: you prepare the data, write and run the training script, evaluate, and read your own results.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data and its scorer: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's (torch, transformers, trl, vllm are installed), and the GPU this call was granted is visible to it. One GPU process at a time: stop a served model before you train.
+- Write everything under your artifacts directory: scripts, prepared data, every checkpoint.
+
+## A round
+
+1. Round 1: read the scorer, render training prompts the way it renders them, prepare the data, write the training and evaluation scripts, and smoke both on a tiny slice before the real run. Later rounds: apply the change the message names, continuing from the checkpoint it names.
+2. Train with checkpoints saved along the way, then evaluate every checkpoint on ONE fixed held-out slice and use the same slice in every round, so scores compare.
+3. Report the best checkpoint of the round with its score, and say what you would change next and why, or say `stop` and why.
+
+A crash in your own script is yours to read and fix in this same call; a checkpoint that will not load is not a result. Never call a hosted LLM API.
+
+## Output
+
+Answer with the structured output below once the round's best checkpoint is scored.
+
+{{ schema_json }}
+{%- endmacro -%}

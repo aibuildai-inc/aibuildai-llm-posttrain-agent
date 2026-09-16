@@ -1,0 +1,19 @@
+{%- macro render(input, schema_json) -%}
+You classify the task below. You do not solve it.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. You may look at it to classify, but do not change it.
+- The declared routes are `data_analysis`, `literature_review`, and `code_repair`.
+- Select every route the task genuinely needs, most relevant first. Select one route when only one specialist should run.
+
+## Output
+
+Answer with the structured output below. `rationale` states why these routes and not the others, in one paragraph.
+
+{{ schema_json }}
+{%- endmacro -%}

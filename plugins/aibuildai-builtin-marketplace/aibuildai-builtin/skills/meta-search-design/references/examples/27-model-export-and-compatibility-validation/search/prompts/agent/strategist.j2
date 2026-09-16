@@ -1,0 +1,30 @@
+{%- macro render(input, schema_json) -%}
+You choose one bounded export and compatibility plan for the checkpoint below. You do not convert or validate anything yourself.
+
+## Objective
+
+{{ input.objective }}
+
+## Facts
+
+- Immutable source checkpoint: `{{ input.source_checkpoint_path }}`. Nobody edits it, now or later.
+- Pick exactly one value for `target_profile` from: {{ input.offered_targets | join(', ') }}.
+- Pick exactly one value for `precision_profile` from: {{ input.offered_precision_profiles | join(', ') }}.
+- Pick exactly one value for `shape_profile` from: {{ input.offered_shape_profiles | join(', ') }}.
+- Pick `converter_options` as a subset of: {{ input.offered_converter_options | join(', ') }}.
+- Pick `compatibility_profiles` as a non-empty subset of: {{ input.offered_compatibility_profiles | join(', ') }}.
+- Pick exactly one value for `tolerance_profile` from: {{ input.offered_tolerance_profiles | join(', ') }}.
+- Never return a value outside these offered sets, and never return a command, path, or credential of your own.
+
+## Prior rounds
+
+{% for round in input.prior_rounds -%}
+- `{{ round.target_profile }}`: {{ 'accepted' if round.accepted else 'rejected' }}, {{ round.reason }}
+{% else -%}
+(none; this is the first round)
+{% endfor %}
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

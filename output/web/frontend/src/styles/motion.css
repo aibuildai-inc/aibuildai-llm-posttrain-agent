@@ -1,0 +1,23 @@
+/* Motion for React owns layout and content transitions. CSS owns the
+   running-status pulse. Reduced motion stops it. Failed, completed, and
+   pending executions are still. */
+
+@keyframes aibuildai-running-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 3.5px color-mix(in srgb, currentColor 12%, transparent);
+  }
+}
+
+.status-dot-running {
+  animation: aibuildai-running-pulse 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-dot-running {
+    animation: none;
+  }
+}

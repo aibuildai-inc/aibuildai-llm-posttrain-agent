@@ -1,0 +1,16 @@
+{
+  "objective": "Modify the gradient-boosting pipeline in source_dir until validation RMSE on train.csv reaches 0.18 or the expansion budget is spent, accounting for the compute each trial actually costs.",
+  "data_dir": "/run/public/data",
+  "source_dir": "/run/public/source",
+  "python_path": "/run/public/envs/astar/bin/python",
+  "initial_config_json": "{\"model\": \"gradient_boosting\", \"n_estimators\": 200, \"learning_rate\": 0.1, \"max_depth\": 4}",
+  "metric_name": "val_rmse",
+  "target_metric": 0.18,
+  "metric_lower_is_better": true,
+  "branching_factor": 3,
+  "max_expansions": 10,
+  "max_frontier_size": 15,
+  "expander_wall_clock_seconds": 600,
+  "trial_wall_clock_seconds": 1800,
+  "heuristic_wall_clock_seconds": 300
+}

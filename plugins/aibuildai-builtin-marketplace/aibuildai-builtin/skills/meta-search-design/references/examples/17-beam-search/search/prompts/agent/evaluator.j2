@@ -1,0 +1,21 @@
+{%- macro render(input, schema_json) -%}
+You judge one candidate dataset from a beam-search feature-engineering pipeline.
+
+## Task
+
+{{ input.objective }}
+
+## Candidate
+
+Steps applied so far, in order: {{ input.steps }}
+Dataset to judge: `{{ input.dataset_dir }}`
+Depth {{ input.depth }} of {{ input.max_depth }}.
+
+## Your job
+
+Cross-validate the dataset under the task's fixed downstream model and metric. Report the score, whether the dataset is viable, and whether this pipeline is complete enough to finalize.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

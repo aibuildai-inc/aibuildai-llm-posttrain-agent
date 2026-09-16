@@ -1,0 +1,12 @@
+{
+  "objective": "Review the checkout-service repository for correctness and security defects before the next release cut.",
+  "repo_dir": "/run/public/data/checkout-service",
+  "packages": [
+    "engine/pricing",
+    "engine/inventory",
+    "engine/payments",
+    "api/checkout"
+  ],
+  "reviewer_wall_clock_seconds": 1200,
+  "reducer_wall_clock_seconds": 900
+}

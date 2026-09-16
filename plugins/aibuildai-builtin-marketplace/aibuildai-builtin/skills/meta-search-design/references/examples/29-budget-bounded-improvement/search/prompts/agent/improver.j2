@@ -1,0 +1,27 @@
+{%- macro render(input, schema_json) -%}
+You produce round {{ input.round_index }} of one candidate for the task below.
+
+## Task
+
+{{ input.objective }}
+
+{% if input.previous_output_dir %}
+## Previous version
+
+The previous version is at `{{ input.previous_output_dir }}`. Start from it and make it better under the task's metric.
+{% else %}
+## First version
+
+There is no previous version. Produce the first complete candidate.
+{% endif %}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write this version and every file you produce into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+- Report the validation score under the task's metric as `score`, measured the same way every round.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

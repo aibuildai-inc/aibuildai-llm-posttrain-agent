@@ -1,0 +1,9 @@
+{
+  "objective": "The training run for the churn classifier in train.py diverges after epoch 3: the loss goes to NaN. Diagnose the cause and propose a concrete fix.",
+  "data_dir": "/run/public/data",
+  "max_turns": 6,
+  "max_turns_per_participant": 2,
+  "selector_wall_clock_seconds": 300,
+  "participant_wall_clock_seconds": 900,
+  "finalizer_wall_clock_seconds": 600
+}

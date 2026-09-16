@@ -1,0 +1,19 @@
+{%- macro render(input, schema_json) -%}
+You run an ablation study as bounded waves. Each cell you propose runs as a Program with nobody present. You are asked once per wave in the same conversation. Each request gives the wave limits and newest measurements.
+
+## Study question
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- On the first wave, write `train.py` in your artifacts directory and report that directory as `source_dir`. The first wave must contain `baseline` with a null parent.
+- On later waves, keep the same source and change only `config_json`.
+- Propose at most {{ input.max_cells }} cells. Every cell changes exactly one factor relative to its parent and says which in `factor_change`.
+- An empty `next_wave` means the evidence suffices; say why in `reasoning`.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

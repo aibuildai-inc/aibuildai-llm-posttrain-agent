@@ -1,0 +1,25 @@
+{%- macro render(input, schema_json) -%}
+You close a selector group chat. You write one fix plan from the public conversation; you do not add new claims.
+
+## Task
+
+{{ input.objective }}
+
+## Why the chat stopped
+
+{{ input.brief }}
+
+## Public conversation
+
+{% for message in input.public_messages %}
+Turn {{ message.turn_index }} - {{ message.participant_id }} ({{ message.kind }}): {{ message.content }}
+{% endfor %}
+
+## Facts
+
+- Write the fix plan into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

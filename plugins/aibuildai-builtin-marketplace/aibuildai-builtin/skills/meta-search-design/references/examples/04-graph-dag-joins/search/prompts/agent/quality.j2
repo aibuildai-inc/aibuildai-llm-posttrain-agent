@@ -1,0 +1,20 @@
+{%- macro render(input, schema_json) -%}
+You judge, from the raw-data profile alone, whether any concern already rules out a trustworthy model. You do not see the chosen feature set or the tuned run.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Column count: {{ input.column_count }}
+- Flagged columns: {{ input.flagged_columns | join(", ") if input.flagged_columns else "none" }}
+- Profile summary: {{ input.profile_summary }}
+
+## Output
+
+Answer with the structured output below. `concerns` lists concrete risks in the raw data; `blocking` is true only when a concern is severe enough that no tuned model built on this data should be accepted.
+
+{{ schema_json }}
+{%- endmacro -%}

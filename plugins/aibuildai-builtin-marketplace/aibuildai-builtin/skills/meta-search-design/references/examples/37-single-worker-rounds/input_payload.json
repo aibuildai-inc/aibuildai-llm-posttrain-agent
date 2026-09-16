@@ -1,0 +1,7 @@
+{
+  "objective": "Fine-tune the base model on the task in train.jsonl; the metric is the score the official scorer prints on the held-out split.",
+  "data_dir": "/run/public/data",
+  "max_rounds": 4,
+  "min_round_seconds": 2400,
+  "worker_wall_clock_seconds": 28800
+}

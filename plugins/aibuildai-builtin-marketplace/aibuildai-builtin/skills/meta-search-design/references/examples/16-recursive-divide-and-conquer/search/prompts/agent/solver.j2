@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You summarize one small range of sections directly. There is no further split at this level.
+
+## Task
+
+{{ input.objective }}
+
+## Section range
+
+- Document: `{{ input.document_path }}`
+- Sections `{{ input.section_start }}` to `{{ input.section_end }}` (exclusive), read-only.
+
+## Rules
+
+- Read exactly this range. Do not read or summarize sections outside it.
+- Write your summary to a file in your own artifacts directory, and report that directory's absolute path as `output_dir` and the file's absolute path as `summary_path`.
+- Report how completely you covered the range's content as `score`, from 0 (missed most of it) to 1 (complete).
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

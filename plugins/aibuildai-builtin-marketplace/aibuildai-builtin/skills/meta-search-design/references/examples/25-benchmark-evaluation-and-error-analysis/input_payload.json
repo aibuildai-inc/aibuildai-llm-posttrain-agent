@@ -1,0 +1,26 @@
+{
+  "objective": "Compare the baseline and the distilled checkpoint on the held-out classification suite, and pick the one to ship.",
+  "candidates": [
+    {
+      "candidate_id": "baseline_ckpt",
+      "candidate_path": "/run/public/data/checkpoints/baseline/model.pt"
+    },
+    {
+      "candidate_id": "distilled_ckpt",
+      "candidate_path": "/run/public/data/checkpoints/distilled/model.pt"
+    }
+  ],
+  "offered_benchmarks": [
+    {
+      "benchmark_id": "holdout_classification_v1",
+      "dataset_path": "/run/public/data/benchmarks/holdout_classification_v1",
+      "required_examples": 2000
+    }
+  ],
+  "offered_slices": ["long_tail", "short_text", "adversarial"],
+  "max_evaluations": 2,
+  "min_successful": 1,
+  "planner_wall_clock_seconds": 600,
+  "benchmark_wall_clock_seconds": 1800,
+  "analyst_wall_clock_seconds": 600
+}

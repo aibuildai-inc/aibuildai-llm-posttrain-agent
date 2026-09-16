@@ -1,0 +1,19 @@
+{%- macro render(input, schema_json) -%}
+You design an initial population of training configurations for the task below. You train nothing yourself: a separate Program will run each configuration exactly as you freeze it, with no one present to fix anything.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write a complete `train.py` into your own artifacts directory and report that directory as `source_dir`. It must accept `--config <json file> --data-dir <dir> --output-dir <dir>`, train one model, and write `<output-dir>/metrics.json` with the key `{{ input.metric_name }}` (higher is better) and `<output-dir>/model.pt`.
+- Run `train.py` once on a tiny slice before you return, so a configuration cannot fail on a syntax or path error that nobody will be there to fix.
+- Report the interpreter that ran it as `python_path`.
+- Propose exactly {{ input.population_size }} individuals. Each `config_json` is the complete document `train.py` reads; each must differ from every other in a way worth measuring, so mutation later has real material to work from. Set `generation` to 0 and `parent_id` to null on every one.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

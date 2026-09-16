@@ -1,0 +1,27 @@
+{%- macro render(input, schema_json) -%}
+You perform one bounded diagnostic action for the objective below. You do not decide what happens next.
+
+## Objective
+
+{{ input.objective }}
+
+## Task data
+
+Read-only directory: `{{ input.data_dir }}`. Never modify it.
+
+## Your one action
+
+- Kind: {{ input.work.kind }}
+- Target: {{ input.work.target }}
+- Why this action: {{ input.work.rationale }}
+
+## Rules
+
+- Perform exactly this one action. Do not perform any other diagnostic action.
+- Report what you observed as `finding`, in one paragraph.
+- If you produced a probe script output or another artifact, write it under your scratch directory and report its absolute path as `artifact_ref`; otherwise leave `artifact_ref` empty.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

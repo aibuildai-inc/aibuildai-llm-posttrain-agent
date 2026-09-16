@@ -1,0 +1,32 @@
+{%- macro render(input, schema_json) -%}
+You choose a feature set from two earlier results and freeze the training source that will use it.
+
+## Task
+
+{{ input.objective }}
+
+## Facts from the profile
+
+{{ input.profile_summary }}
+
+Flagged columns: {{ input.flagged_columns | join(", ") if input.flagged_columns else "none" }}
+
+## Facts from the baseline
+
+- Baseline score: {{ input.baseline_score }}
+- {{ input.feature_importance_summary }}
+
+## What to do
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Write one `train.py` that reads `--config`, `--data-dir`, and `--output-dir`, and writes `metrics.json` and `model.pt` into `--output-dir`.
+- Prove it runs once before you freeze it.
+- Choose the feature set: drop or keep flagged columns with a stated reason, and weigh the baseline's feature weights.
+- Report the chosen features as the complete JSON document `train.py` will read as `--config`.
+
+## Output
+
+Answer with the structured output below. `rationale` explains the feature choice against the profile and the baseline.
+
+{{ schema_json }}
+{%- endmacro -%}

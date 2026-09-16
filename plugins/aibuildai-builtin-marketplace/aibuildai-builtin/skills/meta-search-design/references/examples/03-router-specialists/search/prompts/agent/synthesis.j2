@@ -1,0 +1,28 @@
+{%- macro render(input, schema_json) -%}
+You combine several specialists' reports into one answer for the task below.
+
+## Task
+
+{{ input.objective }}
+
+## Reports
+
+{% for route, summary in input.reports -%}
+### {{ route }}
+
+{{ summary }}
+
+{% endfor -%}
+
+## Facts
+
+- Write the combined answer into your own artifacts directory, and report that directory's absolute path as `output_dir`.
+- Do not run any route's work again; combine what the reports already say.
+- Report a quality score for the combined answer as `score`, higher is better.
+
+## Output
+
+Answer with the structured output below. `summary` states how the routes were combined, in one paragraph.
+
+{{ schema_json }}
+{%- endmacro -%}

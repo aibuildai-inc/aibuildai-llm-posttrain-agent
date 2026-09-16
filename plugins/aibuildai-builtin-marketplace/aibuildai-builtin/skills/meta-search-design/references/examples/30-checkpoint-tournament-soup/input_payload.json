@@ -1,0 +1,12 @@
+{
+  "objective": "Fine-tune a small base model to solve competition-math problems with integer answers; the metric is exact-match accuracy on the held-out set.",
+  "data_dir": "/run/public/data",
+  "eval_script": "/run/public/data/eval.py",
+  "soup_script": "/run/public/data/soup.py",
+  "sft_module": "posttraining.sft_train",
+  "max_rounds": 2,
+  "soup_k": 3,
+  "min_round_seconds": 1800,
+  "recon_wall_clock_seconds": 1200,
+  "round_wall_clock_seconds": 5400
+}

@@ -1,0 +1,839 @@
+/* The Inspector (left of the Atlas) and the workbench split. Colours come only from
+   the served project variables; surfaces derive with color-mix(). */
+
+.atlas-split {
+  height: 100%;
+}
+
+.atlas-host {
+  position: relative;
+  height: 100%;
+}
+
+.inspector-resize {
+  width: 5px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+  transition: background 0.15s;
+}
+
+.inspector-resize:hover,
+.inspector-resize:active {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 55%, var(--aibuildai-atlas-border));
+}
+
+.inspector-panel {
+  height: 100%;
+}
+
+.inspector {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--aibuildai-atlas-surface);
+  border-right: 1px solid var(--aibuildai-atlas-border);
+  box-shadow: 12px 0 32px color-mix(in srgb, var(--aibuildai-atlas-ink) 7%, transparent);
+}
+
+.inspector-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--aibuildai-atlas-border);
+}
+
+.inspector-header .execution-icon {
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.inspector-title {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  margin-right: auto;
+}
+
+.inspector-label {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 650;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inspector-family {
+  font-size: 10.5px;
+  font-weight: 550;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.inspector-close {
+  border: 0;
+  background: none;
+  padding: 5px;
+  border-radius: 7px;
+  color: var(--aibuildai-atlas-ink-secondary);
+  cursor: pointer;
+  display: inline-flex;
+}
+
+.inspector-close[data-hovered] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 9%, transparent);
+  color: var(--aibuildai-highlight);
+}
+
+.inspector-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 24px 48px;
+}
+
+.inspector-missing {
+  margin: 14px;
+  font-size: 13px;
+}
+
+/* ── Sections and facts ────────────────────────────────────────────── */
+
+.inspector-section {
+  margin-top: 20px;
+}
+
+.inspector-section-title {
+  margin: 0 0 8px;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--aibuildai-atlas-ink);
+}
+
+.inspector-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+
+.inspector-hero-value {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 34px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.inspector-hero-name {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.inspector-hero-fallback {
+  font-size: 15px;
+  font-weight: 550;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.inspector-spans {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 10px;
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--aibuildai-atlas-ink);
+}
+
+.inspector-span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inspector-spans > .exec-model {
+  color: var(--aibuildai-atlas-ink);
+  opacity: 1;
+}
+
+.inspector-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 20px;
+  margin: 18px 0 0;
+  font-size: 12.5px;
+}
+
+.inspector-fact {
+  display: contents;
+}
+
+.inspector-facts dt {
+  color: var(--aibuildai-atlas-ink-secondary);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.9;
+}
+
+.inspector-facts dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+/* ── Child rows and lineage ────────────────────────────────────────── */
+
+.inspector-children {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.inspector-child {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  border: 0;
+  background: color-mix(in srgb, var(--aibuildai-atlas-card) 72%, transparent);
+  text-align: left;
+  padding: 7px 11px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--aibuildai-atlas-ink);
+  cursor: pointer;
+}
+
+.inspector-child[data-hovered] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 8%, var(--aibuildai-atlas-card));
+}
+
+.inspector-child-word {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+  min-width: 64px;
+}
+
+.inspector-child-label {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inspector-child-meta {
+  margin-left: auto;
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.inspector-lineage {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.inspector-lineage-link {
+  border: 0;
+  background: color-mix(in srgb, var(--aibuildai-highlight) 9%, transparent);
+  color: var(--aibuildai-highlight-ink);
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11.5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.inspector-lineage-link[data-hovered] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 16%, transparent);
+}
+
+.inspector-lineage-arrow {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+/* ── Raw and failure surfaces ──────────────────────────────────────── */
+
+.inspector-raw {
+  background: var(--aibuildai-atlas-card);
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 65%, transparent);
+  border-radius: 10px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 11.5px;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--aibuildai-atlas-ink);
+}
+
+.inspector-raw-failed {
+  border-color: color-mix(in srgb, var(--aibuildai-atlas-status-error) 55%, transparent);
+  background: color-mix(in srgb, var(--aibuildai-atlas-status-error) 7%, transparent);
+}
+
+.inspector-failure {
+  border-left: 3px solid var(--aibuildai-atlas-status-error);
+  background: color-mix(in srgb, var(--aibuildai-atlas-status-error) 7%, transparent);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 14px;
+  margin-top: 20px;
+}
+
+.inspector-failure-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-status-error);
+  margin-bottom: 8px;
+}
+
+.inspector-failure-text {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+/* ── Scope breadcrumb (Atlas panel) ────────────────────────────────── */
+
+.scope-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 8px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-surface) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 75%, transparent);
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.scope-crumb-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.scope-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: none;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 550;
+  color: var(--aibuildai-atlas-ink);
+  cursor: pointer;
+}
+
+.scope-crumb[data-hovered] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 9%, transparent);
+  color: var(--aibuildai-highlight-ink);
+}
+
+/* At the root there is nothing to return to: the control is subdued and
+   inert, never a clickable no-op. */
+.scope-root[data-disabled] {
+  color: var(--aibuildai-atlas-ink-secondary);
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ── Run selector (Atlas context strip) ────────────────────────────── */
+
+.run-select {
+  display: inline-flex;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.run-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 480px;
+  min-width: 0;
+  padding: 2px 7px 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 85%, transparent);
+  border-radius: 999px;
+  background: var(--aibuildai-atlas-surface);
+  color: var(--aibuildai-atlas-ink);
+  font-size: 11.5px;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.run-select-trigger[data-hovered] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 9%, transparent);
+}
+
+.run-select-trigger[data-focus-visible] {
+  outline: 2px solid var(--aibuildai-highlight);
+  outline-offset: 1px;
+}
+
+.run-select-trigger > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.run-select-task {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.run-select-sep,
+.run-select-id,
+.run-select-model,
+.run-select-elapsed {
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.run-select-gone {
+  color: var(--aibuildai-atlas-status-error);
+}
+
+.run-select-popover {
+  width: 360px;
+  max-height: 320px;
+  overflow: auto;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 85%, transparent);
+  border-radius: 10px;
+  background: var(--aibuildai-atlas-surface);
+  box-shadow: 0 10px 28px -12px color-mix(in srgb, var(--aibuildai-atlas-ink) 30%, transparent);
+}
+
+.run-select-list {
+  outline: none;
+}
+
+.run-select-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+.run-select-row[data-hovered],
+.run-select-row[data-focused] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 9%, transparent);
+}
+
+.run-select-row[data-selected] {
+  background: color-mix(in srgb, var(--aibuildai-highlight) 14%, transparent);
+  color: var(--aibuildai-highlight-ink);
+}
+
+.run-select-row-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.run-select-row-sub {
+  font-size: 11px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.run-select-spacer {
+  flex: 1;
+}
+
+.run-select-check {
+  color: var(--aibuildai-highlight-ink);
+}
+
+.atlas-gone {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.atlas-gone-strip {
+  padding: 12px 16px;
+}
+
+/* ── Structured tables (TanStack) ──────────────────────────────────── */
+
+.metric-data {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.data-table-scroll {
+  overflow: auto;
+  max-height: 340px;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 65%, transparent);
+  border-radius: 10px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: left;
+  padding: 7px 12px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aibuildai-atlas-ink-secondary);
+  background: var(--aibuildai-atlas-card);
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 85%, transparent);
+}
+
+.data-table-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.data-table-sort:hover {
+  color: var(--aibuildai-atlas-ink);
+}
+
+.data-table th[aria-sort] .data-table-sort {
+  color: var(--aibuildai-highlight-ink);
+}
+
+.data-table tbody td {
+  padding: 7px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 35%, transparent);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.cell-label {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11.5px;
+}
+
+.composite-link {
+  border: 0;
+  padding: 0;
+  color: var(--aibuildai-atlas-ink);
+  background: transparent;
+  cursor: pointer;
+}
+
+.composite-link[data-hovered] {
+  color: var(--aibuildai-highlight-ink);
+}
+
+.composite-link[data-focus-visible] {
+  border-radius: 2px;
+  outline: 2px solid var(--aibuildai-highlight);
+  outline-offset: 2px;
+}
+
+.cell-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.cell-metric {
+  font-weight: 650;
+}
+
+.data-table .num {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Recorded metric curves ────────────────────────────────────────── */
+
+.metric-curves {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.metric-curve {
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 65%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--aibuildai-atlas-card) 55%, var(--aibuildai-atlas-surface));
+  padding: 10px 10px 4px;
+}
+
+.metric-curve-name {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--aibuildai-atlas-ink);
+  padding: 0 4px 6px;
+}
+
+.metric-curve-segment {
+  font-size: 10px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.chart-surface {
+  width: 100%;
+}
+
+.metric-data-toggle {
+  margin: 0 4px 6px;
+  padding: 2px 0;
+  border: 0;
+  color: var(--aibuildai-atlas-ink-secondary);
+  background: transparent;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.metric-data-toggle[data-hovered],
+.metric-data-toggle[data-focus-visible] {
+  color: var(--aibuildai-highlight-ink);
+}
+
+.metric-data-table {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-data-pages {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 4px 2px;
+  color: var(--aibuildai-atlas-ink-secondary);
+  font-size: 10px;
+}
+
+.metric-data-pages button {
+  border: 0;
+  padding: 2px 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.metric-data-pages button[data-hovered],
+.metric-data-pages button[data-focus-visible] {
+  color: var(--aibuildai-highlight-ink);
+}
+
+.metric-data-pages button[data-disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.chart-empty {
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.metric-series-error {
+  color: var(--aibuildai-atlas-status-error);
+}
+
+/* ── raw input / output: folded by default ── */
+
+.inspector-raw-fold {
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.inspector-raw-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  list-style: none;
+  font-size: 12px;
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.inspector-raw-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.inspector-raw-fold > summary::before {
+  content: "";
+  flex: none;
+  width: 0.4em;
+  height: 0.4em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 120ms ease;
+}
+
+.inspector-raw-fold[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.inspector-raw-word {
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+.inspector-raw-size {
+  margin-left: auto;
+}
+
+.inspector-raw-fold > .inspector-raw {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  border-top: 1px dashed color-mix(in srgb, var(--aibuildai-atlas-border) 70%, transparent);
+  max-height: 420px;
+  overflow: auto;
+}
+
+/* ── Search outline: a tree with collapsible child Searches ── */
+
+.outline {
+  font-size: 12px;
+}
+
+.outline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.outline-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 8px 4px 22px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.outline-row:hover {
+  background: var(--aibuildai-atlas-card);
+}
+
+.outline-kind,
+.outline-num {
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.outline-num {
+  font-size: 11px;
+}
+
+.outline-spacer {
+  flex: 1;
+}
+
+.outline-count {
+  font-size: 10px;
+  padding: 0 5px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 80%, transparent);
+  color: var(--aibuildai-atlas-ink-secondary);
+}
+
+.outline-group > summary {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.outline-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.outline-group > summary::before {
+  content: "";
+  flex: none;
+  width: 0.38em;
+  height: 0.38em;
+  margin: 0 4px 0 6px;
+  border-right: 1.5px solid var(--aibuildai-atlas-ink-secondary);
+  border-bottom: 1.5px solid var(--aibuildai-atlas-ink-secondary);
+  transform: rotate(45deg);
+  transition: transform 120ms ease;
+  cursor: pointer;
+}
+
+.outline-group:not([open]) > summary::before {
+  transform: rotate(-45deg);
+}
+
+.outline-group > summary .outline-row {
+  flex: 1;
+  padding-left: 4px;
+}
+
+.outline-group > summary .outline-label {
+  font-weight: 600;
+}
+
+.outline-children {
+  margin-left: 14px;
+  padding-left: 8px;
+  border-left: 1px solid color-mix(in srgb, var(--aibuildai-atlas-border) 90%, transparent);
+}

@@ -1,0 +1,24 @@
+{%- macro render(input, schema_json) -%}
+You run one training trial exactly as the decisions below fix it. Decide nothing.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Frozen source: `{{ input.source_dir }}` holds `train.py`. Copy it into your scratch directory; never edit it.
+- Decisions on this path, in order:
+{% for decision in input.decisions %}
+  - {{ decision }}
+{% endfor %}
+- Write those decisions as the JSON object `config.json` beside your copy of `train.py` (one key per hyperparameter), then run `python train.py --config config.json --data-dir {{ input.data_dir }} --output-dir <your artifacts directory>/trial` from the copy. The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- The run must write `metrics.json` into that output directory. If it does not, or exits non-zero, report the failure; do not repair train.py.
+
+## Output
+
+Answer with the structured output below. `score` is the value of `{{ input.metric_name }}` in `metrics.json`.
+
+{{ schema_json }}
+{%- endmacro -%}

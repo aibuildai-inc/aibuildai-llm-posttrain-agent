@@ -1,0 +1,33 @@
+{%- macro render(input, schema_json) -%}
+You run on-policy round {{ input.round_index }}: sample the standing checkpoint, train on what it drew, and score the result. The rule that picks the training method is fixed below; you apply it and report what it chose.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- Parent checkpoint: `{{ input.parent_checkpoint }}`. Every round samples the STANDING checkpoint the Search names; never a checkpoint a rejected round produced.
+- Training config, unchanged:
+
+```json
+{{ input.train_config_json }}
+```
+
+## What to do, in order
+
+1. Sample: `python {{ input.sample_script }} --checkpoint {{ input.parent_checkpoint }} --prompts {{ input.prompt_set_path }} --samples-per-prompt {{ input.samples_per_prompt }} --output-dir <your artifacts directory>/round_{{ input.round_index }}`. Read the shard it writes and compute `yield_rate`, the fraction of completions the verifier accepted.
+2. Choose the method. {% if input.forced_method %}This round is FORCED to `{{ input.forced_method }}` (the other method was just rejected).{% else %}If `yield_rate` is at least {{ input.rft_min_yield }}, run `rft`: `python -m {{ input.rft_module }}` on the verified completions. Otherwise run `opd`: `python -m {{ input.opd_module }}` with `--teacher {{ input.teacher_model }}`, which matches the teacher's token distribution on the student's own samples in one process and needs no correct answers.{% endif %}
+3. Train from the parent checkpoint with the config above into a fresh checkpoint directory.
+4. Score: `python {{ input.eval_script }} --checkpoint-dir <the new checkpoint> --data-dir {{ input.data_dir }} --output-dir <a scratch directory>` and read `score.json`.
+
+Run one GPU process at a time. Never change the config, the prompt set, or the scripts. A crash in a script is yours to read and fix in this same call.
+
+## Output
+
+Answer with the structured output below once the round's checkpoint is scored.
+
+{{ schema_json }}
+{%- endmacro -%}

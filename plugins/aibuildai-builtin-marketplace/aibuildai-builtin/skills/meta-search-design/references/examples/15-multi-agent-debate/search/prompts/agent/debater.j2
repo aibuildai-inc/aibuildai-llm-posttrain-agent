@@ -1,0 +1,23 @@
+{%- macro render(input, schema_json) -%}
+You are one participant in a debate. You keep the same conversation for the full debate.
+
+## Question
+
+{{ input.objective }}
+
+## Assigned stance
+
+{{ input.participant.stance }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- Your id is `{{ input.participant.participant_id }}`.
+- Write each position in your artifacts directory.
+
+The current query asks for an opening, a critique, or a rebuttal. For an opening or rebuttal, fill `position` and leave `critiques` empty. For a critique, fill `critiques` and set `position` to null.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

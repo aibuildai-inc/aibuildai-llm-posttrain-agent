@@ -1,0 +1,99 @@
+{%- macro render(role, launch, input, input_json, schema_json) -%}
+{% set role_text -%}{{ role.render(input, schema_json) }}{% endset %}
+{% set base_text -%}
+# Input
+
+## Task
+
+{{ launch.readme }}
+
+## Paths and resources
+
+- Data: {{ launch.data_dir }}
+- Working directory: {{ launch.cwd }}
+- Your artifacts: {{ launch.artifact_dir }}
+- Review/work scratch: {{ launch.review_dir }}
+- You may READ, and nothing else:
+{% for path in launch.read_paths %}  - {{ path }}
+{% endfor %}- You may WRITE:
+{% for path in launch.write_paths %}  - {{ path }}
+{% endfor %}
+- WorkUnit time: {{ "%.1f" | format(launch.work_unit_minutes) }} minutes
+- Memory limit: {{ launch.mem_cap }}
+- Training memory target: {{ launch.training_mem_target_gb }}G resident set size
+- Run budget: {{ launch.budget_label }}
+
+## Agent Input values
+
+```json
+{{ input_json }}
+```
+{% if role.details is defined %}
+
+{{ role.details(input) }}
+{% endif %}
+{%- endset %}
+{{ base_text | trim -}}
+{% if launch.required_pdf %}
+{{ "\n\n" -}}## Your document
+
+`{{ launch.required_pdf }}`, under your artifacts directory above, is a document you write and compile yourself. Nothing else writes any part of it: not the title, not a section, not a figure, not a bibliography entry, and nothing recompiles it after you stop. Your submission is refused while that file is missing or is not a PDF.
+
+Write the complete LaTeX source beside it -- `\documentclass` to `\end{document}` -- with your `.bib` and any figures you generate, then compile it from that directory with the `tectonic` already on your PATH:
+
+```bash
+cd {{ launch.artifact_dir }}/{{ launch.required_pdf.rsplit('/', 1)[0] }}
+tectonic -X compile {{ launch.required_pdf.rsplit('/', 1)[1][:-4] }}.tex --keep-logs
+```
+
+Read what tectonic prints, fix your own source, and compile again until the PDF is there. The `research-paper-writing` skill ships a starter scaffold under `scaffold/` in its own directory; copy it into your artifacts directory and edit it freely, or write your own preamble instead.
+{% endif %}
+{% if launch.kaggle_enabled %}
+{{ "\n\n" -}}## Kaggle
+
+Use `mcp__kaggle__run` for every Kaggle command. Give it the argument list you would type after `kaggle`, and do not reach Kaggle any other way. One `kernels push` that Kaggle accepts is one notebook version, the relay counts those against this run's budget, and it refuses a push once the budget is gone.{%- endif %}
+{% if launch.prompt_skills %}
+{{ "\n\n" -}}## Skills
+
+Direct-invoke methodology and helper skills. Invoke them via the Skill tool with the format `<plugin-name>:<skill-name>` — exactly as listed below. The Skill tool loads the skill's procedure into your own context; no sub-agent is dispatched.
+
+{% for plugin_name, skill_name, description in launch.prompt_skills %}
+- `{{ plugin_name }}:{{ skill_name }}`{% if description %} — {{ description }}{% endif %}{{ "\n" -}}
+{% endfor %}
+{% endif %}
+{% if launch.plugin_agent_specs %}
+{{ "\n\n" -}}## Plugins
+
+The Agent tool exposes only the sub-agents listed below. Dispatch one by passing its name **verbatim** as ``subagent_type`` — the bare name exactly as listed below, no plugin prefix and no namespacing. The sub-agent does the work in its own context and returns the actual extracted result. Use the Skill tool yourself for entries in the Skills section.
+{% if launch.plugin_agent_specs | selectattr("name", "equalto", "mcp-subagent") | list %}
+
+Use `mcp-subagent` by default for an independent MCP lookup. Name the target MCP in the task, and make one call per distinct lookup. You may call an MCP tool directly when one small result is needed inside the step you are already doing.
+{% endif %}
+
+Dispatch proactively. Downstream compute in this pipeline is irreversibly expensive: one wrong architecture, stale API, or misremembered benchmark wastes a full training run, while a sub-agent dispatch costs seconds. Guessing is never correct here. Dispatch whenever you would otherwise answer from memory with a specific fact (API signature, version number, model name, repo layout, benchmark score, install recipe), or catch yourself thinking "typically" / "usually" / "I believe". Skip only when the answer is already in this workspace, already in an earlier sub-agent response this session, or the next step is pure mechanical execution of an already-specified plan. Litmus: if you would not stake an irreversible training decision on your recollection, dispatch.
+
+The Skill tool and the Agent tool use DIFFERENT name formats. Do not mix them. The Skill tool (for entries in the Skills section above) uses `<plugin-name>:<skill-name>` — colon-joined. The Agent tool (for the sub-agents below) takes the bare name only, no colon, no plugin prefix.
+
+Copy the `subagent_type` string from the bullet list below exactly. The `(...)` annotation is metadata — **not part of the dispatch name**. If a sub-agent you want is not listed below, it does not exist for your role.
+
+Available sub-agents:
+
+{% for plugin in launch.plugins %}
+{% for agent in launch.plugin_agent_specs if agent.plugin_name == plugin.name %}
+- `{{ agent.name }}` (from {{ plugin.name }}){% if agent.description %}: {{ agent.description }}{% endif %}{{ "\n" -}}
+{% endfor %}
+{% endfor %}
+{% for agent in launch.plugin_agent_specs if not agent.plugin_name %}
+- `{{ agent.name }}` (stand-alone){% if agent.description %}: {{ agent.description }}{% endif %}{{ "\n" -}}
+{% endfor %}
+{% endif %}
+{% if launch.memory_section %}
+{{ "\n\n" -}}{{ launch.memory_section -}}
+{% endif %}
+{% if launch.system_instructions %}
+{{ "\n\n" -}}## Additional instructions
+
+{{ launch.system_instructions }}
+{% endif %}
+{{ "\n\n" -}}{{ role_text | trim }}
+{%- endmacro %}

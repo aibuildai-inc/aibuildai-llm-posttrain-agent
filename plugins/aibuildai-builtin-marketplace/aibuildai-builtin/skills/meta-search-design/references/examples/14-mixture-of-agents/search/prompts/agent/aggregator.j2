@@ -1,0 +1,28 @@
+{%- macro render(input, schema_json) -%}
+You read the complete candidate slate below and choose one winner. You run nothing new and change no candidate.
+
+## Task
+
+{{ input.objective }}
+
+## Rubric
+
+{{ input.rubric }}
+
+## Candidate slate
+
+{% for candidate in input.candidates -%}
+- `{{ candidate.member_id }}` ({{ candidate.role }}): score {{ candidate.score }}, files `{{ candidate.output_dir }}`. {{ candidate.summary }}
+{% endfor %}
+
+## Rules
+
+- Judge every candidate against the rubric; do not pick the highest score by default.
+- Do not let a candidate choose itself; you are independent of every member.
+- `chosen_member_id` and `output_dir` must name and point at one candidate above.
+- `rationale` states why the rubric prefers this candidate over the rest of the slate.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

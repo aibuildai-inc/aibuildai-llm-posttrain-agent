@@ -1,0 +1,33 @@
+{%- macro render(input, schema_json) -%}
+You run round {{ input.round_index }} of a post-training loop: one SFT job, a tournament over its checkpoints, and a model soup. Every choice was frozen before this round; you execute it and report what it measured.
+
+## Task
+
+{{ input.objective }}
+
+## Facts
+
+- Read-only task data: `{{ input.data_dir }}`. Never modify it.
+- The python on your PATH is the task environment's, and the GPU this call was granted is visible to it.
+- Start from `{{ input.base_model_or_checkpoint }}`.
+- Training data: `{{ input.prepared_data_dir }}`. Training config, unchanged:
+
+```json
+{{ input.train_config_json }}
+```
+
+## What to do, in order
+
+1. Train: `python -m {{ input.sft_module }} --base-model {{ input.base_model_or_checkpoint }} --data-dir {{ input.prepared_data_dir }} --config <the config above, as a file> --save-steps {{ input.save_steps }} --output-dir <your artifacts directory>/round_{{ input.round_index }}`. It writes `checkpoints.json` listing every checkpoint it saved.
+2. Tournament: score every saved checkpoint with `python {{ input.eval_script }} --checkpoint-dir <checkpoint> --data-dir {{ input.data_dir }} --output-dir <a scratch directory per checkpoint>`; each run writes `score.json`. Run them one after another: one evaluation engine on the card at a time.
+3. Soup: sort the scored checkpoints by step and take the contiguous window of {{ input.soup_k }} with the highest mean score (neighbours on the trajectory, never the top-k by score). Run `python {{ input.soup_script }} --output-dir <your artifacts directory>/round_{{ input.round_index }}_soup <the window's checkpoint directories>` and score the soup the same way. Skip this step when fewer than two checkpoints were scored.
+4. The round's winner is whichever of the best single checkpoint and the soup scored higher.
+
+A training crash, a missing `checkpoints.json`, or a checkpoint that will not load is a failure of this round: report it in your final message instead of guessing a score. Never change the config, the data, or the scripts.
+
+## Output
+
+Answer with the structured output below. `scored` lists every checkpoint you scored in step order; `best_*` name the winner.
+
+{{ schema_json }}
+{%- endmacro -%}

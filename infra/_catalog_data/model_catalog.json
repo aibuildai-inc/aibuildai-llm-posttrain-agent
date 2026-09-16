@@ -1,0 +1,4013 @@
+{
+  "fetched_at": "2026-06-15T23:38:12.536054+00:00",
+  "models": {
+    "ai21/jamba-large-1.7": {
+      "context_length": 256000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "aion-labs/aion-1.0": {
+      "context_length": 131072,
+      "input": 4.0,
+      "output": 8.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "aion-labs/aion-1.0-mini": {
+      "context_length": 131072,
+      "input": 0.7,
+      "output": 1.4,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "aion-labs/aion-2.0": {
+      "context_length": 131072,
+      "input": 0.7999999999999999,
+      "output": 1.5999999999999999,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "aion-labs/aion-rp-llama-3.1-8b": {
+      "context_length": 32768,
+      "input": 0.7999999999999999,
+      "output": 1.5999999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "allenai/olmo-3-32b-think": {
+      "context_length": 65536,
+      "input": 0.15,
+      "output": 0.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "amazon/nova-2-lite-v1": {
+      "context_length": 1000000,
+      "input": 0.3,
+      "output": 2.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "amazon/nova-lite-v1": {
+      "context_length": 300000,
+      "input": 0.06,
+      "output": 0.24,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "amazon/nova-micro-v1": {
+      "context_length": 128000,
+      "input": 0.035,
+      "output": 0.14,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "amazon/nova-premier-v1": {
+      "context_length": 1000000,
+      "input": 2.5,
+      "output": 12.5,
+      "cache_read": 0.625,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "amazon/nova-pro-v1": {
+      "context_length": 300000,
+      "input": 0.7999999999999999,
+      "output": 3.1999999999999997,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "anthracite-org/magnum-v4-72b": {
+      "context_length": 16384,
+      "input": 3.0,
+      "output": 5.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "anthropic/claude-3-haiku": {
+      "context_length": 200000,
+      "input": 0.25,
+      "output": 1.25,
+      "cache_read": 0.03,
+      "cache_write": 0.3,
+      "source": "openrouter"
+    },
+    "anthropic/claude-3.5-haiku": {
+      "context_length": 200000,
+      "input": 0.7999999999999999,
+      "output": 4.0,
+      "cache_read": 0.08,
+      "cache_write": 1.0,
+      "source": "openrouter"
+    },
+    "anthropic/claude-fable-5": {
+      "context_length": 1000000,
+      "input": 10.0,
+      "output": 50.0,
+      "cache_read": 1.0,
+      "cache_write": 12.5,
+      "source": "openrouter"
+    },
+    "anthropic/claude-haiku-4.5": {
+      "context_length": 200000,
+      "input": 1.0,
+      "output": 5.0,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 1.25,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 75.0,
+      "cache_read": 1.5,
+      "cache_write": 18.75,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.1": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 75.0,
+      "cache_read": 1.5,
+      "cache_write": 18.75,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.5": {
+      "context_length": 200000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.6": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.6-fast": {
+      "context_length": 1000000,
+      "input": 30.0,
+      "output": 150.0,
+      "cache_read": 3.0,
+      "cache_write": 37.5,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.7": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.7-fast": {
+      "context_length": 1000000,
+      "input": 30.0,
+      "output": 150.0,
+      "cache_read": 3.0,
+      "cache_write": 37.5,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.8": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "openrouter"
+    },
+    "anthropic/claude-opus-4.8-fast": {
+      "context_length": 1000000,
+      "input": 10.0,
+      "output": 50.0,
+      "cache_read": 1.0,
+      "cache_write": 12.5,
+      "source": "openrouter"
+    },
+    "anthropic/claude-sonnet-4": {
+      "context_length": 1000000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "openrouter"
+    },
+    "anthropic/claude-sonnet-4.5": {
+      "context_length": 1000000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "openrouter"
+    },
+    "anthropic/claude-sonnet-5": {
+      "context_length": 1000000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "openrouter"
+    },
+    "arcee-ai/coder-large": {
+      "context_length": 32768,
+      "input": 0.5,
+      "output": 0.7999999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "arcee-ai/trinity-large-thinking": {
+      "context_length": 262144,
+      "input": 0.22,
+      "output": 0.85,
+      "cache_read": 0.06,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "arcee-ai/trinity-mini": {
+      "context_length": 131072,
+      "input": 0.045,
+      "output": 0.15,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "arcee-ai/virtuoso-large": {
+      "context_length": 131072,
+      "input": 0.75,
+      "output": 1.2,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "baidu/ernie-4.5-vl-424b-a47b": {
+      "context_length": 123000,
+      "input": 0.42,
+      "output": 1.25,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "bytedance-seed/seed-1.6": {
+      "context_length": 262144,
+      "input": 0.25,
+      "output": 2.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "bytedance-seed/seed-1.6-flash": {
+      "context_length": 262144,
+      "input": 0.075,
+      "output": 0.3,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "bytedance-seed/seed-2.0-lite": {
+      "context_length": 262144,
+      "input": 0.25,
+      "output": 2.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "bytedance-seed/seed-2.0-mini": {
+      "context_length": 262144,
+      "input": 0.09999999999999999,
+      "output": 0.39999999999999997,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "bytedance/ui-tars-1.5-7b": {
+      "context_length": 128000,
+      "input": 0.09999999999999999,
+      "output": 0.19999999999999998,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "chatgpt-4o-latest": {
+      "context_length": 128000,
+      "input": 5.0,
+      "output": 15.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "claude-3-7-sonnet-20250219": {
+      "context_length": 200000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "litellm"
+    },
+    "claude-3-haiku-20240307": {
+      "context_length": 200000,
+      "input": 0.25,
+      "output": 1.25,
+      "cache_read": 0.03,
+      "cache_write": 0.3,
+      "source": "litellm"
+    },
+    "claude-3-opus-20240229": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 75.0,
+      "cache_read": 1.5,
+      "cache_write": 18.75,
+      "source": "litellm"
+    },
+    "claude-4-opus-20250514": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 75.0,
+      "cache_read": 1.5,
+      "cache_write": 18.75,
+      "source": "litellm"
+    },
+    "claude-4-sonnet-20250514": {
+      "context_length": 1000000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "litellm"
+    },
+    "claude-fable-5": {
+      "context_length": 1000000,
+      "input": 10.0,
+      "output": 50.0,
+      "cache_read": 1.0,
+      "cache_write": 12.5,
+      "source": "litellm"
+    },
+    "claude-haiku-4-5": {
+      "context_length": 200000,
+      "input": 1.0,
+      "output": 5.0,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 1.25,
+      "source": "litellm"
+    },
+    "claude-haiku-4-5-20251001": {
+      "context_length": 200000,
+      "input": 1.0,
+      "output": 5.0,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 1.25,
+      "source": "litellm"
+    },
+    "claude-opus-4-1": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 75.0,
+      "cache_read": 1.5,
+      "cache_write": 18.75,
+      "source": "litellm"
+    },
+    "claude-opus-4-1-20250805": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 75.0,
+      "cache_read": 1.5,
+      "cache_write": 18.75,
+      "source": "litellm"
+    },
+    "claude-opus-4-20250514": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 75.0,
+      "cache_read": 1.5,
+      "cache_write": 18.75,
+      "source": "litellm"
+    },
+    "claude-opus-4-5": {
+      "context_length": 200000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "claude-opus-4-5-20251101": {
+      "context_length": 200000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "claude-opus-4-6": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "claude-opus-4-6-20260205": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "claude-opus-4-7": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "claude-opus-4-7-20260416": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "claude-opus-4-8": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "claude-sonnet-4-20250514": {
+      "context_length": 1000000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "litellm"
+    },
+    "claude-sonnet-4-5": {
+      "context_length": 200000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "litellm"
+    },
+    "claude-sonnet-4-5-20250929": {
+      "context_length": 200000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "litellm"
+    },
+    "claude-sonnet-5": {
+      "context_length": 1000000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "litellm"
+    },
+    "codex-mini-latest": {
+      "context_length": 200000,
+      "input": 1.5,
+      "output": 6.0,
+      "cache_read": 0.375,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "cognitivecomputations/dolphin-mistral-24b-venice-edition:free": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "cohere/command-a": {
+      "context_length": 256000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "cohere/command-r-08-2024": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "cohere/command-r-plus-08-2024": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "cohere/command-r7b-12-2024": {
+      "context_length": 128000,
+      "input": 0.0375,
+      "output": 0.15,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepcogito/cogito-v2.1-671b": {
+      "context_length": 128000,
+      "input": 1.25,
+      "output": 1.25,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek-chat": {
+      "context_length": 131072,
+      "input": 0.28,
+      "output": 0.42,
+      "cache_read": 0.028,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "deepseek-reasoner": {
+      "context_length": 131072,
+      "input": 0.28,
+      "output": 0.42,
+      "cache_read": 0.028,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "deepseek/deepseek-chat": {
+      "context_length": 128000,
+      "input": 0.20020000000000002,
+      "output": 0.8000999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-chat-v3-0324": {
+      "context_length": 163840,
+      "input": 0.19999999999999998,
+      "output": 0.77,
+      "cache_read": 0.135,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-chat-v3.1": {
+      "context_length": 163840,
+      "input": 0.21,
+      "output": 0.7899999999999999,
+      "cache_read": 0.13,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-coder": {
+      "context_length": 128000,
+      "input": 0.14,
+      "output": 0.28,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "deepseek/deepseek-r1": {
+      "context_length": 64000,
+      "input": 0.7,
+      "output": 2.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-r1-0528": {
+      "context_length": 163840,
+      "input": 0.5,
+      "output": 2.1500000000000004,
+      "cache_read": 0.35,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-r1-distill-llama-70b": {
+      "context_length": 8192,
+      "input": 0.7999999999999999,
+      "output": 0.7999999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-r1-distill-qwen-32b": {
+      "context_length": 32768,
+      "input": 0.29,
+      "output": 0.29,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-reasoner": {
+      "context_length": 131072,
+      "input": 0.28,
+      "output": 0.42,
+      "cache_read": 0.028,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "deepseek/deepseek-v3": {
+      "context_length": 65536,
+      "input": 0.27,
+      "output": 1.1,
+      "cache_read": 0.07,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "deepseek/deepseek-v3.1-terminus": {
+      "context_length": 163840,
+      "input": 0.27,
+      "output": 0.95,
+      "cache_read": 0.13,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-v3.2": {
+      "context_length": 128000,
+      "input": 0.2288,
+      "output": 0.3432,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-v3.2-exp": {
+      "context_length": 163840,
+      "input": 0.27,
+      "output": 0.41,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-v4-flash": {
+      "context_length": 1048575,
+      "input": 0.098,
+      "output": 0.196,
+      "cache_read": 0.02,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "deepseek/deepseek-v4-pro": {
+      "context_length": 1048576,
+      "input": 0.435,
+      "output": 0.87,
+      "cache_read": 0.003625,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "essentialai/rnj-1-instruct": {
+      "context_length": 32768,
+      "input": 0.15,
+      "output": 0.15,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "ft:gpt-3.5-turbo": {
+      "context_length": 16385,
+      "input": 3.0,
+      "output": 6.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-3.5-turbo-0125": {
+      "context_length": 16385,
+      "input": 3.0,
+      "output": 6.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-3.5-turbo-0613": {
+      "context_length": 4096,
+      "input": 3.0,
+      "output": 6.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-3.5-turbo-1106": {
+      "context_length": 16385,
+      "input": 3.0,
+      "output": 6.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-4-0613": {
+      "context_length": 8192,
+      "input": 30.0,
+      "output": 60.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-4.1-2025-04-14": {
+      "context_length": 1047576,
+      "input": 3.0,
+      "output": 12.0,
+      "cache_read": 0.75,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-4.1-mini-2025-04-14": {
+      "context_length": 1047576,
+      "input": 0.7999999999999999,
+      "output": 3.1999999999999997,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-4.1-nano-2025-04-14": {
+      "context_length": 1047576,
+      "input": 0.19999999999999998,
+      "output": 0.7999999999999999,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-4o-2024-08-06": {
+      "context_length": 128000,
+      "input": 3.75,
+      "output": 15.0,
+      "cache_read": 1.875,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:gpt-4o-2024-11-20": {
+      "context_length": 128000,
+      "input": 3.75,
+      "output": 15.0,
+      "cache_read": 0.0,
+      "cache_write": 1.875,
+      "source": "litellm"
+    },
+    "ft:gpt-4o-mini-2024-07-18": {
+      "context_length": 128000,
+      "input": 0.3,
+      "output": 1.2,
+      "cache_read": 0.15,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "ft:o4-mini-2025-04-16": {
+      "context_length": 200000,
+      "input": 4.0,
+      "output": 16.0,
+      "cache_read": 1.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "google/gemini-2.5-flash": {
+      "context_length": 1048576,
+      "input": 0.3,
+      "output": 2.5,
+      "cache_read": 0.03,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemini-2.5-flash-image": {
+      "context_length": 32768,
+      "input": 0.3,
+      "output": 2.5,
+      "cache_read": 0.03,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemini-2.5-flash-lite": {
+      "context_length": 1048576,
+      "input": 0.09999999999999999,
+      "output": 0.39999999999999997,
+      "cache_read": 0.01,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemini-2.5-flash-lite-preview-09-2025": {
+      "context_length": 1048576,
+      "input": 0.09999999999999999,
+      "output": 0.39999999999999997,
+      "cache_read": 0.01,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemini-2.5-pro": {
+      "context_length": 1048576,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "google/gemini-2.5-pro-preview": {
+      "context_length": 1048576,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "google/gemini-2.5-pro-preview-05-06": {
+      "context_length": 1048576,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "google/gemini-3-flash-preview": {
+      "context_length": 1048576,
+      "input": 0.5,
+      "output": 3.0,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemini-3-pro-image-preview": {
+      "context_length": 65536,
+      "input": 2.0,
+      "output": 12.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "google/gemini-3.1-flash-image-preview": {
+      "context_length": 65536,
+      "input": 0.5,
+      "output": 3.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemini-3.1-flash-lite": {
+      "context_length": 1048576,
+      "input": 0.25,
+      "output": 1.5,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemini-3.1-flash-lite-preview": {
+      "context_length": 1048576,
+      "input": 0.25,
+      "output": 1.5,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemini-3.1-pro-preview": {
+      "context_length": 1048576,
+      "input": 2.0,
+      "output": 12.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "google/gemini-3.1-pro-preview-customtools": {
+      "context_length": 1048576,
+      "input": 2.0,
+      "output": 12.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "google/gemini-3.5-flash": {
+      "context_length": 1048576,
+      "input": 1.5,
+      "output": 9.0,
+      "cache_read": 0.15,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "google/gemma-2-27b-it": {
+      "context_length": 8192,
+      "input": 0.65,
+      "output": 0.65,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-3-12b-it": {
+      "context_length": 131072,
+      "input": 0.049999999999999996,
+      "output": 0.15,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-3-27b-it": {
+      "context_length": 131072,
+      "input": 0.08,
+      "output": 0.16,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-3-4b-it": {
+      "context_length": 131072,
+      "input": 0.049999999999999996,
+      "output": 0.09999999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-3n-e4b-it": {
+      "context_length": 32768,
+      "input": 0.06,
+      "output": 0.12,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-4-26b-a4b-it": {
+      "context_length": 262144,
+      "input": 0.06,
+      "output": 0.33,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-4-26b-a4b-it:free": {
+      "context_length": 262144,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-4-31b-it": {
+      "context_length": 262144,
+      "input": 0.12,
+      "output": 0.35,
+      "cache_read": 0.09,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/gemma-4-31b-it:free": {
+      "context_length": 262144,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/lyria-3-clip-preview": {
+      "context_length": 1048576,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "google/lyria-3-pro-preview": {
+      "context_length": 1048576,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "gpt-3.5-turbo": {
+      "context_length": 16385,
+      "input": 0.5,
+      "output": 1.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-3.5-turbo-0125": {
+      "context_length": 16385,
+      "input": 0.5,
+      "output": 1.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-3.5-turbo-1106": {
+      "context_length": 16385,
+      "input": 1.0,
+      "output": 2.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-3.5-turbo-16k": {
+      "context_length": 16385,
+      "input": 3.0,
+      "output": 4.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4": {
+      "context_length": 8192,
+      "input": 30.0,
+      "output": 60.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4-0125-preview": {
+      "context_length": 128000,
+      "input": 10.0,
+      "output": 30.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4-0314": {
+      "context_length": 8192,
+      "input": 30.0,
+      "output": 60.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4-0613": {
+      "context_length": 8192,
+      "input": 30.0,
+      "output": 60.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4-1106-preview": {
+      "context_length": 128000,
+      "input": 10.0,
+      "output": 30.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4-turbo": {
+      "context_length": 128000,
+      "input": 10.0,
+      "output": 30.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4-turbo-2024-04-09": {
+      "context_length": 128000,
+      "input": 10.0,
+      "output": 30.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4-turbo-preview": {
+      "context_length": 128000,
+      "input": 10.0,
+      "output": 30.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4.1": {
+      "context_length": 1047576,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4.1-2025-04-14": {
+      "context_length": 1047576,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4.1-mini": {
+      "context_length": 1047576,
+      "input": 0.39999999999999997,
+      "output": 1.5999999999999999,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4.1-mini-2025-04-14": {
+      "context_length": 1047576,
+      "input": 0.39999999999999997,
+      "output": 1.5999999999999999,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4.1-nano": {
+      "context_length": 1047576,
+      "input": 0.09999999999999999,
+      "output": 0.39999999999999997,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4.1-nano-2025-04-14": {
+      "context_length": 1047576,
+      "input": 0.09999999999999999,
+      "output": 0.39999999999999997,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-2024-05-13": {
+      "context_length": 128000,
+      "input": 5.0,
+      "output": 15.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-2024-08-06": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-2024-11-20": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-audio-preview": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-audio-preview-2024-12-17": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-audio-preview-2025-06-03": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-2024-07-18": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-audio-preview": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-audio-preview-2024-12-17": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-realtime-preview": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.3,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-realtime-preview-2024-12-17": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.3,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-search-preview": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-search-preview-2025-03-11": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-transcribe": {
+      "context_length": 16000,
+      "input": 1.25,
+      "output": 5.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-transcribe-2025-03-20": {
+      "context_length": 16000,
+      "input": 1.25,
+      "output": 5.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-mini-transcribe-2025-12-15": {
+      "context_length": 16000,
+      "input": 1.25,
+      "output": 5.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-realtime-preview": {
+      "context_length": 128000,
+      "input": 5.0,
+      "output": 20.0,
+      "cache_read": 2.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-realtime-preview-2024-12-17": {
+      "context_length": 128000,
+      "input": 5.0,
+      "output": 20.0,
+      "cache_read": 2.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-realtime-preview-2025-06-03": {
+      "context_length": 128000,
+      "input": 5.0,
+      "output": 20.0,
+      "cache_read": 2.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-search-preview": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-search-preview-2025-03-11": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-transcribe": {
+      "context_length": 16000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-4o-transcribe-diarize": {
+      "context_length": 16000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-2025-08-07": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-chat": {
+      "context_length": 128000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-chat-latest": {
+      "context_length": 128000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-codex": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-mini": {
+      "context_length": 272000,
+      "input": 0.25,
+      "output": 2.0,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-mini-2025-08-07": {
+      "context_length": 272000,
+      "input": 0.25,
+      "output": 2.0,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-nano": {
+      "context_length": 272000,
+      "input": 0.049999999999999996,
+      "output": 0.39999999999999997,
+      "cache_read": 0.005,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-nano-2025-08-07": {
+      "context_length": 272000,
+      "input": 0.049999999999999996,
+      "output": 0.39999999999999997,
+      "cache_read": 0.005,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-pro": {
+      "context_length": 128000,
+      "input": 15.0,
+      "output": 120.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-pro-2025-10-06": {
+      "context_length": 128000,
+      "input": 15.0,
+      "output": 120.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-search-api": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5-search-api-2025-10-14": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.1": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.1-2025-11-13": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.1-chat-latest": {
+      "context_length": 128000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.1-codex": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.1-codex-max": {
+      "context_length": 272000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.1-codex-mini": {
+      "context_length": 272000,
+      "input": 0.25,
+      "output": 2.0,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.2": {
+      "context_length": 272000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.2-2025-12-11": {
+      "context_length": 272000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.2-chat-latest": {
+      "context_length": 128000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.2-codex": {
+      "context_length": 272000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.2-pro": {
+      "context_length": 272000,
+      "input": 21.0,
+      "output": 168.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.2-pro-2025-12-11": {
+      "context_length": 272000,
+      "input": 21.0,
+      "output": 168.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.3-chat-latest": {
+      "context_length": 128000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.3-codex": {
+      "context_length": 272000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4": {
+      "context_length": 1050000,
+      "input": 2.5,
+      "output": 15.0,
+      "cache_read": 0.25,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4-2026-03-05": {
+      "context_length": 1050000,
+      "input": 2.5,
+      "output": 15.0,
+      "cache_read": 0.25,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4-mini": {
+      "context_length": 272000,
+      "input": 0.75,
+      "output": 4.5,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4-mini-2026-03-17": {
+      "context_length": 272000,
+      "input": 0.75,
+      "output": 4.5,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4-nano": {
+      "context_length": 272000,
+      "input": 0.19999999999999998,
+      "output": 1.25,
+      "cache_read": 0.02,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4-nano-2026-03-17": {
+      "context_length": 272000,
+      "input": 0.19999999999999998,
+      "output": 1.25,
+      "cache_read": 0.02,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4-pro": {
+      "context_length": 1050000,
+      "input": 30.0,
+      "output": 180.0,
+      "cache_read": 3.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.4-pro-2026-03-05": {
+      "context_length": 1050000,
+      "input": 30.0,
+      "output": 180.0,
+      "cache_read": 3.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.5": {
+      "context_length": 1050000,
+      "input": 5.0,
+      "output": 30.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.5-2026-04-23": {
+      "context_length": 1050000,
+      "input": 5.0,
+      "output": 30.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.5-pro": {
+      "context_length": 1050000,
+      "input": 30.0,
+      "output": 180.0,
+      "cache_read": 3.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.5-pro-2026-04-23": {
+      "context_length": 1050000,
+      "input": 30.0,
+      "output": 180.0,
+      "cache_read": 3.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-5.6-luna": {
+      "context_length": 1050000,
+      "input": 1.0,
+      "output": 6.0,
+      "cache_read": 0.1,
+      "cache_write": 1.25,
+      "source": "litellm"
+    },
+    "gpt-5.6-sol": {
+      "context_length": 1050000,
+      "input": 5.0,
+      "output": 30.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "litellm"
+    },
+    "gpt-5.6-terra": {
+      "context_length": 1050000,
+      "input": 2.5,
+      "output": 15.0,
+      "cache_read": 0.25,
+      "cache_write": 3.125,
+      "source": "litellm"
+    },
+    "gpt-audio": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-audio-1.5": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-audio-2025-08-28": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-audio-mini": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-audio-mini-2025-10-06": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-audio-mini-2025-12-15": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-realtime": {
+      "context_length": 32000,
+      "input": 4.0,
+      "output": 16.0,
+      "cache_read": 0.39999999999999997,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-realtime-1.5": {
+      "context_length": 32000,
+      "input": 4.0,
+      "output": 16.0,
+      "cache_read": 0.39999999999999997,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-realtime-2": {
+      "context_length": 32000,
+      "input": 4.0,
+      "output": 16.0,
+      "cache_read": 0.39999999999999997,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-realtime-2025-08-28": {
+      "context_length": 32000,
+      "input": 4.0,
+      "output": 16.0,
+      "cache_read": 0.39999999999999997,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-realtime-mini": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-realtime-mini-2025-10-06": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.06,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gpt-realtime-mini-2025-12-15": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.06,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "gryphe/mythomax-l2-13b": {
+      "context_length": 4096,
+      "input": 0.06,
+      "output": 0.06,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "ibm-granite/granite-4.0-h-micro": {
+      "context_length": 131000,
+      "input": 0.017,
+      "output": 0.112,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "ibm-granite/granite-4.1-8b": {
+      "context_length": 131072,
+      "input": 0.049999999999999996,
+      "output": 0.09999999999999999,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "inception/mercury-2": {
+      "context_length": 128000,
+      "input": 0.25,
+      "output": 0.75,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "inclusionai/ling-2.6-1t": {
+      "context_length": 262144,
+      "input": 0.075,
+      "output": 0.625,
+      "cache_read": 0.015,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "inclusionai/ling-2.6-flash": {
+      "context_length": 262144,
+      "input": 0.01,
+      "output": 0.03,
+      "cache_read": 0.002,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "inclusionai/ring-2.6-1t": {
+      "context_length": 262144,
+      "input": 0.075,
+      "output": 0.625,
+      "cache_read": 0.015,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "inflection/inflection-3-pi": {
+      "context_length": 8000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "inflection/inflection-3-productivity": {
+      "context_length": 8000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "kwaipilot/kat-coder-pro-v2": {
+      "context_length": 256000,
+      "input": 0.3,
+      "output": 1.2,
+      "cache_read": 0.06,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "liquid/lfm-2-24b-a2b": {
+      "context_length": 32768,
+      "input": 0.03,
+      "output": 0.12,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "liquid/lfm-2.5-1.2b-instruct:free": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "liquid/lfm-2.5-1.2b-thinking:free": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mancer/weaver": {
+      "context_length": 8000,
+      "input": 0.75,
+      "output": 1.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3-70b-instruct": {
+      "context_length": 8192,
+      "input": 0.51,
+      "output": 0.74,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3-8b-instruct": {
+      "context_length": 8192,
+      "input": 0.14,
+      "output": 0.14,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.1-70b-instruct": {
+      "context_length": 131072,
+      "input": 0.39999999999999997,
+      "output": 0.39999999999999997,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.1-8b-instruct": {
+      "context_length": 131072,
+      "input": 0.02,
+      "output": 0.03,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.2-11b-vision-instruct": {
+      "context_length": 131072,
+      "input": 0.345,
+      "output": 0.345,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.2-1b-instruct": {
+      "context_length": 60000,
+      "input": 0.027,
+      "output": 0.201,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.2-3b-instruct": {
+      "context_length": 80000,
+      "input": 0.0509,
+      "output": 0.335,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.2-3b-instruct:free": {
+      "context_length": 131072,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.3-70b-instruct": {
+      "context_length": 131072,
+      "input": 0.09999999999999999,
+      "output": 0.32,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-3.3-70b-instruct:free": {
+      "context_length": 65536,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-4-maverick": {
+      "context_length": 1048576,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-4-scout": {
+      "context_length": 327680,
+      "input": 0.09999999999999999,
+      "output": 0.3,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "meta-llama/llama-guard-4-12b": {
+      "context_length": 163840,
+      "input": 0.18,
+      "output": 0.18,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "microsoft/phi-4": {
+      "context_length": 16384,
+      "input": 0.065,
+      "output": 0.14,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "microsoft/phi-4-mini-instruct": {
+      "context_length": 128000,
+      "input": 0.08,
+      "output": 0.35,
+      "cache_read": 0.08,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "microsoft/wizardlm-2-8x22b": {
+      "context_length": 65535,
+      "input": 0.62,
+      "output": 0.62,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-01": {
+      "context_length": 1000192,
+      "input": 0.19999999999999998,
+      "output": 1.1,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-m1": {
+      "context_length": 1000000,
+      "input": 0.39999999999999997,
+      "output": 2.2,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-m2": {
+      "context_length": 196608,
+      "input": 0.255,
+      "output": 1.0,
+      "cache_read": 0.03,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-m2-her": {
+      "context_length": 65536,
+      "input": 0.3,
+      "output": 1.2,
+      "cache_read": 0.03,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-m2.1": {
+      "context_length": 196608,
+      "input": 0.29,
+      "output": 0.95,
+      "cache_read": 0.03,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-m2.5": {
+      "context_length": 196608,
+      "input": 0.15,
+      "output": 0.8999999999999999,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-m2.7": {
+      "context_length": 196608,
+      "input": 0.25,
+      "output": 1.0,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "minimax/minimax-m3": {
+      "context_length": 524288,
+      "input": 0.3,
+      "output": 1.2,
+      "cache_read": 0.06,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/codestral-2508": {
+      "context_length": 256000,
+      "input": 0.3,
+      "output": 0.8999999999999999,
+      "cache_read": 0.03,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/devstral-2512": {
+      "context_length": 262144,
+      "input": 0.39999999999999997,
+      "output": 2.0,
+      "cache_read": 0.04,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/ministral-14b-2512": {
+      "context_length": 262144,
+      "input": 0.19999999999999998,
+      "output": 0.19999999999999998,
+      "cache_read": 0.02,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/ministral-3b-2512": {
+      "context_length": 131072,
+      "input": 0.09999999999999999,
+      "output": 0.09999999999999999,
+      "cache_read": 0.01,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/ministral-8b-2512": {
+      "context_length": 262144,
+      "input": 0.15,
+      "output": 0.15,
+      "cache_read": 0.015,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-large": {
+      "context_length": 128000,
+      "input": 2.0,
+      "output": 6.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-large-2407": {
+      "context_length": 131072,
+      "input": 2.0,
+      "output": 6.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-large-2512": {
+      "context_length": 262144,
+      "input": 0.5,
+      "output": 1.5,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-medium-3": {
+      "context_length": 131072,
+      "input": 0.39999999999999997,
+      "output": 2.0,
+      "cache_read": 0.04,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-medium-3-5": {
+      "context_length": 262144,
+      "input": 1.5,
+      "output": 7.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-medium-3.1": {
+      "context_length": 131072,
+      "input": 0.39999999999999997,
+      "output": 2.0,
+      "cache_read": 0.04,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-nemo": {
+      "context_length": 131072,
+      "input": 0.02,
+      "output": 0.03,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-saba": {
+      "context_length": 32768,
+      "input": 0.19999999999999998,
+      "output": 0.6,
+      "cache_read": 0.02,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-small-24b-instruct-2501": {
+      "context_length": 32768,
+      "input": 0.049999999999999996,
+      "output": 0.08,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-small-2603": {
+      "context_length": 262144,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.015,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-small-3.1-24b-instruct": {
+      "context_length": 128000,
+      "input": 0.351,
+      "output": 0.5549999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mistral-small-3.2-24b-instruct": {
+      "context_length": 128000,
+      "input": 0.075,
+      "output": 0.19999999999999998,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/mixtral-8x22b-instruct": {
+      "context_length": 65536,
+      "input": 2.0,
+      "output": 6.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "mistralai/voxtral-small-24b-2507": {
+      "context_length": 32000,
+      "input": 0.09999999999999999,
+      "output": 0.3,
+      "cache_read": 0.01,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "moonshotai/kimi-k2": {
+      "context_length": 131072,
+      "input": 0.5700000000000001,
+      "output": 2.3,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "moonshotai/kimi-k2-0905": {
+      "context_length": 262144,
+      "input": 0.6,
+      "output": 2.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "moonshotai/kimi-k2-thinking": {
+      "context_length": 262144,
+      "input": 0.6,
+      "output": 2.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "moonshotai/kimi-k2.5": {
+      "context_length": 256000,
+      "input": 0.375,
+      "output": 2.025,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "moonshotai/kimi-k2.6": {
+      "context_length": 262142,
+      "input": 0.6799999999999999,
+      "output": 3.41,
+      "cache_read": 0.33999999999999997,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "moonshotai/kimi-k2.7-code": {
+      "context_length": 262144,
+      "input": 0.75,
+      "output": 3.5,
+      "cache_read": 0.16,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "morph/morph-v3-fast": {
+      "context_length": 81920,
+      "input": 0.7999999999999999,
+      "output": 1.2,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "morph/morph-v3-large": {
+      "context_length": 262144,
+      "input": 0.8999999999999999,
+      "output": 1.9,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nex-agi/nex-n2-pro:free": {
+      "context_length": 262144,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nousresearch/hermes-3-llama-3.1-405b": {
+      "context_length": 131072,
+      "input": 1.0,
+      "output": 1.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nousresearch/hermes-3-llama-3.1-405b:free": {
+      "context_length": 131072,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nousresearch/hermes-3-llama-3.1-70b": {
+      "context_length": 131072,
+      "input": 0.7,
+      "output": 0.7,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nousresearch/hermes-4-405b": {
+      "context_length": 131072,
+      "input": 1.0,
+      "output": 3.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nousresearch/hermes-4-70b": {
+      "context_length": 131072,
+      "input": 0.13,
+      "output": 0.39999999999999997,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/llama-3.3-nemotron-super-49b-v1.5": {
+      "context_length": 131072,
+      "input": 0.39999999999999997,
+      "output": 0.39999999999999997,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3-nano-30b-a3b": {
+      "context_length": 262144,
+      "input": 0.049999999999999996,
+      "output": 0.19999999999999998,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3-nano-30b-a3b:free": {
+      "context_length": 256000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+      "context_length": 256000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3-super-120b-a12b": {
+      "context_length": 262144,
+      "input": 0.09,
+      "output": 0.44999999999999996,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3-super-120b-a12b:free": {
+      "context_length": 262144,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3-ultra-550b-a55b": {
+      "context_length": 262144,
+      "input": 0.5,
+      "output": 2.5,
+      "cache_read": 0.15,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3-ultra-550b-a55b:free": {
+      "context_length": 1000000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-3.5-content-safety:free": {
+      "context_length": 128000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-nano-12b-v2-vl:free": {
+      "context_length": 128000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "nvidia/nemotron-nano-9b-v2:free": {
+      "context_length": 128000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "o1": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 60.0,
+      "cache_read": 7.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o1-2024-12-17": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 60.0,
+      "cache_read": 7.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o1-pro": {
+      "context_length": 200000,
+      "input": 150.0,
+      "output": 600.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o1-pro-2025-03-19": {
+      "context_length": 200000,
+      "input": 150.0,
+      "output": 600.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3": {
+      "context_length": 200000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3-2025-04-16": {
+      "context_length": 200000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3-deep-research": {
+      "context_length": 200000,
+      "input": 10.0,
+      "output": 40.0,
+      "cache_read": 2.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3-deep-research-2025-06-26": {
+      "context_length": 200000,
+      "input": 10.0,
+      "output": 40.0,
+      "cache_read": 2.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3-mini": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.55,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3-mini-2025-01-31": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.55,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3-pro": {
+      "context_length": 200000,
+      "input": 20.0,
+      "output": 80.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o3-pro-2025-06-10": {
+      "context_length": 200000,
+      "input": 20.0,
+      "output": 80.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o4-mini": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.275,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o4-mini-2025-04-16": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.275,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o4-mini-deep-research": {
+      "context_length": 200000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "o4-mini-deep-research-2025-06-26": {
+      "context_length": 200000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "omni-moderation-2024-09-26": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "omni-moderation-latest": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "openai/gpt-3.5-turbo": {
+      "context_length": 16385,
+      "input": 0.5,
+      "output": 1.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-3.5-turbo-0613": {
+      "context_length": 4095,
+      "input": 1.0,
+      "output": 2.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-3.5-turbo-16k": {
+      "context_length": 16385,
+      "input": 3.0,
+      "output": 4.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-3.5-turbo-instruct": {
+      "context_length": 4095,
+      "input": 1.5,
+      "output": 2.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4": {
+      "context_length": 8191,
+      "input": 30.0,
+      "output": 60.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4-turbo": {
+      "context_length": 128000,
+      "input": 10.0,
+      "output": 30.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4-turbo-preview": {
+      "context_length": 128000,
+      "input": 10.0,
+      "output": 30.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4.1": {
+      "context_length": 1047576,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4.1-mini": {
+      "context_length": 1047576,
+      "input": 0.39999999999999997,
+      "output": 1.5999999999999999,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4.1-nano": {
+      "context_length": 1047576,
+      "input": 0.09999999999999999,
+      "output": 0.39999999999999997,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o-2024-05-13": {
+      "context_length": 128000,
+      "input": 5.0,
+      "output": 15.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o-2024-08-06": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o-2024-11-20": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o-mini": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o-mini-2024-07-18": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o-mini-search-preview": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-4o-search-preview": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5": {
+      "context_length": 400000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5-chat": {
+      "context_length": 128000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5-codex": {
+      "context_length": 400000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5-image": {
+      "context_length": 400000,
+      "input": 10.0,
+      "output": 10.0,
+      "cache_read": 1.25,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5-image-mini": {
+      "context_length": 400000,
+      "input": 2.5,
+      "output": 2.0,
+      "cache_read": 0.25,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5-mini": {
+      "context_length": 400000,
+      "input": 0.25,
+      "output": 2.0,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5-nano": {
+      "context_length": 400000,
+      "input": 0.049999999999999996,
+      "output": 0.39999999999999997,
+      "cache_read": 0.01,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5-pro": {
+      "context_length": 400000,
+      "input": 15.0,
+      "output": 120.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.1": {
+      "context_length": 400000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.13,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.1-chat": {
+      "context_length": 128000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.13,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.1-codex": {
+      "context_length": 400000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.13,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.1-codex-max": {
+      "context_length": 400000,
+      "input": 1.25,
+      "output": 10.0,
+      "cache_read": 0.125,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.1-codex-mini": {
+      "context_length": 400000,
+      "input": 0.25,
+      "output": 2.0,
+      "cache_read": 0.024999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.2": {
+      "context_length": 400000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.2-chat": {
+      "context_length": 128000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.2-codex": {
+      "context_length": 400000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.2-pro": {
+      "context_length": 400000,
+      "input": 21.0,
+      "output": 168.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.3-chat": {
+      "context_length": 128000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.3-codex": {
+      "context_length": 400000,
+      "input": 1.75,
+      "output": 14.0,
+      "cache_read": 0.175,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.4": {
+      "context_length": 1050000,
+      "input": 2.5,
+      "output": 15.0,
+      "cache_read": 0.25,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.4-image-2": {
+      "context_length": 272000,
+      "input": 8.0,
+      "output": 15.0,
+      "cache_read": 2.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.4-mini": {
+      "context_length": 400000,
+      "input": 0.75,
+      "output": 4.5,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.4-nano": {
+      "context_length": 400000,
+      "input": 0.19999999999999998,
+      "output": 1.25,
+      "cache_read": 0.02,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.4-pro": {
+      "context_length": 1050000,
+      "input": 30.0,
+      "output": 180.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.5": {
+      "context_length": 1050000,
+      "input": 5.0,
+      "output": 30.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-5.5-pro": {
+      "context_length": 1050000,
+      "input": 30.0,
+      "output": 180.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-audio": {
+      "context_length": 128000,
+      "input": 2.5,
+      "output": 10.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-audio-mini": {
+      "context_length": 128000,
+      "input": 0.6,
+      "output": 2.4,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-chat-latest": {
+      "context_length": 400000,
+      "input": 5.0,
+      "output": 30.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-oss-120b": {
+      "context_length": 131072,
+      "input": 0.039,
+      "output": 0.18,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-oss-120b:free": {
+      "context_length": 131072,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-oss-20b": {
+      "context_length": 131072,
+      "input": 0.029,
+      "output": 0.14,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-oss-20b:free": {
+      "context_length": 131072,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/gpt-oss-safeguard-20b": {
+      "context_length": 131072,
+      "input": 0.075,
+      "output": 0.3,
+      "cache_read": 0.037,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o1": {
+      "context_length": 200000,
+      "input": 15.0,
+      "output": 60.0,
+      "cache_read": 7.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o1-pro": {
+      "context_length": 200000,
+      "input": 150.0,
+      "output": 600.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o3": {
+      "context_length": 200000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o3-deep-research": {
+      "context_length": 200000,
+      "input": 10.0,
+      "output": 40.0,
+      "cache_read": 2.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o3-mini": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.55,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o3-mini-high": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.55,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o3-pro": {
+      "context_length": 200000,
+      "input": 20.0,
+      "output": 80.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o4-mini": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.275,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o4-mini-deep-research": {
+      "context_length": 200000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openai/o4-mini-high": {
+      "context_length": 200000,
+      "input": 1.1,
+      "output": 4.4,
+      "cache_read": 0.275,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openrouter/auto": {
+      "context_length": 2000000,
+      "input": -1000000.0,
+      "output": -1000000.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openrouter/bodybuilder": {
+      "context_length": 128000,
+      "input": -1000000.0,
+      "output": -1000000.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openrouter/free": {
+      "context_length": 200000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openrouter/fusion": {
+      "context_length": 1000000,
+      "input": -1000000.0,
+      "output": -1000000.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openrouter/owl-alpha": {
+      "context_length": 1048756,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "openrouter/pareto-code": {
+      "context_length": 2000000,
+      "input": -1000000.0,
+      "output": -1000000.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "perceptron/perceptron-mk1": {
+      "context_length": 32768,
+      "input": 0.15,
+      "output": 1.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "perplexity/sonar": {
+      "context_length": 127072,
+      "input": 1.0,
+      "output": 1.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "perplexity/sonar-deep-research": {
+      "context_length": 128000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "perplexity/sonar-pro": {
+      "context_length": 200000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "perplexity/sonar-pro-search": {
+      "context_length": 200000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "perplexity/sonar-reasoning-pro": {
+      "context_length": 128000,
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "poolside/laguna-m.1:free": {
+      "context_length": 262144,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "poolside/laguna-xs.2:free": {
+      "context_length": 262144,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "prime-intellect/intellect-3": {
+      "context_length": 131072,
+      "input": 0.19999999999999998,
+      "output": 1.1,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen-2.5-72b-instruct": {
+      "context_length": 32768,
+      "input": 0.36,
+      "output": 0.39999999999999997,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen-2.5-7b-instruct": {
+      "context_length": 32768,
+      "input": 0.04,
+      "output": 0.09999999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen-2.5-coder-32b-instruct": {
+      "context_length": 32768,
+      "input": 0.66,
+      "output": 1.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen-plus": {
+      "context_length": 1000000,
+      "input": 0.26,
+      "output": 0.78,
+      "cache_read": 0.052000000000000005,
+      "cache_write": 0.325,
+      "source": "openrouter"
+    },
+    "qwen/qwen-plus-2025-07-28": {
+      "context_length": 1000000,
+      "input": 0.26,
+      "output": 0.78,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen-plus-2025-07-28:thinking": {
+      "context_length": 1000000,
+      "input": 0.26,
+      "output": 0.78,
+      "cache_read": 0.0,
+      "cache_write": 0.325,
+      "source": "openrouter"
+    },
+    "qwen/qwen2.5-vl-72b-instruct": {
+      "context_length": 128000,
+      "input": 0.7999999999999999,
+      "output": 1.0,
+      "cache_read": 0.39999999999999997,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-14b": {
+      "context_length": 40960,
+      "input": 0.09999999999999999,
+      "output": 0.24,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-235b-a22b": {
+      "context_length": 131072,
+      "input": 0.45499999999999996,
+      "output": 1.8199999999999998,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-235b-a22b-2507": {
+      "context_length": 262144,
+      "input": 0.09,
+      "output": 0.09999999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-235b-a22b-thinking-2507": {
+      "context_length": 262144,
+      "input": 0.09999999999999999,
+      "output": 0.09999999999999999,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-30b-a3b": {
+      "context_length": 40960,
+      "input": 0.12,
+      "output": 0.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-30b-a3b-instruct-2507": {
+      "context_length": 128000,
+      "input": 0.04815,
+      "output": 0.19305,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-30b-a3b-thinking-2507": {
+      "context_length": 131072,
+      "input": 0.08,
+      "output": 0.39999999999999997,
+      "cache_read": 0.08,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-32b": {
+      "context_length": 40960,
+      "input": 0.08,
+      "output": 0.28,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-8b": {
+      "context_length": 40960,
+      "input": 0.049999999999999996,
+      "output": 0.39999999999999997,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-coder": {
+      "context_length": 262144,
+      "input": 0.22,
+      "output": 1.7999999999999998,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-coder-30b-a3b-instruct": {
+      "context_length": 160000,
+      "input": 0.07,
+      "output": 0.27,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-coder-flash": {
+      "context_length": 1000000,
+      "input": 0.195,
+      "output": 0.975,
+      "cache_read": 0.039,
+      "cache_write": 0.24375,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-coder-next": {
+      "context_length": 262144,
+      "input": 0.11,
+      "output": 0.7999999999999999,
+      "cache_read": 0.07,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-coder-plus": {
+      "context_length": 1000000,
+      "input": 0.65,
+      "output": 3.25,
+      "cache_read": 0.13,
+      "cache_write": 0.8125,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-coder:free": {
+      "context_length": 262000,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-max": {
+      "context_length": 262144,
+      "input": 0.78,
+      "output": 3.9,
+      "cache_read": 0.156,
+      "cache_write": 0.975,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-max-thinking": {
+      "context_length": 262144,
+      "input": 0.78,
+      "output": 3.9,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-next-80b-a3b-instruct": {
+      "context_length": 262144,
+      "input": 0.09,
+      "output": 1.1,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-next-80b-a3b-instruct:free": {
+      "context_length": 262144,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-next-80b-a3b-thinking": {
+      "context_length": 131072,
+      "input": 0.0975,
+      "output": 0.78,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-vl-235b-a22b-instruct": {
+      "context_length": 262144,
+      "input": 0.19999999999999998,
+      "output": 0.88,
+      "cache_read": 0.11,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-vl-235b-a22b-thinking": {
+      "context_length": 131072,
+      "input": 0.26,
+      "output": 2.6,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-vl-30b-a3b-instruct": {
+      "context_length": 131072,
+      "input": 0.13,
+      "output": 0.52,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-vl-30b-a3b-thinking": {
+      "context_length": 131072,
+      "input": 0.13,
+      "output": 1.56,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-vl-32b-instruct": {
+      "context_length": 131072,
+      "input": 0.10400000000000001,
+      "output": 0.41600000000000004,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-vl-8b-instruct": {
+      "context_length": 131072,
+      "input": 0.08,
+      "output": 0.5,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3-vl-8b-thinking": {
+      "context_length": 131072,
+      "input": 0.117,
+      "output": 1.365,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-122b-a10b": {
+      "context_length": 262144,
+      "input": 0.26,
+      "output": 2.08,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-27b": {
+      "context_length": 262144,
+      "input": 0.195,
+      "output": 1.56,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-35b-a3b": {
+      "context_length": 262144,
+      "input": 0.14,
+      "output": 1.0,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-397b-a17b": {
+      "context_length": 262144,
+      "input": 0.39,
+      "output": 2.34,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-9b": {
+      "context_length": 262144,
+      "input": 0.09999999999999999,
+      "output": 0.15,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-flash-02-23": {
+      "context_length": 1000000,
+      "input": 0.065,
+      "output": 0.26,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-plus-02-15": {
+      "context_length": 1000000,
+      "input": 0.26,
+      "output": 1.56,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.5-plus-20260420": {
+      "context_length": 1000000,
+      "input": 0.3,
+      "output": 1.7999999999999998,
+      "cache_read": 0.0,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.6-27b": {
+      "context_length": 262140,
+      "input": 0.28850000000000003,
+      "output": 3.17,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.6-35b-a3b": {
+      "context_length": 262144,
+      "input": 0.15,
+      "output": 1.0,
+      "cache_read": 0.049999999999999996,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.6-flash": {
+      "context_length": 1000000,
+      "input": 0.1875,
+      "output": 1.125,
+      "cache_read": 0.0,
+      "cache_write": 0.234375,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.6-max-preview": {
+      "context_length": 262144,
+      "input": 1.04,
+      "output": 6.24,
+      "cache_read": 0.0,
+      "cache_write": 1.3,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.6-plus": {
+      "context_length": 1000000,
+      "input": 0.325,
+      "output": 1.95,
+      "cache_read": 0.0,
+      "cache_write": 0.40625,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.7-max": {
+      "context_length": 1000000,
+      "input": 1.25,
+      "output": 3.75,
+      "cache_read": 0.25,
+      "cache_write": 1.5625,
+      "source": "openrouter"
+    },
+    "qwen/qwen3.7-plus": {
+      "context_length": 1000000,
+      "input": 0.32,
+      "output": 1.28,
+      "cache_read": 0.064,
+      "cache_write": 0.39999999999999997,
+      "source": "openrouter"
+    },
+    "rekaai/reka-edge": {
+      "context_length": 16384,
+      "input": 0.09999999999999999,
+      "output": 0.09999999999999999,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "rekaai/reka-flash-3": {
+      "context_length": 65536,
+      "input": 0.09999999999999999,
+      "output": 0.19999999999999998,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "relace/relace-apply-3": {
+      "context_length": 256000,
+      "input": 0.85,
+      "output": 1.25,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "relace/relace-search": {
+      "context_length": 256000,
+      "input": 1.0,
+      "output": 3.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "sao10k/l3-lunaris-8b": {
+      "context_length": 8192,
+      "input": 0.04,
+      "output": 0.049999999999999996,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "sao10k/l3.1-70b-hanami-x1": {
+      "context_length": 16000,
+      "input": 3.0,
+      "output": 3.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "sao10k/l3.1-euryale-70b": {
+      "context_length": 131072,
+      "input": 0.85,
+      "output": 0.85,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "sao10k/l3.3-euryale-70b": {
+      "context_length": 131072,
+      "input": 0.65,
+      "output": 0.75,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "stepfun/step-3.5-flash": {
+      "context_length": 262144,
+      "input": 0.09,
+      "output": 0.3,
+      "cache_read": 0.02,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "stepfun/step-3.7-flash": {
+      "context_length": 256000,
+      "input": 0.19999999999999998,
+      "output": 1.15,
+      "cache_read": 0.04,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "switchpoint/router": {
+      "context_length": 131072,
+      "input": 0.85,
+      "output": 3.4,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "tencent/hunyuan-a13b-instruct": {
+      "context_length": 131072,
+      "input": 0.14,
+      "output": 0.5700000000000001,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "tencent/hy3-preview": {
+      "context_length": 262144,
+      "input": 0.063,
+      "output": 0.21,
+      "cache_read": 0.020999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "text-embedding-3-large": {
+      "context_length": 8191,
+      "input": 0.13,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "text-embedding-3-small": {
+      "context_length": 8191,
+      "input": 0.02,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "text-embedding-ada-002": {
+      "context_length": 8191,
+      "input": 0.09999999999999999,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "text-embedding-ada-002-v2": {
+      "context_length": 8191,
+      "input": 0.09999999999999999,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "text-moderation-007": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "text-moderation-latest": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "text-moderation-stable": {
+      "context_length": 32768,
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "litellm"
+    },
+    "thedrummer/cydonia-24b-v4.1": {
+      "context_length": 131072,
+      "input": 0.3,
+      "output": 0.5,
+      "cache_read": 0.15,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "thedrummer/rocinante-12b": {
+      "context_length": 32768,
+      "input": 0.16999999999999998,
+      "output": 0.43,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "thedrummer/skyfall-36b-v2": {
+      "context_length": 32768,
+      "input": 0.55,
+      "output": 0.7999999999999999,
+      "cache_read": 0.25,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "thedrummer/unslopnemo-12b": {
+      "context_length": 32768,
+      "input": 0.39999999999999997,
+      "output": 0.39999999999999997,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "undi95/remm-slerp-l2-13b": {
+      "context_length": 6144,
+      "input": 0.44999999999999996,
+      "output": 0.65,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "upstage/solar-pro-3": {
+      "context_length": 128000,
+      "input": 0.15,
+      "output": 0.6,
+      "cache_read": 0.015,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "writer/palmyra-x5": {
+      "context_length": 1040000,
+      "input": 0.6,
+      "output": 6.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "x-ai/grok-4.20": {
+      "context_length": 2000000,
+      "input": 1.25,
+      "output": 2.5,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "x-ai/grok-4.20-multi-agent": {
+      "context_length": 2000000,
+      "input": 1.25,
+      "output": 2.5,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "x-ai/grok-4.3": {
+      "context_length": 1000000,
+      "input": 1.25,
+      "output": 2.5,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "x-ai/grok-build-0.1": {
+      "context_length": 256000,
+      "input": 1.0,
+      "output": 2.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "xiaomi/mimo-v2-flash": {
+      "context_length": 262144,
+      "input": 0.09999999999999999,
+      "output": 0.3,
+      "cache_read": 0.01,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "xiaomi/mimo-v2.5": {
+      "context_length": 1048576,
+      "input": 0.14,
+      "output": 0.28,
+      "cache_read": 0.0028,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "xiaomi/mimo-v2.5-pro": {
+      "context_length": 1048576,
+      "input": 0.435,
+      "output": 0.87,
+      "cache_read": 0.0036,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-4.5": {
+      "context_length": 131072,
+      "input": 0.6,
+      "output": 2.2,
+      "cache_read": 0.11,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-4.5-air": {
+      "context_length": 131070,
+      "input": 0.125,
+      "output": 0.85,
+      "cache_read": 0.06,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-4.5v": {
+      "context_length": 65536,
+      "input": 0.6,
+      "output": 1.7999999999999998,
+      "cache_read": 0.11,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-4.6": {
+      "context_length": 202752,
+      "input": 0.43,
+      "output": 1.74,
+      "cache_read": 0.08,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-4.6v": {
+      "context_length": 131072,
+      "input": 0.3,
+      "output": 0.8999999999999999,
+      "cache_read": 0.055,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-4.7": {
+      "context_length": 202752,
+      "input": 0.39999999999999997,
+      "output": 1.75,
+      "cache_read": 0.08,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-4.7-flash": {
+      "context_length": 202752,
+      "input": 0.06,
+      "output": 0.39999999999999997,
+      "cache_read": 0.01,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-5": {
+      "context_length": 202752,
+      "input": 0.6,
+      "output": 1.92,
+      "cache_read": 0.12,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-5-turbo": {
+      "context_length": 262144,
+      "input": 1.2,
+      "output": 4.0,
+      "cache_read": 0.24,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "z-ai/glm-5.1": {
+      "context_length": 202752,
+      "input": 0.98,
+      "output": 3.08,
+      "cache_read": 0.182,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "~anthropic/claude-fable-latest": {
+      "context_length": 1000000,
+      "input": 10.0,
+      "output": 50.0,
+      "cache_read": 1.0,
+      "cache_write": 12.5,
+      "source": "openrouter"
+    },
+    "~anthropic/claude-haiku-latest": {
+      "context_length": 200000,
+      "input": 1.0,
+      "output": 5.0,
+      "cache_read": 0.09999999999999999,
+      "cache_write": 1.25,
+      "source": "openrouter"
+    },
+    "~anthropic/claude-opus-latest": {
+      "context_length": 1000000,
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "source": "openrouter"
+    },
+    "~anthropic/claude-sonnet-latest": {
+      "context_length": 1000000,
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "source": "openrouter"
+    },
+    "~google/gemini-flash-latest": {
+      "context_length": 1048576,
+      "input": 1.5,
+      "output": 9.0,
+      "cache_read": 0.15,
+      "cache_write": 0.08333333333333334,
+      "source": "openrouter"
+    },
+    "~google/gemini-pro-latest": {
+      "context_length": 1048576,
+      "input": 2.0,
+      "output": 12.0,
+      "cache_read": 0.19999999999999998,
+      "cache_write": 0.375,
+      "source": "openrouter"
+    },
+    "~moonshotai/kimi-latest": {
+      "context_length": 262142,
+      "input": 0.6799999999999999,
+      "output": 3.41,
+      "cache_read": 0.33999999999999997,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "~openai/gpt-latest": {
+      "context_length": 1050000,
+      "input": 5.0,
+      "output": 30.0,
+      "cache_read": 0.5,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    },
+    "~openai/gpt-mini-latest": {
+      "context_length": 400000,
+      "input": 0.75,
+      "output": 4.5,
+      "cache_read": 0.075,
+      "cache_write": 0.0,
+      "source": "openrouter"
+    }
+  }
+}

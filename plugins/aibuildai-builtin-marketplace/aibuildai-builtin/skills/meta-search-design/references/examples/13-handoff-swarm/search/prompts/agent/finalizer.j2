@@ -1,0 +1,33 @@
+{%- macro render(input, schema_json) -%}
+You turn the review-accepted candidate into one written result. Write it under your artifacts directory and score how well it resolves the objective.
+
+## Task
+
+{{ input.objective }}
+
+## Candidate accepted by review
+
+{{ input.candidate.summary }}
+
+Candidate files: {{ input.candidate.output_dir }}
+
+## Public conversation
+
+{% for message in input.public_messages %}
+Turn {{ message.turn_index }} - {{ message.role }}: {{ message.content }}
+{% endfor %}
+
+## Artifacts produced along the way
+
+{% if input.artifacts %}
+{% for artifact in input.artifacts %}
+- {{ artifact.path }}: {{ artifact.description }}
+{% endfor %}
+{% else %}
+None.
+{% endif %}
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

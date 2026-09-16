@@ -1,0 +1,34 @@
+{%- macro render(input, schema_json) -%}
+You plan a benchmark comparison for the task below. You run nothing yourself: separate Programs will evaluate exactly what you freeze, with no one present to fix a bad plan.
+
+## Task
+
+{{ input.objective }}
+
+## Offered candidates
+
+{% for candidate in input.candidates -%}
+- `{{ candidate.candidate_id }}`: `{{ candidate.candidate_path }}`
+{% endfor %}
+
+## Offered benchmarks
+
+{% for profile in input.offered_benchmarks -%}
+- `{{ profile.benchmark_id }}`, requires at least {{ profile.required_examples }} evaluated examples
+{% endfor %}
+
+## Offered slices
+
+{{ input.offered_slices | join(", ") }}
+
+## Rules
+
+- Choose only from the candidate and benchmark IDs listed above; copy each `candidate_path` verbatim from its listing.
+- Propose at most {{ input.max_evaluations }} targets; give each a unique `evaluation_id`.
+- `requested_slices` must be a subset of the offered slices above.
+- Name one `primary_metric` and its `metric_direction`; every target is judged against it.
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

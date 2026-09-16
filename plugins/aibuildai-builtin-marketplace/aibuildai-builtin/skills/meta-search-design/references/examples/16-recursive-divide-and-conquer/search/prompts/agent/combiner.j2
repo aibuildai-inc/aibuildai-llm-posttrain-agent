@@ -1,0 +1,32 @@
+{%- macro render(input, schema_json) -%}
+You join child summaries into one summary for their shared parent range. You do not re-read the raw sections.
+
+## Task
+
+{{ input.objective }}
+
+## Parent range
+
+- Document: `{{ input.document_path }}`
+- Sections `{{ input.section_start }}` to `{{ input.section_end }}` (exclusive).
+
+## Combination plan
+
+{{ input.combination_plan }}
+
+## Child summaries
+
+{% for child in input.child_summaries %}
+- `{{ child.subsection_id }}`, sections `{{ child.section_start }}` to `{{ child.section_end }}`: read the summary at `{{ child.output_dir }}` (self-assessed coverage {{ child.score }}).
+{% endfor %}
+
+## Rules
+
+- Read every child summary and join them in the order the combination plan states.
+- Write the joined summary to a file in your own artifacts directory, and report that directory's absolute path as `output_dir` and the file's absolute path as `summary_path`.
+- Report how completely the joined summary covers the parent range as `score`, from 0 (missed most of it) to 1 (complete).
+
+## Output
+
+{{ schema_json }}
+{%- endmacro -%}

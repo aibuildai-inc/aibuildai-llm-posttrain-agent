@@ -1,0 +1,22 @@
+{
+  "objective": "Choose the architecture strategy most likely to beat the current 0.71 macro-F1 baseline on the churn-prediction dataset in train.jsonl, on a two-hour training budget.",
+  "data_dir": "/run/public/data",
+  "rubric": "1. The proposed strategy fits the two-hour budget on one GPU. 2. Any claimed accuracy gain cites a specific mechanism, not a general reputation. 3. Class imbalance in the churn label is addressed explicitly. 4. A strategy with an unresolved fatal critique cannot win.",
+  "participants": [
+    {
+      "participant_id": "gradient-boosting",
+      "stance": "Argue for a tuned gradient-boosted tree ensemble over the tabular features."
+    },
+    {
+      "participant_id": "tabular-transformer",
+      "stance": "Argue for a small transformer trained directly on the tabular features with feature embeddings."
+    },
+    {
+      "participant_id": "stacked-ensemble",
+      "stance": "Argue for stacking a gradient-boosted model with a logistic-regression meta-learner."
+    }
+  ],
+  "minimum_positions": 2,
+  "debater_wall_clock_seconds": 900,
+  "judge_wall_clock_seconds": 600
+}

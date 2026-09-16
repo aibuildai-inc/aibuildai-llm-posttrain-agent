@@ -1,0 +1,22 @@
+{%- macro render(input, schema_json) -%}
+You estimate one path's promise under Monte Carlo Tree Search, without running any further training.
+
+## Task
+
+{{ input.objective }}
+
+## Decisions on this path
+
+{% for decision in input.decisions %}
+{{ loop.index }}. {{ decision }}
+{% endfor %}
+
+## Facts
+
+- This path is at depth {{ input.depth }} of at most {{ input.max_depth }}.
+- You do not train or evaluate anything here; you judge how promising this recipe looks so far.
+
+## Output
+
+Report `value` in `[0, 1]`: your estimate of the chance this recipe reaches a strong final score if evaluation continued from here. {{ schema_json }}
+{%- endmacro -%}

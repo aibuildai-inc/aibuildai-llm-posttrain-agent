@@ -1,0 +1,211 @@
+# AIBuildAI example: protein EC number prediction.
+# Generated from `aibuildai config` with the run inputs, model, MetaSearch, and
+# per-agent budgets set for the example. Replace the two /path/to/... values
+# (or run the sed line in the README) and start the run with:
+#   aibuildai run examples/protein-ec-prediction.yaml
+run:
+  task_name: protein-ec-prediction
+  conda_env: null
+  data_root: /path/to/protein-ec/data
+  setup_from_scratch: false
+  task_prompt: null
+  playground_root: /path/to/protein-ec/playground
+  budget:
+    wall_clock_minutes: 75
+    cost_usd: null
+    per_agent_cost_cap_usd: null
+llm:
+  default:
+    model: claude-opus-5
+    effort: null
+    max_thinking_tokens: null
+  by_role: {}
+  auto: null
+  retry_ceiling_s: null
+  system_instructions:
+    setup: |
+      A knowledge base of curated machine-learning skills is mounted as the `kb` MCP
+      server. Before planning the environment, call `mcp__kb__search_skills` with a
+      description of the task and read the skills that match.
+    meta: |
+      A knowledge base of curated machine-learning skills is mounted as the `kb` MCP
+      server (`mcp__kb__search_skills`, `mcp__kb__load_skill`, `mcp__kb__read_reference`).
+      Before designing the search program, search it for the task's domain and read the
+      matching skills, and design from that material. Give every Agent you write the same
+      instruction: consult the knowledge base before committing to a modeling approach.
+work_units:
+- kind: llm_agent
+  name: aggregator
+  budget:
+    kind: fixed
+    minutes: 20
+  retry: 0
+- kind: llm_agent
+  name: coder
+  budget:
+    kind: fixed
+    minutes: 25
+  retry: 0
+- kind: llm_agent
+  name: coder_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: designer
+  budget:
+    kind: fixed
+    minutes: 20
+  retry: 0
+- kind: llm_agent
+  name: designer_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: finalizer
+  budget:
+    kind: fixed
+    minutes: 15
+  retry: 0
+- kind: llm_agent
+  name: judge
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: meta
+  budget:
+    kind: fixed
+    minutes: 30
+  retry: 0
+- kind: llm_agent
+  name: meta_review
+  budget:
+    kind: fixed
+    minutes: 15
+  retry: 0
+- kind: llm_agent
+  name: reviser
+  budget:
+    kind: fixed
+    minutes: 15
+  retry: 0
+- kind: llm_agent
+  name: reviser_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: router
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: selector
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: setup
+  budget:
+    kind: fixed
+    minutes: 20
+  retry: 0
+- kind: llm_agent
+  name: setup_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: submitter
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: worker
+  budget:
+    kind: fixed
+    minutes: 25
+  retry: 0
+- kind: llm_agent
+  name: worker_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: writer
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: llm_agent
+  name: writer_review
+  budget:
+    kind: fixed
+    minutes: 10
+  retry: 0
+- kind: program
+  name: score_program
+  budget:
+    kind: fixed
+    minutes: 2
+  retry: 0
+- kind: program
+  name: training
+  budget:
+    kind: expected
+    min_minutes: 10
+    max_minutes: 20
+    slack_fraction: 0.3
+  retry: 0
+search:
+  kind: meta
+  input:
+    report: false
+disallowed_tools: []
+scheduler:
+  recheck_seconds: 300
+verifier:
+  enable: {}
+progress:
+  enable: true
+submission:
+  max_versions: 1
+writer:
+  enable: false
+resources:
+  run:
+    cpu_max_cores: null
+    memory_max_gb: null
+  work_unit:
+    cpu_max_cores: 4
+    memory_max_gb: 32
+    by_kind: {}
+  gpu:
+    min_free_mib: 8192
+    busy_util_threshold: 90
+    util_samples: 1
+  sandbox:
+    enable: false
+    system_read_paths: []
+    system_write_paths: []
+  cuda_visible_devices: null
+memory:
+  enable: false
+  max_chars: 30000
+  user_dir: ~/.aibuildai/memory
+mcps:
+  kb: { type: reference }   # the knowledge base: skill retrieval for every role
+plugins: {}
+agents: {}
+skills: {}
