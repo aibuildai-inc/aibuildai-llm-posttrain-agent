@@ -12,9 +12,9 @@
 
 ---
 
-The **AIBuildAI LLM-Post-Train Agent** is a recursive self-improving (RSI) agent for post-training language models. It autonomously designs a post-training algorithm for your base model, your data and the behaviour you want, writes the code, runs the experiments, measures what came out, and iteratively improves the model until its budget is spent.
+The **AIBuildAI LLM-Post-Train Agent** is a recursive self-improving (RSI) agent for post-training language models. It autonomously designs post-training algorithms tailored to each enterprise's proprietary data and use cases, writes code, runs experiments, and iteratively improves model performance.
 
-Two things make it more than a training script. A **knowledge system**: a retrieval service of curated skill documents on post-training methods, datasets and frameworks, which every agent in a run queries over MCP when it faces a design decision. And **meta search**: instead of executing one fixed strategy, a meta agent studies the task, consults the knowledge system, and writes the search program the run then executes, so the shape of the search fits the task rather than being fixed in advance. Every run also gets a live web workspace and a durable, resumable execution graph.
+Two things make it more than a coding agent. A **knowledge system**: a retrieval service of curated skill documents on post-training methods, datasets and frameworks, which every agent in a run queries over MCP when it faces a design decision. And **meta search**: instead of executing one fixed strategy, a meta agent studies the task, consults the knowledge system, and writes the search program the run then executes, so the shape of the search fits the task rather than being fixed in advance. Every run also gets a live web workspace and a durable, resumable execution graph.
 
 This repository is the source code of the post-train agent, for running from source, reading, and modifying. The packaged AIBuildAI product (pre-built binary and installer) is released from [aibuildai-inc/AI-Build-AI](https://github.com/aibuildai-inc/AI-Build-AI). Report problems with the code on this repository's issue tracker.
 
