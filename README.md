@@ -2,6 +2,7 @@
 
 <p align="center">
   <a href="https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww"><img src="https://img.shields.io/badge/Slack-AIBuildAI%20Community-4A154B?logo=slack" alt="Slack"></a>
+  <a href="https://discord.gg/JWrbhmkV6k"><img src="https://img.shields.io/badge/Discord-AIBuildAI%20Community-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 Source code of the **AIBuildAI LLM-Post-Train Agent**, a recursive self-improving (RSI) agent for autonomous post-training of language models. Given a task folder, the data plus a description of what to solve, it builds, evaluates, and selects solutions and delivers the selected output with the recorded work that produced it. It inherits the whole-experiment tree search of the science line and adds two components. A **knowledge system** for post-training: a remote retrieval service (the Kb) serving skill documents on the workflow of a post-training run and on methods, datasets, and frameworks, which any agent queries over MCP when it faces a design decision. And **meta search**: instead of executing a fixed search, a meta agent investigates the task, consults the knowledge system, and writes the *search program* the run then executes, so the search topology is task-specific. Every run also gets a web workspace and a durable, resumable execution graph backed by a private PostgreSQL journal.
@@ -212,4 +213,4 @@ The post-train paper is to be released. Until then, cite the AIBuildAI papers:
 
 ## Community
 
-Questions and discussion: join the [AIBuildAI Community Slack](https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww). Use the issue tracker for bugs and feature requests.
+Questions and discussion: join the [AIBuildAI Community Slack](https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww) or the [AIBuildAI Community Discord](https://discord.gg/JWrbhmkV6k). Use the issue tracker for bugs and feature requests.
