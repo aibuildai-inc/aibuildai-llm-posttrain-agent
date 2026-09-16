@@ -1,6 +1,6 @@
 <h1 align="center">AIBuildAI LLM-Post-Train Agent</h1>
 
-<h3 align="center">🏆 #1 on <a href="https://github.com/aisa-group/PostTrainBench">PostTrainBench</a></h3>
+<h3 align="center">🏆 #1 on PostTrainBench</h3>
 
 ---
 
