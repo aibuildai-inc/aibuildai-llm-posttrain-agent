@@ -5,6 +5,7 @@
 ---
 
 <p align="center">
+  <a href="docs/aibuildai-llm-post-train-agent.pdf"><img src="https://img.shields.io/badge/Tech%20Report-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white" alt="Tech report"></a>
   <a href="https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww"><img src="https://img.shields.io/badge/Slack-AIBuildAI%20Community-4A154B?logo=slack" alt="Slack"></a>
   <a href="https://discord.gg/JWrbhmkV6k"><img src="https://img.shields.io/badge/Discord-AIBuildAI%20Community-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
@@ -185,7 +186,7 @@ There is no test suite on this line; `./check.sh` is the gate.
 
 ## Citation
 
-The post-train paper is to be released. Until then, cite the AIBuildAI papers:
+The technical report for this line is [`docs/aibuildai-llm-post-train-agent.pdf`](docs/aibuildai-llm-post-train-agent.pdf); its paper is to be released. Until then, cite the AIBuildAI papers:
 
 ```bibtex
 @article{zhang2026aibuildai,
