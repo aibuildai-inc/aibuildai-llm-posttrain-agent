@@ -9,6 +9,8 @@
   <a href="https://discord.gg/JWrbhmkV6k"><img src="https://img.shields.io/badge/Discord-AIBuildAI%20Community-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
+---
+
 Source code of the **AIBuildAI LLM-Post-Train Agent**, a recursive self-improving (RSI) agent for autonomous post-training of language models. Given a task folder, the data plus a description of what to solve, it builds, evaluates, and selects solutions and delivers the selected output with the recorded work that produced it. It inherits the whole-experiment tree search of the science line and adds two components. A **knowledge system** for post-training: a remote retrieval service (the Kb) serving skill documents on the workflow of a post-training run and on methods, datasets, and frameworks, which any agent queries over MCP when it faces a design decision. And **meta search**: instead of executing a fixed search, a meta agent investigates the task, consults the knowledge system, and writes the *search program* the run then executes, so the search topology is task-specific. Every run also gets a web workspace and a durable, resumable execution graph backed by a private PostgreSQL journal.
 
 This repository is the source code of the post-train agent, for running from source, reading, and modifying. The packaged AIBuildAI product (pre-built binary and installer) is released from [aibuildai-inc/AI-Build-AI](https://github.com/aibuildai-inc/AI-Build-AI). Report problems with the code on this repository's issue tracker.
