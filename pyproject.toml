@@ -8,7 +8,7 @@ name = "aibuildai"
 # `git describe` (or installed metadata, or the recorded release version); this dynamic
 # directive reads that same value so the package metadata can never drift.
 dynamic = ["version"]
-description = "Automated machine learning workflow system powered by Claude AI agents."
+description = "Automated AI model building powered by Claude AI agents."
 requires-python = ">=3.11,<3.14"
 readme = "README.md"
 license = "Apache-2.0"

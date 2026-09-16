@@ -1,6 +1,6 @@
 # AIBuildAI
 
-AIBuildAI builds, evaluates, and selects machine-learning solutions. A run may
+AIBuildAI builds, evaluates, and selects AI solutions. A run may
 research a task, construct candidate solutions, execute and score them, and
 deliver the selected output together with the recorded work that produced it.
 
