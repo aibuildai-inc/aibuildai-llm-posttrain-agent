@@ -5,7 +5,7 @@
   "author": {
     "name": "AIBuildAI"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": "https://github.com/aibuildai-inc/aibuildai-llm-posttrain-agent",
   "keywords": [
     "methodology",

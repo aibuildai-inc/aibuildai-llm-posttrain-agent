@@ -198,7 +198,7 @@ The post-train paper is to be released. Until then, cite the AIBuildAI papers:
 
 ## License
 
-[MIT](LICENSE)
+[Apache License 2.0](LICENSE)
 
 ## Community
 

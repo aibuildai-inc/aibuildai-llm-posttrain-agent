@@ -11,7 +11,7 @@ dynamic = ["version"]
 description = "Automated machine learning workflow system powered by Claude AI agents."
 requires-python = ">=3.11,<3.14"
 readme = "README.md"
-license = "MIT"
+license = "Apache-2.0"
 license-files = ["LICENSE"]
 # Framework runtime deps only. Heavy ML/data-science packages (torch,
 # transformers, scikit-learn, scipy, pandas, numpy, ...) belong to the
