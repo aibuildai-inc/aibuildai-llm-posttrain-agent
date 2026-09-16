@@ -163,7 +163,7 @@ Every event of the run is journaled in the private PostgreSQL cluster under `~/.
 
 **Grading, review, delivery.** Setup turns the task folder into a frozen README, a score program, and a baseline attempt, so every role and the final ranking use one definition of success. Optional review roles gate Designer, Coder, Reviser, Setup, Worker, Meta, and Writer submissions. The Finalizer turns the winner into the deliverable.
 
-**Other fixed searches.** `tree` is the v2.5 code search with Judge and Selector, `linear` and `parallel` its forms, and `nb` is a single chain of Workers. Every piece of work is a work unit with typed input and output, a declared time budget, and journaled status; each runs under a bubblewrap sandbox with the task folder read-only and cgroup limits on memory and processes.
+**Execution.** Every piece of work is a work unit with typed input and output, a declared time budget, and journaled status; each runs under a bubblewrap sandbox with the task folder read-only and cgroup limits on memory and processes.
 
 The full design is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
