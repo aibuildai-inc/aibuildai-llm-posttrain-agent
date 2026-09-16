@@ -2,6 +2,8 @@
 
 <h3 align="center">🏆 #1 on <a href="https://github.com/aisa-group/PostTrainBench">PostTrainBench</a></h3>
 
+---
+
 <p align="center">
   <a href="https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww"><img src="https://img.shields.io/badge/Slack-AIBuildAI%20Community-4A154B?logo=slack" alt="Slack"></a>
   <a href="https://discord.gg/JWrbhmkV6k"><img src="https://img.shields.io/badge/Discord-AIBuildAI%20Community-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
