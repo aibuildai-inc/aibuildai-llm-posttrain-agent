@@ -1,5 +1,7 @@
 <h1 align="center">AIBuildAI LLM-Post-Train Agent</h1>
 
+<h3 align="center">🏆 #1 on <a href="https://github.com/aisa-group/PostTrainBench">PostTrainBench</a></h3>
+
 <p align="center">
   <a href="https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww"><img src="https://img.shields.io/badge/Slack-AIBuildAI%20Community-4A154B?logo=slack" alt="Slack"></a>
   <a href="https://discord.gg/JWrbhmkV6k"><img src="https://img.shields.io/badge/Discord-AIBuildAI%20Community-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
@@ -11,7 +13,7 @@ This repository is the source code of the post-train agent, for running from sou
 
 ## Current Results
 
-On [PostTrainBench](https://github.com/aisa-group/PostTrainBench), the benchmark of autonomous LLM post-training across model families and target evaluations, the AIBuildAI LLM-Post-Train Agent ranks #1 among AI agents with an overall score of 46.6%, ahead of every frontier model and agent evaluated and second only to the human expert baseline (51.1%).
+On [PostTrainBench](https://github.com/aisa-group/PostTrainBench), the benchmark of autonomous LLM post-training across model families and target evaluations, the AIBuildAI LLM-Post-Train Agent ranks #1 with an overall score of 46.6%, ahead of every frontier model and agent evaluated and second only to the human expert baseline (51.1%).
 
 <p align="center">
   <img src="assets/ptb-results.png" width="80%" alt="PostTrainBench results">
@@ -26,7 +28,7 @@ On [PostTrainBench](https://github.com/aisa-group/PostTrainBench), the benchmark
 - Access to a model: for Claude, a Claude Code login or an Anthropic API key; for any other model, an Anthropic-compatible endpoint and its key (DeepSeek and OpenRouter endpoints are built in)
 - A CUDA GPU is recommended; the agents detect and use available hardware
 
-No conda is needed: Program environments are created with the owned micromamba. A run is bounded by one cgroup-v2 tree, so your systemd user manager must delegate the `memory` and `pids` controllers (stock Ubuntu does); Check with:
+No conda is needed: Program environments are created with the owned micromamba. A run is bounded by one cgroup-v2 tree, so your systemd user manager must delegate the `memory` and `pids` controllers (stock Ubuntu does). Check with:
 
 ```bash
 U=$(id -u); cat /sys/fs/cgroup/user.slice/user-$U.slice/user@$U.service/cgroup.subtree_control
@@ -101,38 +103,9 @@ $H/program-environment/env/bin/python ~/gsm8k-example/task/grade/evaluate.py \
     --model-path $H/deliverable/final_model --limit -1
 ```
 
-### Example: protein EC number prediction
-
-The example task predicts the enzyme class (EC number, 1-7) of a protein from its amino acid sequence ([Yu et al., *Science* 2023](https://www.science.org/doi/10.1126/science.adf2465)). The dataset and a scoring script ship with the product repository, [aibuildai-inc/AI-Build-AI](https://github.com/aibuildai-inc/AI-Build-AI), and this repository ships a ready config under `examples/`:
-
-```bash
-BASE=https://raw.githubusercontent.com/aibuildai-inc/AI-Build-AI/main
-mkdir -p protein-ec/data && cd protein-ec
-for f in train.csv test.csv sample_submission.csv; do
-    curl -fsSL -o data/$f $BASE/data/protein-ec-prediction/$f
-done
-curl -fsSL -o data/README.md $BASE/tasks/protein-ec-prediction.md      # the task statement lives in the task folder
-sed "s#/path/to/protein-ec#$PWD#" <repo>/examples/protein-ec-prediction.yaml > task.yaml
-```
-
-The config sets `claude-opus-5` and `search.kind: meta`: a meta agent first investigates the task and writes the search program, then the run executes that program as a child search and delivers the winner. It mounts the knowledge base for every role (`mcps: kb: { type: reference }`; set `AIBUILDAI_KB_BASE_URL` to use another Kb service) and, through `llm.system_instructions`, tells Setup and the meta agent to consult it and to pass that instruction on to the agents the meta agent writes, keeps the design report off (`search.input.report: false`), and uses short budgets, a 75-minute exploration wall clock with 10-30-minute agent budgets, so a run finishes in under two hours; raise them for a serious run. Run it:
-
-```bash
-aibuildai run task.yaml
-```
-
-The run home is printed at the end. Because the task's `test.csv` ships without labels, Setup carves a stratified held-out slice out of `train.csv` (the run's `public/test.csv`, 1,313 proteins), writes the answer key and a score program under `private/`, and every candidate is graded on that slice. The `deliverable/` directory holds what the task statement asks for, here a `submission.csv` for that slice; score it with the run's own program in the run's Program environment (macro F1):
-
-```bash
-H=playground/protein-ec-prediction/<run-home>
-$H/program-environment/env/bin/python -c "import sys; sys.path.insert(0, '$H/private'); import score; print(score.score('$H/deliverable'))"
-```
-
-Verified runs of this config take 40-45 minutes and about $20 on one A100: Setup 2 min, the meta agent 5-10 min, the generated search 20-30 min, delivery 1 min. In the run with the knowledge base mounted, Setup, the meta agent, and every generated agent consulted it (`mcp__kb__search_skills` 15 times in total), the meta agent wrote a search program that trains three ESM-2 candidates in parallel and blends the winner, and the deliverable scored 0.800 (the baseline attempt scores 0.08).
-
 ### Your own task
 
-Copy `examples/protein-ec-prediction.yaml` (or start from `aibuildai config`, which prints every field with its documentation) and point `run.data_root` at your task folder: everything the run gets, holding what the task asks for in any readable form (a README, a task statement, a paper) plus every data file. Setup reads the folder whole, freezes the statement as the run's README, and writes the run's score program from it.
+Copy `examples/gsm8k-qwen3-1.7b-base.yaml` (or start from `aibuildai config`, which prints every field with its documentation) and point `run.data_root` at your task folder: everything the run gets, holding what the task asks for in any readable form (a README, a task statement, a paper) plus every data file. Setup reads the folder whole, freezes the statement as the run's README, and writes the run's score program from it.
 
 ### Key fields
 
