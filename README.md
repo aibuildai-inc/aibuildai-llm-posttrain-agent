@@ -1,10 +1,20 @@
 # AIBuildAI LLM-Post-Train Agent
 
+<h3 align="center">🏆 #1 among AI agents on <a href="https://github.com/aisa-group/PostTrainBench">PostTrainBench</a></h3>
+
 [![Slack](https://img.shields.io/badge/Slack-AIBuildAI%20Community-4A154B?logo=slack)](https://join.slack.com/t/aibuildaicommunity/shared_invite/zt-4a40v9kus-bQr~NIAZSKJkTwYxj5Elww)
 
 Source code of the **AIBuildAI LLM-Post-Train Agent**, a recursive self-improving (RSI) agent for autonomous post-training of language models. Given a task folder, the data plus a description of what to solve, it builds, evaluates, and selects solutions and delivers the selected output with the recorded work that produced it. It inherits the whole-experiment tree search of the science line and adds two components. A **knowledge system** for post-training: a remote retrieval service (the Kb) serving skill documents on the workflow of a post-training run and on methods, datasets, and frameworks, which any agent queries over MCP when it faces a design decision. And **meta search**: instead of executing a fixed search, a meta agent investigates the task, consults the knowledge system, and writes the *search program* the run then executes, so the search topology is task-specific. Every run also gets a web workspace and a durable, resumable execution graph backed by a private PostgreSQL journal.
 
 This repository is the source code of the post-train agent, for running from source, reading, and modifying. The packaged AIBuildAI product (pre-built binary and installer) is released from [aibuildai-inc/AI-Build-AI](https://github.com/aibuildai-inc/AI-Build-AI). Report problems with the code on this repository's issue tracker.
+
+## Current Results
+
+On [PostTrainBench](https://github.com/aisa-group/PostTrainBench), the benchmark of autonomous LLM post-training across model families and target evaluations, the AIBuildAI LLM-Post-Train Agent ranks #1 among AI agents with an overall score of 46.6%, ahead of every frontier model and agent evaluated and second only to the human expert baseline (51.1%).
+
+<p align="center">
+  <img src="assets/ptb-results.png" width="80%" alt="PostTrainBench results">
+</p>
 
 ## Requirements
 
