@@ -217,3 +217,5 @@ Questions and discussion: join the [AIBuildAI Community Slack](https://join.slac
 ## Contact us
 
 For enterprises interested in adopting or deploying the AIBuildAI LLM-Post-Train Agent at scale, including technical consulting, custom post-training engagements, or partnership inquiries, contact us at pengtao.xie@aibuildai.io.
+
+Long-term active contributors to this repository are eligible for coding agent sponsorship, such as Claude Code, Cursor, or OpenAI Codex. Email pengtao.xie@aibuildai.io with your most important commits or pull requests.
