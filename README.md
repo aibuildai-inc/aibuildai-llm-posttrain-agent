@@ -16,8 +16,6 @@ The **AIBuildAI LLM-Post-Train Agent** is a recursive self-improving (RSI) agent
 
 Two things make it more than a coding agent. A **knowledge system**: a retrieval service of curated skill documents on post-training methods, datasets and frameworks, which every agent in a run queries over MCP when it faces a design decision. And **meta search**: instead of executing one fixed strategy, a meta agent studies the task, consults the knowledge system, and writes the search program the run then executes, so the shape of the search fits the task rather than being fixed in advance. Every run also gets a live web workspace and a durable, resumable execution graph.
 
-This repository is the source code of the post-train agent, for running from source, reading, and modifying. The packaged AIBuildAI product (pre-built binary and installer) is released from [aibuildai-inc/AI-Build-AI](https://github.com/aibuildai-inc/AI-Build-AI). Report problems with the code on this repository's issue tracker.
-
 ## Current Results
 
 On [PostTrainBench](https://github.com/aisa-group/PostTrainBench), the benchmark of autonomous LLM post-training across model families and target evaluations, the AIBuildAI LLM-Post-Train Agent ranks #1 with an overall score of 46.6%, ahead of every frontier model and agent evaluated and second only to the human expert baseline (51.1%).
