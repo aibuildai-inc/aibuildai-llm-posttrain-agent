@@ -39,7 +39,11 @@ handle = await self.ctx.spawn(
 )
 meta_output = await handle.result()
 child = load_meta_search(meta, meta_output)
-child_handle = await self.ctx.spawn(child.run, upstream=(handle,))
+child_handle = await self.ctx.spawn(
+    child.run,
+    upstream=(handle,),
+    capability=ExecutionCapability(),
+)
 return await child_handle.result()
 ```
 
@@ -69,7 +73,11 @@ handle = await self.ctx.spawn(
 )
 meta_output = await handle.result()
 child = load_meta_search(meta, meta_output)
-child_handle = await self.ctx.spawn(child.run, upstream=(handle,))
+child_handle = await self.ctx.spawn(
+    child.run,
+    upstream=(handle,),
+    capability=ExecutionCapability(),
+)
 return await child_handle.result()
 ```
 

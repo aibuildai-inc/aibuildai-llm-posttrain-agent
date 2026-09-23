@@ -145,7 +145,13 @@ meta_handle = await self.ctx.spawn(
 )
 meta_output = await meta_handle.result()
 child = load_meta_search(meta, meta_output)
-result = await (await self.ctx.spawn(child.run, upstream=(meta_handle,))).result()
+result = await (
+    await self.ctx.spawn(
+        child.run,
+        upstream=(meta_handle,),
+        capability=ExecutionCapability(),
+    )
+).result()
 ```
 
 The published package and every completed execution stay immutable history. The new child Search owns only the future; never edit a published Search definition.
