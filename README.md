@@ -204,6 +204,13 @@ The technical report for this line is [`docs/aibuildai-llm-post-train-agent.pdf`
     journal={arXiv},
     url={https://arxiv.org/abs/2605.27873}
 }
+@article{qin2026aibuildai25,
+    title={AIBuildAI-2.5: Efficient Autonomous AI Model Development Through LLM-Guided Tree Search},
+    author={Peijia Qin and Ruiyi Zhang and Qi Cao and Han Guo and Li Zhang and Pengtao Xie},
+    year={2026},
+    journal={arXiv},
+    url={https://arxiv.org/abs/2609.25047}
+}
 ```
 
 ## License
