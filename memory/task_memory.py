@@ -16,12 +16,40 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Sequence
 
+from infra.backends.claude.event_adapter import ConversationObserver
 from infra.backends.hooks import make_strict_read_root_spec
 from infra.backends.one_shot import agent_turn
 from infra.backends.spec import AgentSpec
 
 MEMORY_TOOLS = ("Read", "Glob", "Grep")
 MAX_DOCUMENT_CHARS = 60_000
+
+
+class MemoryCostObserver(ConversationObserver):
+    """Capture the provider's settled cost for the one bounded memory turn."""
+
+    def __init__(self) -> None:
+        self.costs: list[float | None] = []
+
+    def invocation_started(self) -> None: ...
+    def session_started(self, **_: object) -> None: ...
+    def session_replaced(self, **_: object) -> None: ...
+    def text_delta(self, *_: object, **__: object) -> None: ...
+    def reasoning_delta(self, *_: object, **__: object) -> None: ...
+    def tool_use_start(self, *_: object, **__: object) -> None: ...
+    def tool_use_end(self, *_: object, **__: object) -> None: ...
+    def usage_delta(self, *_: object, **__: object) -> None: ...
+    def turn_complete(self, *, cost_usd: float | None, **_: object) -> None:
+        self.costs.append(cost_usd)
+    def backend_log(self, *_: object, **__: object) -> None: ...
+    def rate_limit_paused(self) -> None: ...
+    def rate_limit_resumed(self) -> None: ...
+
+    @property
+    def total_cost_usd(self) -> float | None:
+        if not self.costs or any(value is None for value in self.costs):
+            return None
+        return sum(value for value in self.costs if value is not None)
 
 SYSTEM_PROMPT = (
     "You read saved evidence from finished ML experiment runs and write the one "
@@ -114,6 +142,8 @@ async def build_task_memory(
     run_roots: Sequence[tuple[str, tuple[Path, ...]]],
     *,
     model: str,
+    max_budget_usd: float,
+    observer: ConversationObserver | None = None,
 ) -> str:
     """Ask one Agent session to read every run's real directories and return the task memory.
 
@@ -136,6 +166,7 @@ Those directories are also the session's workspace and, through the first of the
             instructions=SYSTEM_PROMPT,
             model=model,
             tools=tuple(MEMORY_TOOLS),
+            max_budget_usd=max_budget_usd,
             # Memorize is a foreground command holding nothing, and it has never
             # carried a product timeout; the bound stays absent rather than being
             # invented here.
@@ -146,6 +177,7 @@ Those directories are also the session's workspace and, through the first of the
             add_dirs=roots,
         ),
         prompt=PROMPT.format(task=task, evidence_block=evidence_block),
+        observer=observer,
     )
     if not isinstance(markdown, str):
         raise AssertionError("the Memory Agent returned a structured result, not a document")

@@ -1141,6 +1141,18 @@ class MemoryConfig(_ConfigBaseModel):
         validate_default=True,
         description="user-managed memory dir (read every run)",
     )
+    source_run_home: _NormalizedPath | None = Field(
+        default=None,
+        description=(
+            "the one completed run whose artifacts this memorize invocation may read; "
+            "required by the source-bound producer"
+        ),
+    )
+    source_run_id: str | None = Field(
+        default=None,
+        pattern=r"^[a-f0-9]{32}$",
+        description="exact Run ID expected in source_run_home; required by memorize",
+    )
 
 
 def _registry_name(value: str) -> str:

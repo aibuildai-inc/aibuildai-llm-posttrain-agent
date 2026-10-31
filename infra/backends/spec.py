@@ -42,6 +42,7 @@ class AgentSpec:
     pre_tool_hooks: tuple[HookSpec, ...] = ()
     post_tool_hooks: tuple[HookSpec, ...] = ()
     max_turns: int | None = None
+    max_budget_usd: float | None = None
     cwd: str | None = None
     add_dirs: list[str] = field(default_factory=list)
     write_dirs: list[str] = field(default_factory=list)
