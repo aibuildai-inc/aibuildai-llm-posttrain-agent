@@ -138,10 +138,29 @@ class MemoryCostObserver(ConversationObserver):
         if (not self.cost.results or self.cost.current_invocation_open
                 or self.cost.unpriced_models_warned):
             return None
-        # Cost.cost_by_invocation is the established charged headline. In
-        # Anthropic mode that headline intentionally follows the SDK receipt;
-        # memory publication also needs the separately catalog-priced usage
-        # amount, derived from the same UsageDelta turns Cost already owns.
+        result = self.cost.results.get(invocation)
+        if result is None:
+            return None
+        if result.usage_by_model:
+            if not self.is_anthropic:
+                # Cost already applies the established selected/resolved
+                # gateway model policy to terminal usage, including SDKs that
+                # report model_usage without per-message UsageDelta events.
+                return self.cost.cost_by_invocation.get(invocation)
+            rates_by_model = result.local_rates_by_model
+            if rates_by_model is None:
+                return None
+            measured = 0.0
+            for model, raw_usage in result.usage_by_model.items():
+                rates = rates_by_model.get(model)
+                if rates is None:
+                    self.cost._record_unpriced(model)
+                    return None
+                measured += self.cost._cost_from_rates(Usage.from_raw(raw_usage), rates)
+            return measured
+        # When no terminal per-model usage exists, settle from the priced
+        # message turns. Without either complete source the local amount is
+        # unknown and candidate publication refuses.
         turns = [turn for turn in self.cost.turns.values()
                  if turn.invocation == invocation]
         if not turns:

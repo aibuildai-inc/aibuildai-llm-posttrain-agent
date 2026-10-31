@@ -386,7 +386,7 @@ class MemorySourceContractTest(unittest.TestCase):
         self.assertEqual(observer.local_ledger_charge_usd, 0.2)
         self.assertEqual(observer.total_cost_usd, 0.01)
 
-    def test_anthropic_memory_charge_keeps_sdk_receipt_separate_from_local_pricing(self):
+    def test_anthropic_memory_charge_keeps_sdk_receipt_separate_from_terminal_pricing(self):
         from infra.cost_observation import PricingRates
         from memory.task_memory import MemoryCostObserver
 
@@ -398,13 +398,6 @@ class MemorySourceContractTest(unittest.TestCase):
             cache_write=0.30, web_search=0.01,
         )}
         with patch("memory.task_memory.local_rates_by_model", return_value=rates):
-            observer.usage_delta(
-                input_tokens=1_000_000, output_tokens=0,
-                cached_input_tokens=0, cache_creation_input_tokens=0,
-                web_search_requests=0, speed="", model="claude-sonnet-4",
-                cumulative=False, message_id="synthetic-anthropic-message",
-                parent_tool_use_id=None,
-            )
             observer.turn_complete(
                 cost_usd=0.01, duration_s=1, duration_api_s=1, num_turns=1,
                 usage_by_model={"claude-sonnet-4": {
