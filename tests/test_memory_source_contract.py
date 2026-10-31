@@ -229,7 +229,7 @@ class MemorySourceContractTest(unittest.TestCase):
         self.assertEqual(options["max_budget_usd"], 0.25)
 
     def test_synthetic_producer_writes_only_after_settled_cost(self):
-        from claude_agent_sdk import AssistantMessage, ResultMessage, TextBlock
+        from claude_agent_sdk import AssistantMessage, ResultMessage, SystemMessage, TextBlock
         from infra.backends.claude import conversation as conversation_module
 
         class SuccessClient:
@@ -245,6 +245,10 @@ class MemorySourceContractTest(unittest.TestCase):
             async def receive_response(self):
                 if False:
                     yield None
+                yield SystemMessage(subtype="init", data={
+                    "session_id": "synthetic-session", "model": "<synthetic>",
+                    "cwd": "/tmp", "tools": [], "mcp_servers": [],
+                })
                 yield AssistantMessage(
                     content=[TextBlock("# task\n\nSynthetic evidence only.")],
                     model="<synthetic>", message_id="synthetic-message",
@@ -269,7 +273,10 @@ class MemorySourceContractTest(unittest.TestCase):
             home = self.make_run(root)
             dest = Path(temp) / "candidate"
 
-            with patch.dict(os.environ, {"AIBUILDAI_API_KEY": "synthetic"}), \
+            with patch.dict(os.environ, {
+                     "AIBUILDAI_API_KEY": "synthetic",
+                     "ANTHROPIC_BASE_URL": "https://openrouter.ai/api/v1",
+                 }), \
                  patch.object(memorize, "eligible_source_run", return_value=(RUN_ID, (home / "workspace",))), \
                  patch.object(conversation_module, "ClaudeSDKClient", SuccessClient), \
                  patch.object(conversation_module, "_create_memfd",
@@ -281,7 +288,7 @@ class MemorySourceContractTest(unittest.TestCase):
                 result = asyncio.run(memorize.run_memorize(
                     "task", root, home, RUN_ID,
                     SimpleNamespace(tasks_dir=dest / "tasks"),
-                    "synthetic-model", 0.25, 5,
+                    "<synthetic>", 0.25, 5,
                 ))
             self.assertEqual(result["generation_cost_usd"], 0.0)
             self.assertEqual(result["generation_cost_label"], "measured")
@@ -340,3 +347,41 @@ class MemorySourceContractTest(unittest.TestCase):
             self.assertEqual(RetryClient.instances[0].query_count, 1)
             self.assertEqual(RetryClient.instances[1].query_count, 0)
             publish.assert_not_called()
+
+    def test_negative_usage_cannot_reduce_the_local_memory_charge(self):
+        from memory.task_memory import MemoryCostObserver
+
+        with self.assertRaisesRegex(ValueError, "nonnegative integer"):
+            MemoryCostObserver._validate_usage_counts({
+                "<synthetic>": {"input_tokens": 1000, "output_tokens": -1},
+            })
+
+    def test_gateway_memory_charge_uses_the_selected_model_cost_policy(self):
+        from infra.cost_observation import PricingRates
+        from memory.task_memory import MemoryCostObserver
+
+        observer = MemoryCostObserver(0.25, is_anthropic=False)
+        observer.invocation_started()
+        observer.session_started(model="gpt-4o")
+        rates = {
+            "gpt-4o": PricingRates(
+                input=0.20, output=0.40, cache_read=0.10,
+                cache_write=0.30, web_search=0.01,
+            ),
+            "claude-3-5-haiku": PricingRates(
+                input=90, output=90, cache_read=90,
+                cache_write=90, web_search=90,
+            ),
+        }
+        with patch("memory.task_memory.local_rates_by_model", return_value=rates):
+            observer.turn_complete(
+                cost_usd=0.01, duration_s=1, duration_api_s=1, num_turns=1,
+                usage_by_model={"claude-3-5-haiku": {
+                    "input_tokens": 1_000_000, "output_tokens": 0,
+                    "cache_read_input_tokens": 0,
+                    "cache_creation_input_tokens": 0,
+                    "web_search_requests": 0, "cost_usd": 0.01,
+                }},
+            )
+        self.assertEqual(observer.local_ledger_charge_usd, 0.2)
+        self.assertEqual(observer.total_cost_usd, 0.01)

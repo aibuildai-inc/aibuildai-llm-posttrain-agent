@@ -23,6 +23,7 @@ from memory.task_memory import (
     publish_task_memory,
     validate_task_memory,
 )
+from infra.model_catalog import endpoint_is_anthropic
 
 # What a run shows a reader: the executions it materialized, the task data it
 # was given, and what it handed back. Its private grading state, its Submitter
@@ -113,7 +114,10 @@ async def run_memorize(
         playground_root=playground_root, run_home=run_home,
         source_run_id=source_run_id, task_name=task_name,
     )
-    observer = MemoryCostObserver(float(generation_budget_usd))
+    observer = MemoryCostObserver(
+        float(generation_budget_usd),
+        is_anthropic=endpoint_is_anthropic(os.environ.get("ANTHROPIC_BASE_URL", "")),
+    )
     async with asyncio.timeout(timeout_seconds):
         markdown = await build_task_memory(
             task_name, [source], model=model,

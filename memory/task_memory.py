@@ -20,6 +20,7 @@ from infra.backends.claude.event_adapter import ConversationObserver
 from infra.backends.hooks import make_strict_read_root_spec
 from infra.backends.one_shot import agent_turn
 from infra.backends.spec import AgentSpec
+from engine.cost import Cost, InvocationResult, Usage
 from infra.cost_observation import local_rates_by_model
 
 MEMORY_TOOLS = ("Read", "Glob", "Grep")
@@ -29,12 +30,14 @@ MAX_DOCUMENT_CHARS = 60_000
 class MemoryCostObserver(ConversationObserver):
     """Keep provider receipts separate from locally priced ledger usage."""
 
-    def __init__(self, budget_usd: float) -> None:
+    def __init__(self, budget_usd: float, *, is_anthropic: bool = True) -> None:
         self.budget_usd = float(budget_usd)
+        self.is_anthropic = is_anthropic
+        self.cost = Cost()
         self.invocations_started = 0
         self.reported_costs_usd: list[float | None] = []
-        self.local_ledger_charges_usd: list[float | None] = []
         self._invocation_open = False
+        self.resolved_model: str | None = None
 
     def invocation_started(self) -> None:
         if self.invocations_started:
@@ -45,47 +48,80 @@ class MemoryCostObserver(ConversationObserver):
             )
         self.invocations_started += 1
         self._invocation_open = True
-    def session_started(self, **_: object) -> None: ...
+        self.cost.open_invocation(action=0)
+
+    def session_started(self, *, model: str, **_: object) -> None:
+        self.resolved_model = model
     def session_replaced(self, **_: object) -> None: ...
     def text_delta(self, *_: object, **__: object) -> None: ...
     def reasoning_delta(self, *_: object, **__: object) -> None: ...
     def tool_use_start(self, *_: object, **__: object) -> None: ...
     def tool_use_end(self, *_: object, **__: object) -> None: ...
-    def usage_delta(self, *_: object, **__: object) -> None: ...
+    def usage_delta(
+        self, *, input_tokens: int, output_tokens: int,
+        cached_input_tokens: int, cache_creation_input_tokens: int | None,
+        web_search_requests: int, speed: str, model: str, cumulative: bool,
+        message_id: str | None, parent_tool_use_id: str | None,
+    ) -> None:
+        counts = {
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "cache_read_input_tokens": cached_input_tokens,
+            "cache_creation_input_tokens": cache_creation_input_tokens or 0,
+            "web_search_requests": web_search_requests,
+        }
+        self._validate_usage_counts({model: counts})
+        self.cost.record_usage(
+            Usage(**counts, speed=speed), cumulative=cumulative,
+            message_id=message_id, event_model=model,
+            parent_tool_use_id=parent_tool_use_id,
+            resolved_model=self.resolved_model,
+            local_rates_by_model=local_rates_by_model((model,), self.resolved_model),
+            cache_creation_input_tokens=cache_creation_input_tokens,
+            is_anthropic=self.is_anthropic, owner_role="memory",
+        )
     def turn_complete(
         self, *, cost_usd: float | None,
-        usage_by_model: dict[str, dict[str, float]] | None, **_: object,
+        duration_s: float | None, duration_api_s: float | None,
+        num_turns: int, usage_by_model: dict[str, dict[str, float]] | None,
+        **_: object,
     ) -> None:
         if not self._invocation_open:
             raise ValueError("memory provider receipt arrived without an open invocation")
+        if self.resolved_model is None:
+            raise ValueError("memory provider completed without a resolved model identity")
+        self._validate_usage_counts(usage_by_model)
         self._invocation_open = False
-        local_charge = self._price_usage(usage_by_model)
         self.reported_costs_usd.append(cost_usd)
-        self.local_ledger_charges_usd.append(local_charge)
+        rates = local_rates_by_model(usage_by_model or (), self.resolved_model)
+        self.cost.settle_turn(
+            InvocationResult(
+                cost_usd=cost_usd, usage_by_model=usage_by_model,
+                duration_s=duration_s, duration_api_s=duration_api_s,
+                num_turns=num_turns, local_rates_by_model=rates,
+            ),
+            is_anthropic=self.is_anthropic, resolved_model=self.resolved_model,
+            owner_role="memory",
+        )
+        local_charge = self.local_ledger_charge_usd
         if cost_usd is not None and cost_usd > self.budget_usd:
             raise ValueError("provider-reported memory cost exceeded its admitted budget")
         if local_charge is not None and local_charge > self.budget_usd:
             raise ValueError("measured local memory cost exceeded its admitted budget")
 
     @staticmethod
-    def _price_usage(usage_by_model: dict[str, dict[str, float]] | None) -> float | None:
-        if not usage_by_model:
-            return None
-        rates = local_rates_by_model(usage_by_model, None)
-        total = 0.0
-        for model, row in usage_by_model.items():
-            price = rates.get(model)
-            if price is None:
-                return None
-            cache_write = price.cache_write or price.input
-            total += sum((
-                float(row.get("input_tokens", 0)) / 1_000_000 * price.input,
-                float(row.get("output_tokens", 0)) / 1_000_000 * price.output,
-                float(row.get("cache_read_input_tokens", 0)) / 1_000_000 * price.cache_read,
-                float(row.get("cache_creation_input_tokens", 0)) / 1_000_000 * cache_write,
-                float(row.get("web_search_requests", 0)) * price.web_search,
-            ))
-        return total
+    def _validate_usage_counts(usage_by_model: dict[str, dict[str, float]] | None) -> None:
+        for row in (usage_by_model or {}).values():
+            for field in (
+                "input_tokens", "output_tokens", "cache_read_input_tokens",
+                "cache_creation_input_tokens", "web_search_requests",
+            ):
+                value = row.get(field, 0)
+                if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                    raise ValueError(
+                        f"local memory usage field {field} must be a nonnegative integer"
+                    )
+
     def backend_log(self, *_: object, **__: object) -> None: ...
     def rate_limit_paused(self) -> None: ...
     def rate_limit_resumed(self) -> None: ...
@@ -98,11 +134,11 @@ class MemoryCostObserver(ConversationObserver):
 
     @property
     def local_ledger_charge_usd(self) -> float | None:
-        if not self.local_ledger_charges_usd or any(
-            value is None for value in self.local_ledger_charges_usd
-        ):
+        invocation = self.cost.current_invocation
+        if (not self.cost.results or self.cost.current_invocation_open
+                or self.cost.unpriced_models_warned):
             return None
-        return sum(value for value in self.local_ledger_charges_usd if value is not None)
+        return self.cost.cost_by_invocation.get(invocation)
 
 SYSTEM_PROMPT = (
     "You read saved evidence from finished ML experiment runs and write the one "
