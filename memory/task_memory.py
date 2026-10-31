@@ -138,7 +138,15 @@ class MemoryCostObserver(ConversationObserver):
         if (not self.cost.results or self.cost.current_invocation_open
                 or self.cost.unpriced_models_warned):
             return None
-        return self.cost.cost_by_invocation.get(invocation)
+        # Cost.cost_by_invocation is the established charged headline. In
+        # Anthropic mode that headline intentionally follows the SDK receipt;
+        # memory publication also needs the separately catalog-priced usage
+        # amount, derived from the same UsageDelta turns Cost already owns.
+        turns = [turn for turn in self.cost.turns.values()
+                 if turn.invocation == invocation]
+        if not turns:
+            return None
+        return sum(turn.priced_cost_usd for turn in turns)
 
 SYSTEM_PROMPT = (
     "You read saved evidence from finished ML experiment runs and write the one "
