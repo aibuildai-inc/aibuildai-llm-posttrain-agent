@@ -113,19 +113,26 @@ async def run_memorize(
         playground_root=playground_root, run_home=run_home,
         source_run_id=source_run_id, task_name=task_name,
     )
-    observer = MemoryCostObserver()
+    observer = MemoryCostObserver(float(generation_budget_usd))
     async with asyncio.timeout(timeout_seconds):
         markdown = await build_task_memory(
             task_name, [source], model=model,
             max_budget_usd=float(generation_budget_usd), observer=observer,
         )
-    generation_cost = observer.total_cost_usd
-    if generation_cost is None:
+    provider_reported_cost = observer.total_cost_usd
+    if provider_reported_cost is None:
         raise ValueError("provider did not return settled memory-generation cost; candidate refused")
-    if not math.isfinite(generation_cost) or generation_cost < 0:
+    if not math.isfinite(provider_reported_cost) or provider_reported_cost < 0:
         raise ValueError("provider returned invalid memory-generation cost; candidate refused")
-    if generation_cost > generation_budget_usd:
+    if provider_reported_cost > generation_budget_usd:
         raise ValueError("provider-reported memory cost exceeded its admitted budget; candidate refused")
+    local_ledger_charge = observer.local_ledger_charge_usd
+    if local_ledger_charge is None:
+        raise ValueError("local memory cost ledger is incomplete; candidate refused")
+    if not math.isfinite(local_ledger_charge) or local_ledger_charge < 0:
+        raise ValueError("local memory cost ledger is invalid; candidate refused")
+    if local_ledger_charge > generation_budget_usd:
+        raise ValueError("measured local memory cost exceeded its admitted budget; candidate refused")
     task_path = publish_task_memory(
         store.tasks_dir / f"{task_name}.md", validate_task_memory(markdown, task_name)
     )
@@ -134,5 +141,8 @@ async def run_memorize(
         "source_run_id": source_run_id,
         "task_memory_path": task_path,
         "generation_budget_usd": float(generation_budget_usd),
-        "generation_cost_usd": generation_cost,
+        "generation_cost_usd": local_ledger_charge,
+        "generation_cost_label": "measured",
+        "provider_reported_cost_usd": provider_reported_cost,
+        "provider_reported_cost_label": "reported",
     }

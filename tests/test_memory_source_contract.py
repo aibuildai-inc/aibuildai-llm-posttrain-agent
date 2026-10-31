@@ -57,7 +57,7 @@ class MemorySourceContractTest(unittest.TestCase):
                 for item in reversed(patches):
                     item.stop()
             self.assertEqual(run_id, RUN_ID)
-            self.assertEqual(paths, (home / "workspace",))
+            self.assertEqual(paths, (home.resolve() / "workspace",))
 
     def test_foreign_run_path_and_task_are_refused(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -229,25 +229,114 @@ class MemorySourceContractTest(unittest.TestCase):
         self.assertEqual(options["max_budget_usd"], 0.25)
 
     def test_synthetic_producer_writes_only_after_settled_cost(self):
+        from claude_agent_sdk import AssistantMessage, ResultMessage, TextBlock
+        from infra.backends.claude import conversation as conversation_module
+
+        class SuccessClient:
+            def __init__(self, **_kwargs):
+                pass
+
+            async def connect(self):
+                pass
+
+            async def query(self, _prompt):
+                pass
+
+            async def receive_response(self):
+                if False:
+                    yield None
+                yield AssistantMessage(
+                    content=[TextBlock("# task\n\nSynthetic evidence only.")],
+                    model="<synthetic>", message_id="synthetic-message",
+                )
+                yield ResultMessage(
+                    subtype="success", duration_ms=1, duration_api_ms=1,
+                    is_error=False, num_turns=1, session_id="synthetic-session",
+                    stop_reason="end_turn", total_cost_usd=0.11,
+                    usage={"input_tokens": 1000},
+                    model_usage={"<synthetic>": {
+                        "inputTokens": 1000, "outputTokens": 0,
+                        "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0,
+                        "webSearchRequests": 0, "costUSD": 0.11,
+                    }},
+                )
+
+            async def disconnect(self):
+                pass
+
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp) / "playground"
             home = self.make_run(root)
             dest = Path(temp) / "candidate"
 
-            async def synthetic_agent(task, runs, *, model, max_budget_usd, observer):
-                self.assertEqual(max_budget_usd, 0.25)
-                self.assertEqual([run_id for run_id, _ in runs], [RUN_ID])
-                observer.costs.append(0.11)
-                return "# task\n\nSynthetic evidence only."
-
             with patch.dict(os.environ, {"AIBUILDAI_API_KEY": "synthetic"}), \
                  patch.object(memorize, "eligible_source_run", return_value=(RUN_ID, (home / "workspace",))), \
-                 patch.object(memorize, "build_task_memory", side_effect=synthetic_agent):
+                 patch.object(conversation_module, "ClaudeSDKClient", SuccessClient), \
+                 patch.object(conversation_module, "_create_memfd",
+                              side_effect=lambda _name: os.open(os.devnull, os.O_RDWR)), \
+                 patch.object(conversation_module, "build_agent_launcher",
+                              return_value=("/synthetic/launcher", None)), \
+                 patch.object(conversation_module, "spec_to_options",
+                              return_value=object()):
                 result = asyncio.run(memorize.run_memorize(
                     "task", root, home, RUN_ID,
                     SimpleNamespace(tasks_dir=dest / "tasks"),
                     "synthetic-model", 0.25, 5,
                 ))
-            self.assertEqual(result["generation_cost_usd"], 0.11)
+            self.assertEqual(result["generation_cost_usd"], 0.0)
+            self.assertEqual(result["generation_cost_label"], "measured")
+            self.assertEqual(result["provider_reported_cost_usd"], 0.11)
+            self.assertEqual(result["provider_reported_cost_label"], "reported")
             self.assertEqual(Path(result["task_memory_path"]).read_text(),
                              "# task\n\nSynthetic evidence only.\n")
+
+    def test_unsettled_retry_is_refused_before_a_second_provider_invocation(self):
+        from infra.backends.claude import conversation as conversation_module
+
+        class RetryClient:
+            instances = []
+
+            def __init__(self, **_kwargs):
+                self.query_count = 0
+                self.instances.append(self)
+
+            async def connect(self):
+                pass
+
+            async def query(self, _prompt):
+                self.query_count += 1
+
+            async def receive_response(self):
+                from infra.backends.claude.errors import _RetryableError
+                if False:
+                    yield None
+                raise _RetryableError("synthetic transient request failure")
+
+            async def disconnect(self):
+                pass
+
+        with tempfile.TemporaryDirectory() as temp:
+            home = Path(temp) / "run"
+            home.mkdir()
+            with patch.dict(os.environ, {"AIBUILDAI_API_KEY": "synthetic"}), \
+                 patch.object(memorize, "eligible_source_run",
+                              return_value=(RUN_ID, (home,))), \
+                 patch.object(conversation_module, "ClaudeSDKClient", RetryClient), \
+                 patch.object(conversation_module, "_create_memfd",
+                              side_effect=lambda _name: os.open(os.devnull, os.O_RDWR)), \
+                 patch.object(conversation_module, "build_agent_launcher",
+                              return_value=("/synthetic/launcher", None)), \
+                 patch.object(conversation_module, "spec_to_options",
+                              return_value=object()), \
+                 patch.object(conversation_module, "_RETRY_POLL_INTERVAL_S", 0), \
+                 patch.object(memorize, "publish_task_memory") as publish:
+                with self.assertRaisesRegex(ValueError, "retry refused"):
+                    asyncio.run(memorize.run_memorize(
+                        "task", temp, home, RUN_ID,
+                        SimpleNamespace(tasks_dir=Path(temp) / "memory"),
+                        "synthetic-model", 0.25, 5,
+                    ))
+            self.assertEqual(len(RetryClient.instances), 2)
+            self.assertEqual(RetryClient.instances[0].query_count, 1)
+            self.assertEqual(RetryClient.instances[1].query_count, 0)
+            publish.assert_not_called()

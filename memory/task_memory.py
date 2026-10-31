@@ -20,18 +20,31 @@ from infra.backends.claude.event_adapter import ConversationObserver
 from infra.backends.hooks import make_strict_read_root_spec
 from infra.backends.one_shot import agent_turn
 from infra.backends.spec import AgentSpec
+from infra.cost_observation import local_rates_by_model
 
 MEMORY_TOOLS = ("Read", "Glob", "Grep")
 MAX_DOCUMENT_CHARS = 60_000
 
 
 class MemoryCostObserver(ConversationObserver):
-    """Capture the provider's settled cost for the one bounded memory turn."""
+    """Keep provider receipts separate from locally priced ledger usage."""
 
-    def __init__(self) -> None:
-        self.costs: list[float | None] = []
+    def __init__(self, budget_usd: float) -> None:
+        self.budget_usd = float(budget_usd)
+        self.invocations_started = 0
+        self.reported_costs_usd: list[float | None] = []
+        self.local_ledger_charges_usd: list[float | None] = []
+        self._invocation_open = False
 
-    def invocation_started(self) -> None: ...
+    def invocation_started(self) -> None:
+        if self.invocations_started:
+            raise ValueError(
+                "memory provider retry refused: the prior SDK invocation may "
+                "have incurred unreported cost, and a new client would reset "
+                "its SDK budget"
+            )
+        self.invocations_started += 1
+        self._invocation_open = True
     def session_started(self, **_: object) -> None: ...
     def session_replaced(self, **_: object) -> None: ...
     def text_delta(self, *_: object, **__: object) -> None: ...
@@ -39,17 +52,57 @@ class MemoryCostObserver(ConversationObserver):
     def tool_use_start(self, *_: object, **__: object) -> None: ...
     def tool_use_end(self, *_: object, **__: object) -> None: ...
     def usage_delta(self, *_: object, **__: object) -> None: ...
-    def turn_complete(self, *, cost_usd: float | None, **_: object) -> None:
-        self.costs.append(cost_usd)
+    def turn_complete(
+        self, *, cost_usd: float | None,
+        usage_by_model: dict[str, dict[str, float]] | None, **_: object,
+    ) -> None:
+        if not self._invocation_open:
+            raise ValueError("memory provider receipt arrived without an open invocation")
+        self._invocation_open = False
+        local_charge = self._price_usage(usage_by_model)
+        self.reported_costs_usd.append(cost_usd)
+        self.local_ledger_charges_usd.append(local_charge)
+        if cost_usd is not None and cost_usd > self.budget_usd:
+            raise ValueError("provider-reported memory cost exceeded its admitted budget")
+        if local_charge is not None and local_charge > self.budget_usd:
+            raise ValueError("measured local memory cost exceeded its admitted budget")
+
+    @staticmethod
+    def _price_usage(usage_by_model: dict[str, dict[str, float]] | None) -> float | None:
+        if not usage_by_model:
+            return None
+        rates = local_rates_by_model(usage_by_model, None)
+        total = 0.0
+        for model, row in usage_by_model.items():
+            price = rates.get(model)
+            if price is None:
+                return None
+            cache_write = price.cache_write or price.input
+            total += sum((
+                float(row.get("input_tokens", 0)) / 1_000_000 * price.input,
+                float(row.get("output_tokens", 0)) / 1_000_000 * price.output,
+                float(row.get("cache_read_input_tokens", 0)) / 1_000_000 * price.cache_read,
+                float(row.get("cache_creation_input_tokens", 0)) / 1_000_000 * cache_write,
+                float(row.get("web_search_requests", 0)) * price.web_search,
+            ))
+        return total
     def backend_log(self, *_: object, **__: object) -> None: ...
     def rate_limit_paused(self) -> None: ...
     def rate_limit_resumed(self) -> None: ...
 
     @property
     def total_cost_usd(self) -> float | None:
-        if not self.costs or any(value is None for value in self.costs):
+        if not self.reported_costs_usd or any(value is None for value in self.reported_costs_usd):
             return None
-        return sum(value for value in self.costs if value is not None)
+        return sum(value for value in self.reported_costs_usd if value is not None)
+
+    @property
+    def local_ledger_charge_usd(self) -> float | None:
+        if not self.local_ledger_charges_usd or any(
+            value is None for value in self.local_ledger_charges_usd
+        ):
+            return None
+        return sum(value for value in self.local_ledger_charges_usd if value is not None)
 
 SYSTEM_PROMPT = (
     "You read saved evidence from finished ML experiment runs and write the one "

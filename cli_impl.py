@@ -170,6 +170,9 @@ def run_memorize_command(config: "AgentConfig") -> None:
             "source_run_id": result["source_run_id"],
             "generation_budget_usd": result["generation_budget_usd"],
             "generation_cost_usd": result["generation_cost_usd"],
+            "generation_cost_label": result["generation_cost_label"],
+            "provider_reported_cost_usd": result["provider_reported_cost_usd"],
+            "provider_reported_cost_label": result["provider_reported_cost_label"],
             "document": str(result["task_memory_path"]),
         })
     )
