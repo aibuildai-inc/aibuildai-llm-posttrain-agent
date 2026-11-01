@@ -1,0 +1,4 @@
+{
+  "objective": "Prepare an executable environment, then validate a real model-generated patch. Report success only after validation.",
+  "public_data_dir": "/tmp/phase-validation-task"
+}

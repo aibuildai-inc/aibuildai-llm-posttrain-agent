@@ -17,6 +17,12 @@ Pass only if the package is syntactically valid, executable through the public S
 
 Review the whole package and its typed flow. A Program is valid only when each typed `@action` method is settled before launch and contains no open diagnosis or replanning. Reject an Agent that only waits for a settled Program process.
 
+Trace phase feasibility explicitly. For every readiness predicate or handoff gate, identify its required evidence, the reachable Action that first produces that evidence, and the actual resource and file grants at that producer's spawn. Compare prompts and Output definitions with the branch conditions; do not judge only whether the Python dependency graph is acyclic. Reject an earlier gate that requires evidence first produced by an Action reachable only after that gate passes. Name the gate, evidence and producer in the rejection reason.
+
+For example, reject a processor-only preparation role that is forbidden to load a model yet must return ready=true only after a model-generated patch passes validation, when the GPU validation Action is spawned only after ready=true. Accept the ordering correction when preparation readiness requires real environment checks alone and the later permitted model-validation Action still gates training or final success. Reject fabricated readiness, a weakened final gate, or unauthorized model entry. Trace delegated producers too: a parent's GPU count is not a ceiling on its children, so a reachable child with its own sufficient grant can satisfy the requirement.
+
+Check recovery against the same dependency. An unchanged retry of a stage cannot satisfy an impossible prerequisite; the source owner or Meta must repair the graph while preserving verified artifacts and checkpoint state. Do not require one fixed topology or reject legitimate environment failures merely because downstream model evidence is still pending.
+
 Treat every construction and delivery rule in the Objective as binding. Trace the actual `ctx.spawn` calls and reject a package that omits a required reachable execution or ownership edge. The rendered report cannot substitute for the required code path. If the Objective requires three levels `Search -> Composite -> child Search`, reject before checking any other dimension unless the package contains all three: the exported Search spawns a Composite's `run`, that Composite spawns the child Search's `run`, and that child Search constructs the Agent or Program that does the task work. A direct Search -> Agent or Search -> Program is invalid even when it writes the requested files.
 
 When the task folder has a task statement, compare its complete requirements with the Objective and the package. Reject an omitted requirement, but do not reveal hidden data or answer contents in the reason.
@@ -117,6 +123,7 @@ A. Parse and package integrity
 B. Public API and type-contract correctness
 C. Executability of the proposed Search graph
 C2. Declared topology: every constructor's `upstream=` matches what its Input consumes
+C3. Phase feasibility: readiness gates, evidence producers, role restrictions and recovery order agree
 D. Resource feasibility
 E. Recursive Search correctness
 F. Filesystem and namespace safety
