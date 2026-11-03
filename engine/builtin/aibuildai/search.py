@@ -936,6 +936,9 @@ class AIBuildAISearch(Search[SearchInputT, SearchResult], abc.ABC):
                 setup_output = await setup_handle.result()
                 if isinstance(setup_output, Failure):
                     raise RunTerminalFailure(setup.path, setup_output)
+                await run_program_environment().publish(
+                    lambda: run_clock().effective_remaining_s(self)
+                )
                 self._setup_handle = setup_handle
                 self.prepare_grading(setup_output)
                 contract = latest_run_state().metric_contract

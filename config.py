@@ -513,6 +513,15 @@ class RunConfig(_ConfigBaseModel):
             "means look for an environment named by run.task_name"
         ),
     )
+    reuse_environment: bool = Field(
+        default=True,
+        description=(
+            "reuse dependencies from the latest compatible Setup-approved run "
+            "in this task's output directory, using a private writable overlay; "
+            "active bases are skipped and Setup still verifies this run. "
+            "False creates a fresh environment instead"
+        ),
+    )
     data_root: _NormalizedPath = Field(
         json_schema_extra={"placeholder": "/path/to/task-folder"},
         description=(
