@@ -15,6 +15,11 @@ from collections.abc import Callable
 from pathlib import Path
 
 from engine.failure import Failure, FailureKind
+from engine.environment_reuse import (
+    EnvironmentReuse,
+    RUNTIME_PYTHON_CEILING,
+    RUNTIME_PYTHON_FLOOR,
+)
 from infra.owned_tools import micromamba_root_prefix, owned
 from infra.process.command import _BlockingStopped, run_blocking, run_captured
 from infra.process.conda_env import conda_executable, resolve_task_interpreter_or_none
@@ -30,8 +35,8 @@ logger = logging.getLogger(__name__)
 _BUILD_CLEANUP_TIMEOUT_S = 300.0
 
 
-_RUNTIME_PYTHON_FLOOR = (3, 11)
-_RUNTIME_PYTHON_CEILING = (3, 14)
+_RUNTIME_PYTHON_FLOOR = RUNTIME_PYTHON_FLOOR
+_RUNTIME_PYTHON_CEILING = RUNTIME_PYTHON_CEILING
 
 
 class ProgramEnvironmentError(Exception):
@@ -99,9 +104,11 @@ class ProgramEnvironment:
     first is writing.
     """
 
-    def __init__(self, *, run_home: Path, conda_env_name: str) -> None:
-        self._root = run_home / "program-environment"
-        self._prefix = self._root / "env"
+    def __init__(self, *, run_home: Path, conda_env_name: str, reuse: bool = True) -> None:
+        self._reuse = EnvironmentReuse(run_home, conda_env_name)
+        self._root = self._reuse.root
+        self._prefix = self._reuse.prefix
+        self._reuse_enabled = reuse
         self._conda_env_name = conda_env_name
         self._gate = asyncio.Lock()
         self._prepared = False
@@ -112,6 +119,28 @@ class ProgramEnvironment:
         if not path.is_file():
             raise AssertionError("Program environment is not prepared")
         return str(path)
+
+    @property
+    def prefix(self) -> Path:
+        """The run's writable prefix, without following bin/python out of a venv."""
+        return self._prefix
+
+    @property
+    def inherited_prefixes(self) -> tuple[Path, ...]:
+        """Dependency ancestors that every consumer must bind read-only."""
+        return self._reuse.inherited_prefixes
+
+    @property
+    def bin_paths(self) -> tuple[str, ...]:
+        return tuple(str(p / 'bin') for p in (self.prefix, *self.inherited_prefixes))
+
+    async def publish(self, remaining_s: Callable[[], float]) -> None:
+        """Make dependencies reusable after Setup succeeds; task readiness is not cached."""
+        await self._reuse.publish(remaining_s)
+
+    def close(self) -> None:
+        """Release process-held writer/base leases after all consumers have stopped."""
+        self._reuse.close()
 
     async def prepare(self, remaining_s: Callable[[], float]) -> None:
         """Make this run's Program environment ready, once per process.
@@ -138,8 +167,10 @@ class ProgramEnvironment:
             async with self._gate:
                 if self._prepared:
                     return
+                self._reuse.claim()
+                complete = self._reuse.restore()
                 python_path = self._prefix / "bin" / "python"
-                if not python_path.is_file():
+                if not python_path.is_file() or not complete:
                     await self._create(remaining_s)
                 wheel = await self._runtime_wheel(remaining_s)
                 await self._install_runtime(wheel, remaining_s)
@@ -160,13 +191,21 @@ class ProgramEnvironment:
             ) from exc
 
     async def _create(self, remaining_s: Callable[[], float]) -> None:
-        """Clone the named host environment, or make a fresh one."""
+        """Reuse verified dependencies, clone a named base, or make a fresh environment."""
         self._root.mkdir(parents=True, exist_ok=True)
         if self._prefix.exists():
             await run_blocking(
                 lambda stop: _remove_tree(self._prefix, stop),
                 remaining_s(),
             )
+        self._reuse.release_bases()
+        if self._reuse_enabled:
+            base = self._reuse.select()
+            if base is not None:
+                await self._reuse.create_overlay(base, remaining_s)
+                logger.info('Reused Program dependencies from %s into %s', base, self._prefix)
+                return
+        self._reuse.record_creation(ready=False)
         base_python = await resolve_task_interpreter_or_none(
             conda_env_name=self._conda_env_name,
             remaining_s=remaining_s,
@@ -224,10 +263,11 @@ class ProgramEnvironment:
             raise AssertionError(
                 f"Program environment {self._conda_env_name!r} has no Python"
             )
+        self._reuse.record_creation(ready=True)
 
     async def _runtime_wheel(self, remaining_s: Callable[[], float]) -> Path:
         source_root = Path(__file__).resolve().parent.parent
-        cache_root = Path.home() / ".cache" / "aibuildai" / "program-runtime"
+        cache_root = self._root.parent.parent / ".cache" / "program-runtime"
         cache_root.mkdir(parents=True, exist_ok=True)
         private_root = Path(tempfile.mkdtemp(prefix="runtime-wheel-", dir=cache_root))
         build_root = private_root / "source"
@@ -329,10 +369,17 @@ class ProgramEnvironment:
         for relative in (
             *RUNTIME_TOP_LEVEL_MODULES,
             "pyproject.toml",
-            "README.md",
         ):
             _check_stop(stop)
             shutil.copy2(source_root / relative, build_root / relative)
+        # The checkout README may contain private operator instructions or be
+        # deliberately unavailable to agents. Wheel metadata needs a README,
+        # not that document; keep the runtime package independent of it.
+        (build_root / "README.md").write_text(
+            "# AIBuildAI Program runtime\n\n"
+            "Runtime components for managed AIBuildAI Programs.\n",
+            encoding="utf-8",
+        )
         for package in RUNTIME_PACKAGES:
             _check_stop(stop)
             shutil.copytree(

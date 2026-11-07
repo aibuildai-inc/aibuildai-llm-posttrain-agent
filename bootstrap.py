@@ -377,6 +377,7 @@ async def build_search_for_production(
     program_environment = ProgramEnvironment(
         run_home=run_paths.run_home,
         conda_env_name=configs.run.program_environment_base,
+        reuse=configs.run.reuse_environment,
     )
     bind_program_executor(
         LocalExecutor(
