@@ -5,8 +5,11 @@ Argument parsing and YAML loading live in :mod:`startup.config_loader`. This mod
 
 import abc
 import asyncio
+import json
 import logging
+import math
 import os
+import re
 import signal
 import sys
 import traceback
@@ -100,20 +103,78 @@ def run_memorize_command(config: "AgentConfig") -> None:
     from memory.memorize import run_memorize
     from memory.store import MemoryStore
 
-    # The runs to summarize live under run.playground_root, which every config
-    # already declares as this run's output root. No second field names it.
+    # Admission is decided entirely from existing run authority before any
+    # provider process can start. memorize uses the app-held API key, one exact
+    # source Run, and a sub-cap carved from the run's existing budget.
+    if not os.environ.get("AIBUILDAI_API_KEY"):
+        raise ValueError("AIBUILDAI_API_KEY is required for source-bound memorize")
+    if not config.memory.source_run_home or not config.memory.source_run_id:
+        raise ValueError("memory.source_run_home and source_run_id are required")
+    run_budget = config.run.budget
+    if run_budget.cost_usd is None or run_budget.per_agent_cost_cap_usd is None:
+        raise ValueError(
+            "memorize requires the run's existing cost reservation and an explicit per-agent cap"
+        )
+    declared_budget = min(
+        run_budget.cost_usd, run_budget.per_agent_cost_cap_usd
+    )
+    try:
+        generation_budget = float(os.environ.get("VIBE_POSTTRAIN_MEMORY_BUDGET_USD", ""))
+        timeout_seconds = float(os.environ.get("VIBE_POSTTRAIN_MEMORY_TIMEOUT_SECONDS", ""))
+    except ValueError as exc:
+        raise ValueError("worker-issued memory cost/time admission is missing or invalid") from exc
+    if (not math.isfinite(generation_budget) or generation_budget <= 0
+            or generation_budget > declared_budget):
+        raise ValueError("worker-issued memory budget is absent or exceeds the existing Build reservation")
+    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
+        raise ValueError("worker-issued memory timeout is absent or invalid")
+    if (run_budget.wall_clock_minutes is None
+            or not math.isfinite(run_budget.wall_clock_minutes)
+            or run_budget.wall_clock_minutes <= 0):
+        raise ValueError("memorize requires the existing Build wall-clock reservation")
+    if timeout_seconds > run_budget.wall_clock_minutes * 60:
+        raise ValueError("worker-issued memory timeout exceeds the existing Build reservation")
+    source_build_id = os.environ.get("VIBE_POSTTRAIN_SOURCE_BUILD_ID", "")
+    if not re.fullmatch(r"[a-f0-9]{12}", source_build_id):
+        raise ValueError("app-issued source Build identity is missing")
+    expected_candidate_dir = os.environ.get("VIBE_POSTTRAIN_MEMORY_CANDIDATE_DIR")
+    if not expected_candidate_dir:
+        raise ValueError("worker-issued candidate directory is missing")
+    candidate_path = Path(expected_candidate_dir)
+    user_dir = Path(config.memory.user_dir)
+    if candidate_path.is_symlink() or user_dir.is_symlink():
+        raise ValueError("candidate output directory must not be a symlink")
+    if not candidate_path.is_dir():
+        raise ValueError("worker-issued candidate directory must already exist")
+    if user_dir.resolve() != candidate_path.resolve():
+        raise ValueError("memory.user_dir differs from the worker-issued candidate directory")
+    target = Path(config.memory.user_dir) / "tasks" / f"{config.run.task_name}.md"
+    if target.exists() or target.is_symlink():
+        raise ValueError("candidate output already exists; refusing stale or repeated generation")
     store = MemoryStore.user(config.memory.user_dir)
     result = asyncio.run(
         run_memorize(
             task_name=config.run.task_name,
             playground_root=config.run.playground_root,
+            run_home=config.memory.source_run_home,
+            source_run_id=config.memory.source_run_id,
             store=store,
             model=config.llm.default.model,
+            generation_budget_usd=generation_budget,
+            timeout_seconds=timeout_seconds,
         )
     )
     print(
-        f"[memorize] read {result['runs_read']} run(s) for "
-        f"'{config.run.task_name}' -> {result['task_memory_path']}"
+        "MEMORY_RESULT " + json.dumps({
+            "runs_read": result["runs_read"],
+            "source_run_id": result["source_run_id"],
+            "generation_budget_usd": result["generation_budget_usd"],
+            "generation_cost_usd": result["generation_cost_usd"],
+            "generation_cost_label": result["generation_cost_label"],
+            "provider_reported_cost_usd": result["provider_reported_cost_usd"],
+            "provider_reported_cost_label": result["provider_reported_cost_label"],
+            "document": str(result["task_memory_path"]),
+        })
     )
 
 

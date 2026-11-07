@@ -174,6 +174,10 @@ def spec_to_options(
         }
     if spec.max_turns is not None:
         kwargs["max_turns"] = spec.max_turns
+    if spec.max_budget_usd is not None:
+        if spec.max_budget_usd <= 0:
+            raise ValueError("AgentSpec.max_budget_usd must be positive")
+        kwargs["max_budget_usd"] = spec.max_budget_usd
     # Partial-message streaming carries each message's SETTLED usage on the raw
     # message_delta event -- the only per-turn settlement channel that exists on
     # BOTH the Anthropic route and an OpenAI-protocol adapter endpoint (the

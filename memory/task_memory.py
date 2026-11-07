@@ -16,12 +16,156 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Sequence
 
+from infra.backends.claude.event_adapter import ConversationObserver
 from infra.backends.hooks import make_strict_read_root_spec
 from infra.backends.one_shot import agent_turn
 from infra.backends.spec import AgentSpec
+from engine.cost import Cost, InvocationResult, Usage
+from infra.cost_observation import local_rates_by_model
 
 MEMORY_TOOLS = ("Read", "Glob", "Grep")
 MAX_DOCUMENT_CHARS = 60_000
+
+
+class MemoryCostObserver(ConversationObserver):
+    """Keep provider receipts separate from locally priced ledger usage."""
+
+    def __init__(self, budget_usd: float, *, is_anthropic: bool = True) -> None:
+        self.budget_usd = float(budget_usd)
+        self.is_anthropic = is_anthropic
+        self.cost = Cost()
+        self.invocations_started = 0
+        self.reported_costs_usd: list[float | None] = []
+        self._invocation_open = False
+        self.resolved_model: str | None = None
+
+    def invocation_started(self) -> None:
+        if self.invocations_started:
+            raise ValueError(
+                "memory provider retry refused: the prior SDK invocation may "
+                "have incurred unreported cost, and a new client would reset "
+                "its SDK budget"
+            )
+        self.invocations_started += 1
+        self._invocation_open = True
+        self.cost.open_invocation(action=0)
+
+    def session_started(self, *, model: str, **_: object) -> None:
+        self.resolved_model = model
+    def session_replaced(self, **_: object) -> None: ...
+    def text_delta(self, *_: object, **__: object) -> None: ...
+    def reasoning_delta(self, *_: object, **__: object) -> None: ...
+    def tool_use_start(self, *_: object, **__: object) -> None: ...
+    def tool_use_end(self, *_: object, **__: object) -> None: ...
+    def usage_delta(
+        self, *, input_tokens: int, output_tokens: int,
+        cached_input_tokens: int, cache_creation_input_tokens: int | None,
+        web_search_requests: int, speed: str, model: str, cumulative: bool,
+        message_id: str | None, parent_tool_use_id: str | None,
+    ) -> None:
+        counts = {
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "cache_read_input_tokens": cached_input_tokens,
+            "cache_creation_input_tokens": cache_creation_input_tokens or 0,
+            "web_search_requests": web_search_requests,
+        }
+        self._validate_usage_counts({model: counts})
+        self.cost.record_usage(
+            Usage(**counts, speed=speed), cumulative=cumulative,
+            message_id=message_id, event_model=model,
+            parent_tool_use_id=parent_tool_use_id,
+            resolved_model=self.resolved_model,
+            local_rates_by_model=local_rates_by_model((model,), self.resolved_model),
+            cache_creation_input_tokens=cache_creation_input_tokens,
+            is_anthropic=self.is_anthropic, owner_role="memory",
+        )
+    def turn_complete(
+        self, *, cost_usd: float | None,
+        duration_s: float | None, duration_api_s: float | None,
+        num_turns: int, usage_by_model: dict[str, dict[str, float]] | None,
+        **_: object,
+    ) -> None:
+        if not self._invocation_open:
+            raise ValueError("memory provider receipt arrived without an open invocation")
+        if self.resolved_model is None:
+            raise ValueError("memory provider completed without a resolved model identity")
+        self._validate_usage_counts(usage_by_model)
+        self._invocation_open = False
+        self.reported_costs_usd.append(cost_usd)
+        rates = local_rates_by_model(usage_by_model or (), self.resolved_model)
+        self.cost.settle_turn(
+            InvocationResult(
+                cost_usd=cost_usd, usage_by_model=usage_by_model,
+                duration_s=duration_s, duration_api_s=duration_api_s,
+                num_turns=num_turns, local_rates_by_model=rates,
+            ),
+            is_anthropic=self.is_anthropic, resolved_model=self.resolved_model,
+            owner_role="memory",
+        )
+        local_charge = self.local_ledger_charge_usd
+        if cost_usd is not None and cost_usd > self.budget_usd:
+            raise ValueError("provider-reported memory cost exceeded its admitted budget")
+        if local_charge is not None and local_charge > self.budget_usd:
+            raise ValueError("measured local memory cost exceeded its admitted budget")
+
+    @staticmethod
+    def _validate_usage_counts(usage_by_model: dict[str, dict[str, float]] | None) -> None:
+        for row in (usage_by_model or {}).values():
+            for field in (
+                "input_tokens", "output_tokens", "cache_read_input_tokens",
+                "cache_creation_input_tokens", "web_search_requests",
+            ):
+                value = row.get(field, 0)
+                if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                    raise ValueError(
+                        f"local memory usage field {field} must be a nonnegative integer"
+                    )
+
+    def backend_log(self, *_: object, **__: object) -> None: ...
+    def rate_limit_paused(self) -> None: ...
+    def rate_limit_resumed(self) -> None: ...
+
+    @property
+    def total_cost_usd(self) -> float | None:
+        if not self.reported_costs_usd or any(value is None for value in self.reported_costs_usd):
+            return None
+        return sum(value for value in self.reported_costs_usd if value is not None)
+
+    @property
+    def local_ledger_charge_usd(self) -> float | None:
+        invocation = self.cost.current_invocation
+        if (not self.cost.results or self.cost.current_invocation_open
+                or self.cost.unpriced_models_warned):
+            return None
+        result = self.cost.results.get(invocation)
+        if result is None:
+            return None
+        if result.usage_by_model:
+            if not self.is_anthropic:
+                # Cost already applies the established selected/resolved
+                # gateway model policy to terminal usage, including SDKs that
+                # report model_usage without per-message UsageDelta events.
+                return self.cost.cost_by_invocation.get(invocation)
+            rates_by_model = result.local_rates_by_model
+            if rates_by_model is None:
+                return None
+            measured = 0.0
+            for model, raw_usage in result.usage_by_model.items():
+                rates = rates_by_model.get(model)
+                if rates is None:
+                    self.cost._record_unpriced(model)
+                    return None
+                measured += self.cost._cost_from_rates(Usage.from_raw(raw_usage), rates)
+            return measured
+        # When no terminal per-model usage exists, settle from the priced
+        # message turns. Without either complete source the local amount is
+        # unknown and candidate publication refuses.
+        turns = [turn for turn in self.cost.turns.values()
+                 if turn.invocation == invocation]
+        if not turns:
+            return None
+        return sum(turn.priced_cost_usd for turn in turns)
 
 SYSTEM_PROMPT = (
     "You read saved evidence from finished ML experiment runs and write the one "
@@ -114,6 +258,8 @@ async def build_task_memory(
     run_roots: Sequence[tuple[str, tuple[Path, ...]]],
     *,
     model: str,
+    max_budget_usd: float,
+    observer: ConversationObserver | None = None,
 ) -> str:
     """Ask one Agent session to read every run's real directories and return the task memory.
 
@@ -136,6 +282,7 @@ Those directories are also the session's workspace and, through the first of the
             instructions=SYSTEM_PROMPT,
             model=model,
             tools=tuple(MEMORY_TOOLS),
+            max_budget_usd=max_budget_usd,
             # Memorize is a foreground command holding nothing, and it has never
             # carried a product timeout; the bound stays absent rather than being
             # invented here.
@@ -146,6 +293,7 @@ Those directories are also the session's workspace and, through the first of the
             add_dirs=roots,
         ),
         prompt=PROMPT.format(task=task, evidence_block=evidence_block),
+        observer=observer,
     )
     if not isinstance(markdown, str):
         raise AssertionError("the Memory Agent returned a structured result, not a document")
