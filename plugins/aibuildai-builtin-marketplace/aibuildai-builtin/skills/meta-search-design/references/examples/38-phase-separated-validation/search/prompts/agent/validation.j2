@@ -1,0 +1,11 @@
+{% macro render(input, schema_json) -%}
+Validate the model for: {{ input.objective }}
+Read the task at {{ input.public_data_dir }} and the verified environment manifest
+at {{ input.environment_manifest }}. You have one GPU. Load the assigned model,
+generate an actual patch, preserve its bytes, and run extraction, application and
+the task's real development grader. Handcrafted patches are not model evidence.
+Set model_patch_validated only from that actual execution. Keep failures explicit.
+Write the validation artifacts and report their directory. Preparation alone is
+not validation success. Call StructuredOutput once:
+{{ schema_json }}
+{%- endmacro %}

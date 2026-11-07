@@ -1,0 +1,11 @@
+{% macro render(input, schema_json) -%}
+Prepare the environment for: {{ input.objective }}
+Read the assigned task at {{ input.public_data_dir }}. Verify its pinned source,
+dependencies, build and real tests. Write a manifest and evidence in your artifacts.
+You have no GPU and must not load the model. Set environment_ready only from
+environment evidence. Missing model-generated patch evidence belongs to the later
+validation stage and does not make a verified environment unprepared. Report real
+environment failures honestly; do not weaken tests or claim model validation.
+Call StructuredOutput once after completing this phase:
+{{ schema_json }}
+{%- endmacro %}

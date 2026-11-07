@@ -31,6 +31,7 @@ Write a short private design sketch containing:
 - Why the objective fits them
 - State carried by the Search
 - Child Execution types
+- Each phase's completion evidence, its producing Action and actual grants, and the gate that consumes it
 - Each Program and why all four Program answers are yes
 - Fan-out / fan-in structure
 - Score or selection rule
@@ -39,6 +40,23 @@ Write a short private design sketch containing:
 - How the final `SearchOutput` is produced
 
 ### Choose Agent or Program
+
+Before selecting execution types, check that each phase can finish with its own
+grants or a reachable delegated producer. Trace predicates in code, prompts and
+Outputs together. An acyclic sequence of spawns can still be impossible when an
+early readiness gate requires evidence produced only after that gate.
+
+Keep preparation readiness separate from later model/training readiness. A
+processor-only role forbidden to load a model must not need a model-generated
+patch to complete environment preparation. Run the permitted model-validation
+Action afterward and require its genuine evidence before training or final
+success. Do not fabricate readiness, weaken that final requirement or enlarge a
+role's grant against the task. A child may have its own sufficient capability;
+the parent's GPU grant is not an inherited ceiling. If this contradiction appears
+at runtime, repair the graph through its source owner or Meta, preserving verified
+work rather than retrying the same impossible phase. See [38: phase-separated
+validation](references/examples/38-phase-separated-validation/38-phase-separated-validation.md)
+for the rejected counterexample and a complete corrected package.
 
 Start with Agent. Use Program only when all four answers are yes:
 
@@ -242,3 +260,4 @@ All examples live under `references/examples/`.
 | 35, 36 | Choose a training method from a number the run measured, and refuse the round when the measurement does not support it. |
 | 31 | Repair edge: the Agent that wrote the training script runs it and fixes its own crash; the Search spawns the stage with `capture_failure=True` so a stage that still fails leaves the last good result standing. |
 | 34 | Runtime replanning: a running Search returns to `MetaAgent` with a custom first user turn when the remaining plan is invalidated. SDK code fragments in the pattern document, no code package. |
+| 38 | Separate processor-only environment preparation from GPU model validation; includes a phase-ordering regression counterexample and a complete corrected package. |
