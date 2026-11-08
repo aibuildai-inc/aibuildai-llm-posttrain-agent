@@ -51,8 +51,9 @@ class ExecSpec:
     unit_tag: str  # the unit's display + failure-attribution key
     # The child interpreter, already resolved by the site that declared it, or
     # None to run under whatever PATH already provides. When set it is
-    # resolved to its physical path (required under a symlinked
-    # playground), passed as argv[0], and its bin dir is prepended to PATH.
+    # its parent directory is canonicalized (for a symlinked playground),
+    # while the executable link stays intact so a virtual environment is
+    # not bypassed. It is passed as argv[0] and its bin is prepended to PATH.
     interpreter: str | None
     require_gpu_use: bool = False
     extra_env: dict[str, str] = field(
@@ -63,6 +64,7 @@ class ExecSpec:
     )
     cwd_writable: bool = True
     capture_limit_bytes: int | None = None
+    read_only_overrides: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
