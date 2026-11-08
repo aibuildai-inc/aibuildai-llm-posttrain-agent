@@ -506,8 +506,8 @@ class RunConfig(_ConfigBaseModel):
     conda_env: str | None = Field(
         default=None,
         description=(
-            "optional host conda environment cloned into this run's Program "
-            "environment before Setup; cloning needs conda initialized in the "
+            "optional host conda environment used read-only beneath this run's Program "
+            "overlay before Setup; Conda discovery needs conda initialized in the "
             "launching shell. A missing base creates a fresh Python 3.11 "
             "environment with the product's own tooling, no conda needed; unset "
             "means look for an environment named by run.task_name"
@@ -609,7 +609,7 @@ class RunConfig(_ConfigBaseModel):
 
     @property
     def program_environment_base(self) -> str:
-        """Return the named environment cloned before Setup, or the task name."""
+        """Return the configured base environment name, or the legacy task-name fallback."""
         return self.conda_env or self.task_name
 
     @model_validator(mode="after")

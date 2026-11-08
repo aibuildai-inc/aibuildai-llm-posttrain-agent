@@ -206,9 +206,8 @@ async def _default_env(
         "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "128000",
     }
     if policy.task_environment:
-        program_python = run_program_environment().python
         env["PATH"] = (
-            f"{Path(program_python).parent}{os.pathsep}{os.environ.get('PATH', '')}"
+            os.pathsep.join((*run_program_environment().bin_paths, os.environ.get('PATH', '')))
         )
     face_cache_root = f"{write_face}/.cache"
     # TMPDIR must stay SHORT. PyTorch DataLoader / multiprocessing bind AF_UNIX
@@ -659,7 +658,7 @@ def _task_env_prefix(search: "AIBuildAISearch", policy: RolePolicy) -> str | Non
     """The task Program environment prefix of a role that declares ``task_environment``, else None."""
     if not policy.task_environment:
         return None
-    return str(Path(run_program_environment().python).resolve().parent.parent)
+    return str(run_program_environment().prefix)
 
 
 async def _device_nodes(
@@ -685,6 +684,7 @@ def _sandbox_path(
         parts.append(tool_bin_dir.rstrip("/"))
     if task_env_prefix is not None:
         parts.append(f"{task_env_prefix.rstrip('/')}/bin")
+        parts.extend(str(p / 'bin') for p in run_program_environment().read_only_prefixes)
     parts.append(f"{sys.prefix.rstrip('/')}/bin")
     if SystemDir.CONDA_ROOT in (
         *policy.system_read,
@@ -718,6 +718,7 @@ def _sandboxed_confinement(
     ro_paths = [path for path in read_dirs if path != "/tmp"]
     rw = list(write_dirs)
     if task_env_prefix is not None:
+        ro_paths.extend(str(p) for p in run_program_environment().read_only_prefixes)
         if SystemDir.CONDA_ROOT in policy.system_write:
             rw.append(task_env_prefix)
         else:
@@ -746,12 +747,19 @@ def _sandboxed_confinement(
         *config.resources.sandbox.system_write_paths,
         *(system_dirs[kind] for kind in policy.system_write),
     ]
+    protected_bases = ()
+    if task_env_prefix is not None or system_write:
+        protected_bases = tuple(
+            str(base) for base in run_program_environment().read_only_prefixes
+            if any(is_within(base, path) for path in (*system_read, *system_write, *ro_paths, *rw))
+        )
     conf = Confinement(
         apply_bwrap=True,
         system_read_paths=tuple(dict.fromkeys(system_read)),
         system_write_paths=tuple(dict.fromkeys(system_write)),
         ro_paths=tuple(ro_paths),
         rw_paths=tuple(rw),
+        read_only_overrides=protected_bases,
         dev_nodes=dev_nodes,
         mask_paths=mask_paths,
         cgroup=cgroup,

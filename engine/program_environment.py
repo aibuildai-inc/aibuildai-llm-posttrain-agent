@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import fcntl
 import hashlib
+import json
 import logging
 import os
 import shutil
@@ -15,6 +16,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from engine.failure import Failure, FailureKind
+from engine.conda_overlay import create_conda_overlay
 from infra.owned_tools import micromamba_root_prefix, owned
 from infra.process.command import _BlockingStopped, run_blocking, run_captured
 from infra.process.conda_env import conda_executable, resolve_task_interpreter_or_none
@@ -45,16 +47,10 @@ class ProgramEnvironmentError(Exception):
 async def _require_runtime_capable_base(
     base_python: str, conda_env_name: str, remaining_s: Callable[[], float]
 ) -> None:
-    """Refuse a clone base whose interpreter cannot host the Program runtime.
+    """Require a base interpreter capable of running the Program runtime.
 
-    The environment named by ``run.conda_env`` is cloned and then has the
-    AIBuildAI Program runtime installed into it, so its interpreter must satisfy
-    the runtime's own ``requires-python``. Without this check a base outside that
-    range is cloned first -- minutes of copying -- and then fails inside pip with
-    "Package 'aibuildai' requires a different Python", which names pip rather
-    than the setting that chose the base. The floor is real rather than
-    conservative metadata: the runtime uses ``BaseExceptionGroup``, a 3.11
-    builtin.
+    The base supplies Python; the runtime installs into the run's writable
+    environment. Reject unsupported Python before creating that environment.
     """
     probe = await run_captured(
         [base_python, "-c", "import sys; print('%d.%d' % sys.version_info[:2])"],
@@ -76,9 +72,8 @@ async def _require_runtime_capable_base(
         Failure(
             kind=FailureKind.INFRA,
             reason=f"run.conda_env names {conda_env_name!r}, whose interpreter is Python "
-            f"{raw} ({base_python}). It is cloned into this run's Program "
-            f"environment and the AIBuildAI Program runtime is installed into that "
-            f"clone, so it must be Python >={floor},<{ceiling}. Rebuild that "
+            f"{raw} ({base_python}). The run's Program runtime requires "
+            f"Python >={floor},<{ceiling}. Rebuild that "
             f"environment on a supported interpreter, point run.conda_env at one "
             f"that is, or unset run.conda_env to get a fresh Python "
             f"{floor} environment that Setup fills itself.",
@@ -99,9 +94,11 @@ class ProgramEnvironment:
     first is writing.
     """
 
-    def __init__(self, *, run_home: Path, conda_env_name: str) -> None:
+    def __init__(self, *, run_home: Path, conda_env_name: str, use_overlay: bool = True) -> None:
         self._root = run_home / "program-environment"
         self._prefix = self._root / "env"
+        self._use_overlay = use_overlay
+        self._read_only_prefixes: tuple[Path, ...] = ()
         self._conda_env_name = conda_env_name
         self._gate = asyncio.Lock()
         self._prepared = False
@@ -112,6 +109,20 @@ class ProgramEnvironment:
         if not path.is_file():
             raise AssertionError("Program environment is not prepared")
         return str(path)
+
+    @property
+    def prefix(self) -> Path:
+        """The run's writable prefix, without following bin/python out of a venv."""
+        return self._prefix
+
+    @property
+    def read_only_prefixes(self) -> tuple[Path, ...]:
+        """The configured base every consumer must mount read-only."""
+        return self._read_only_prefixes
+
+    @property
+    def bin_paths(self) -> tuple[str, ...]:
+        return tuple(str(p / 'bin') for p in (self.prefix, *self.read_only_prefixes))
 
     async def prepare(self, remaining_s: Callable[[], float]) -> None:
         """Make this run's Program environment ready, once per process.
@@ -138,8 +149,9 @@ class ProgramEnvironment:
             async with self._gate:
                 if self._prepared:
                     return
+                await self._restore_overlay(remaining_s)
                 python_path = self._prefix / "bin" / "python"
-                if not python_path.is_file():
+                if not python_path.is_file() or (self._root / "overlay.creating").exists():
                     await self._create(remaining_s)
                 wheel = await self._runtime_wheel(remaining_s)
                 await self._install_runtime(wheel, remaining_s)
@@ -151,7 +163,7 @@ class ProgramEnvironment:
                     reason="Program environment preparation reached its time limit",
                 )
             ) from exc
-        except OSError as exc:
+        except (OSError, ValueError) as exc:
             raise ProgramEnvironmentError(
                 Failure(
                     kind=FailureKind.INFRA,
@@ -159,8 +171,25 @@ class ProgramEnvironment:
                 )
             ) from exc
 
+    async def _restore_overlay(self, remaining_s: Callable[[], float]) -> None:
+        metadata = self._root / "overlay.json"
+        if not metadata.is_file():
+            return
+        value = json.loads(metadata.read_text())
+        if not isinstance(value, dict):
+            raise ValueError('invalid Conda overlay metadata')
+        base_python = await resolve_task_interpreter_or_none(
+            conda_env_name=self._conda_env_name, remaining_s=remaining_s)
+        base = Path(base_python).parent.resolve().parent if base_python else None
+        if (not self._use_overlay or value.get("schema") != 1
+                or value.get("base_name") != self._conda_env_name
+                or base is None or value.get("base_prefix") != str(base)):
+            raise ProgramEnvironmentError(Failure(kind=FailureKind.INFRA,
+                reason="configured Conda overlay base is missing or changed; restore the named environment"))
+        self._read_only_prefixes = (base,)
+
     async def _create(self, remaining_s: Callable[[], float]) -> None:
-        """Clone the named host environment, or make a fresh one."""
+        """Overlay an explicit base, preserving the legacy path when unset."""
         self._root.mkdir(parents=True, exist_ok=True)
         if self._prefix.exists():
             await run_blocking(
@@ -171,6 +200,21 @@ class ProgramEnvironment:
             conda_env_name=self._conda_env_name,
             remaining_s=remaining_s,
         )
+        if base_python is not None and self._use_overlay:
+            await _require_runtime_capable_base(base_python, self._conda_env_name, remaining_s)
+            marker = self._root / "overlay.creating"
+            marker.touch()
+            base = await create_conda_overlay(base_python, self._prefix, remaining_s)
+            self._read_only_prefixes = (base,)
+            temporary = self._root / "overlay.json.next"
+            with temporary.open('w') as stream:
+                stream.write(json.dumps({"schema": 1, "base_name": self._conda_env_name,
+                                         "base_prefix": str(base)}) + "\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+            temporary.replace(self._root / "overlay.json")
+            marker.unlink()
+            return
         if base_python is None:
             # The owned micromamba creates the fresh environment, so no
             # host conda is required, and every input that decides what

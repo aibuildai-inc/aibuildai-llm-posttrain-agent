@@ -65,6 +65,8 @@ class Confinement:
     system_write_paths: tuple[str, ...] = ()
     ro_paths: tuple[str, ...] = ()
     hard_ro: tuple[str, ...] = ()
+    # Re-applied after writable mounts, so a shared dependency base stays immutable.
+    read_only_overrides: tuple[str, ...] = ()
     rw_paths: tuple[str, ...] = ()
     dev_nodes: tuple[str, ...] = ()
     mask_paths: tuple[str, ...] = ()
@@ -119,6 +121,7 @@ class Confinement:
             *self.system_write_paths,
             *self.ro_paths,
             *self.hard_ro,
+            *self.read_only_overrides,
             *self.rw_paths,
         )
         missing = [
@@ -145,7 +148,9 @@ class Confinement:
         do, so both are asked."""
         allowed = (*self.system_write_paths, *self.rw_paths)
         missing = [
-            path for path in paths if not any(is_within(path, root) for root in allowed)
+            path for path in paths
+            if not any(is_within(path, root) for root in allowed)
+            or any(is_within(path, root) for root in self.read_only_overrides)
         ]
         if missing:
             raise AssertionError(
@@ -172,6 +177,8 @@ class Confinement:
             mask_files=mask_files,
             mask_dirs=mask_dirs,
         )
+        for path in self.read_only_overrides:
+            binds += ["--ro-bind", path, path]
         if self.pinned_device_count > 0:
             # The K bound /dev/nvidia<idx> nodes are in-sandbox indices 0..K-1;
             # an inherited host CUDA_VISIBLE_DEVICES would point CUDA at devices

@@ -19,6 +19,7 @@ def build_subproc_confinement(
     apply_bwrap: bool,
     dev_nodes: Sequence[str] = (),
     cwd_writable: bool = True,
+    read_only_overrides: Sequence[str] = (),
 ) -> Confinement:
     """Build confinement after the caller completes all blocking host reads.
 
@@ -65,6 +66,7 @@ def build_subproc_confinement(
         system_read_paths=tuple(system_read_paths),
         system_write_paths=tuple(system_write_paths),
         hard_ro=tuple(ro_binds),
+        read_only_overrides=tuple(read_only_overrides),
         rw_paths=tuple(rw_binds),
         dev_nodes=tuple(dev_nodes),
         # The bound cards are numbered from zero inside bwrap.

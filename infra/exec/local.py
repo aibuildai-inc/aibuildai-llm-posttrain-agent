@@ -38,6 +38,12 @@ _logger = logging.getLogger(__name__)
 _SIGKILL_WAIT_S = 5.0
 
 
+def resolve_interpreter_path(path: str) -> str:
+    """Canonicalize directory aliases while preserving a virtual environment's executable."""
+    interpreter = Path(path)
+    return str(interpreter.parent.resolve() / interpreter.name)
+
+
 class _CaptureBudget:
     """Keep bounded output tails and stop the cgroup at the combined byte cap."""
 
@@ -129,7 +135,7 @@ class _LocalProcess:
                 )
             # The physical path: under a symlinked playground the declared one
             # can name a link the child would resolve differently.
-            resolved_interp = str(Path(spec.interpreter).resolve())
+            resolved_interp = resolve_interpreter_path(spec.interpreter)
             argv = [resolved_interp, *spec.argv]
             env["PATH"] = (
                 f"{Path(resolved_interp).parent}{os.pathsep}{env.get('PATH', '')}"
@@ -202,6 +208,7 @@ class _LocalProcess:
             apply_bwrap=spec.apply_bwrap,
             dev_nodes=dev_nodes,
             cwd_writable=spec.cwd_writable,
+            read_only_overrides=spec.read_only_overrides,
         )
         if confinement.apply_bwrap:
             try:
@@ -619,12 +626,13 @@ class LocalExecutor(Executor):
             )
             placement_created = True
             python_path = self._environment.python
-            environment_root = str(Path(python_path).resolve().parent.parent)
+            environment_root = str(self._environment.prefix)
+            environment_roots = (environment_root, *(str(p) for p in self._environment.read_only_prefixes))
             local_spec = ExecSpec(
                 argv=["-m", spec.module, *spec.args],
                 cwd=spec.cwd,
                 io_manifest=type(spec.io_manifest)(
-                    read_paths=(*spec.io_manifest.read_paths, environment_root),
+                    read_paths=(*spec.io_manifest.read_paths, *environment_roots),
                     write_paths=spec.io_manifest.write_paths,
                 ),
                 capability=spec.capability,
@@ -640,13 +648,15 @@ class LocalExecutor(Executor):
                     *self._sandbox.system_read_paths,
                 ),
                 system_write_paths=self._sandbox.system_write_paths,
-                required_system_read_paths=(environment_root,),
+                required_system_read_paths=environment_roots,
+                read_only_overrides=tuple(str(p) for p in self._environment.read_only_prefixes),
                 required_system_write_paths=(),
                 capture=ExecCapture.STREAM_TO_FILE,
                 log_path=spec.log_path,
                 unit_tag=spec.unit_tag,
                 interpreter=python_path,
-                extra_env=spec.extra_env,
+                extra_env={**spec.extra_env, 'PATH': os.pathsep.join((
+                    *self._environment.bin_paths, spec.extra_env.get('PATH', os.environ.get('PATH', ''))))},
                 require_gpu_use=spec.require_gpu_use,
             )
             outcome = await _LocalProcess().run(local_spec, remaining_s=remaining_s)

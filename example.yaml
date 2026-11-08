@@ -14,7 +14,7 @@ run:
   # short task id (names the output dir)
   # REQUIRED -- replace
   task_name: my-task
-  # optional host conda environment cloned into this run's Program environment before Setup; cloning needs conda initialized in the launching shell. A missing base creates a fresh Python 3.11 environment with the product's own tooling, no conda needed; unset means look for an environment named by run.task_name
+  # optional host conda environment used read-only beneath this run's Program overlay before Setup; Conda discovery needs conda initialized in the launching shell. A missing base creates a fresh Python 3.11 environment with the product's own tooling, no conda needed; unset means look for an environment named by run.task_name
   conda_env: null
   # the user's task folder: the whole run input. It holds what the task asks for in any readable form plus every material the task needs. Setup reads it, freezes it as the run's README, and writes the run's score program; it is read-only for the whole run
   # REQUIRED -- replace
